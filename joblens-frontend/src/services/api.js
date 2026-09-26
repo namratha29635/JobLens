@@ -20,7 +20,11 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (res) => res,
   (err) => {
-    if (err.response?.status === 401) {
+    if (
+      err.response?.status === 401 &&
+      !err.config?.url?.includes("/auth/login") &&
+      !err.config?.url?.includes("/auth/register")
+    ) {
       localStorage.removeItem("joblens_token");
       localStorage.removeItem("joblens_user");
 
@@ -34,6 +38,10 @@ api.interceptors.response.use(
 // AUTH
 export const authAPI = {
   login: (data) => api.post("/auth/login", data),
+
+  register: (data) => api.post("/auth/register", data),
+
+  seedDemo: () => api.post("/auth/seed-demo"),
 
   forgotPassword: (data) => api.post("/auth/forgot-password", data),
 
@@ -55,7 +63,17 @@ export const coordinatorAPI = {
 
   getStudentDetail: (id) => api.get(`/coordinator/students/${id}`),
 
+  getAllApplications: (params) => api.get("/coordinator/applications", { params }),
+
+  updateApplicationStatus: (id, data) => api.patch(`/coordinator/applications/${id}/status`, data),
+
+  bulkUpdateApplications: (data) => api.post("/coordinator/applications/bulk-status", data),
+
   sendNotification: (data) => api.post("/coordinator/notify", data),
+
+  getNotificationHistory: () => api.get("/coordinator/notifications/history"),
+
+  getAudienceCount: (params) => api.get("/coordinator/audience-count", { params }),
 
   getAuditLogs: (params) => api.get("/coordinator/audit-logs", { params }),
 };
@@ -117,7 +135,7 @@ export const studentAPI = {
 
   getDashboard: () => api.get("/student/dashboard"),
 
-  getOnCampusDrives: () => api.get("/student/drives/oncampus"),
+  getOnCampusDrives: (params) => api.get("/student/drives/oncampus", { params }),
 
   applyToDrive: (id) => api.post(`/student/drives/oncampus/${id}/apply`),
 
@@ -140,7 +158,13 @@ export const studentAPI = {
   // JOB VERIFIER
   checkJobAuthenticity: (data) => api.post("/student/job-verifier/check", data),
 
-  getJobVerifierHistory: () => api.get("/student/job-verifier/history"),
+  getCompanyReviews: (params) => api.get("/student/job-verifier/company-reviews", { params }),
+
+  // NOTIFICATIONS
+  getNotifications: () => api.get("/student/notifications"),
+  markNotificationRead: (id) => api.patch(`/student/notifications/${id}/read`),
+  markAllNotificationsRead: () => api.patch("/student/notifications/read-all"),
+  deleteNotification: (id) => api.delete(`/student/notifications/${id}`),
 };
 
 // FEEDBACK
@@ -156,4 +180,28 @@ export const feedbackAPI = {
 
   getByDrive: (id) => api.get(`/feedback/drive/${id}`),
 };
+
+// RESUME URL & OPENER HELPER
+export const getResumeUrl = (url) => {
+  if (!url) return "";
+  if (url.startsWith("http://") || url.startsWith("https://")) return url;
+
+  // Determine backend base URL
+  const backendBase = process.env.REACT_APP_API_URL
+    ? process.env.REACT_APP_API_URL.replace(/\/api\/?$/, "")
+    : window.location.port === "3000"
+    ? "http://localhost:5000"
+    : window.location.origin;
+
+  const cleanUrl = url.startsWith("/") ? url : `/${url}`;
+  return `${backendBase}${cleanUrl}`;
+};
+
+export const openResume = (url) => {
+  if (!url) return false;
+  const fullUrl = getResumeUrl(url);
+  window.open(fullUrl, "_blank", "noopener,noreferrer");
+  return true;
+};
+
 export default api;

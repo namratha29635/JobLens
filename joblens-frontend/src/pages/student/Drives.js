@@ -13,6 +13,25 @@ const STATUS_META = {
   not_shortlisted: { label: 'Not Shortlisted', variant: 'danger', icon: '❌' },
 };
 
+const POPULAR_COLLEGES = [
+  'All Colleges',
+  "Vignan's Lara Institute of Technology & Science",
+  "Vignan's Foundation for Science, Technology & Research (Vignan University)",
+  'VNR VJIET',
+  'CBIT',
+  'Vasavi College of Engineering',
+  'JNTU Hyderabad',
+  'IIT Hyderabad',
+  'BITS Pilani',
+  'SRM University',
+  'VIT Vellore',
+  'Chaitanya Bharathi Institute of Technology',
+  'Osmania University College of Engineering',
+  'Gokaraju Rangaraju Institute of Engineering & Technology (GRIET)',
+];
+
+const BRANCH_OPTIONS = ['All Branches', 'CSE', 'ECE', 'EEE', 'IT', 'AIDS', 'AIML', 'DS', 'MECH', 'CIVIL'];
+
 function getExtendedDeadline(date) {
   if (!date) return null;
   const d = new Date(date);
@@ -32,74 +51,209 @@ export default function StudentDrives() {
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
   const [feedbackDrive, setFeedbackDrive] = useState(null);
+  const [selectedCollege, setSelectedCollege] = useState('All Colleges');
+  const [selectedBranch, setSelectedBranch] = useState('All Branches');
+  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
 
+  const fetchDrives = async (college) => {
+    try {
+      const params = (college && college !== 'All Colleges') ? { college } : {};
+      const res = await studentAPI.getOnCampusDrives(params);
+      setDrives(res.data?.data || { activeDrives: [], pastDrives: [] });
+    } catch {
+      toast.error('Failed to load on-campus drives');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    studentAPI.getOnCampusDrives()
-      .then(res => setDrives(res.data.data))
-      .catch(() => toast.error('Failed to load drives'))
-      .finally(() => setLoading(false));
-  }, []);
+    fetchDrives(selectedCollege);
+  }, [selectedCollege]);
 
   const handleApply = async (driveId, companyName) => {
     try {
       await studentAPI.applyToDrive(driveId);
       toast.success(`Successfully applied to ${companyName}!`);
-
-      const res = await studentAPI.getOnCampusDrives();
-      setDrives(res.data.data);
+      await fetchDrives(selectedCollege);
     } catch (err) {
       toast.error(err.response?.data?.message || 'Application failed');
     }
   };
 
-  const currentList = tab === 'active' ? drives.activeDrives : drives.pastDrives;
+  const rawList = tab === 'active' ? (drives.activeDrives || []) : (drives.pastDrives || []);
+
+  const currentList = rawList.filter(drive => {
+    const matchesSearch = !searchQuery.trim() ||
+      drive.companyName.toLowerCase().includes(searchQuery.toLowerCase().trim()) ||
+      (drive.collegeName && drive.collegeName.toLowerCase().includes(searchQuery.toLowerCase().trim())) ||
+      (drive.eligibleBranches && drive.eligibleBranches.some(b => b.toLowerCase().includes(searchQuery.toLowerCase().trim()))) ||
+      (drive.description && drive.description.toLowerCase().includes(searchQuery.toLowerCase().trim()));
+
+    const matchesCollege = (selectedCollege === 'All Colleges') ||
+      !drive.collegeName ||
+      drive.collegeName === 'All Colleges' ||
+      drive.collegeName.toLowerCase().includes(selectedCollege.toLowerCase()) ||
+      selectedCollege.toLowerCase().includes(drive.collegeName.toLowerCase());
+
+    const matchesBranch = (selectedBranch === 'All Branches') ||
+      !drive.eligibleBranches ||
+      drive.eligibleBranches.length === 0 ||
+      drive.eligibleBranches.includes(selectedBranch);
+
+    return matchesSearch && matchesCollege && matchesBranch;
+  });
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px' }}>
         <div>
           <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '28px', fontWeight: 800 }}>
-            On-Campus Drives
+            🏢 On-Campus Placement Drives
           </h1>
-          <p style={{ color: 'var(--text-secondary)', marginTop: '4px' }}>
-            {drives.activeDrives.length} active · {drives.pastDrives.length} past
+          <p style={{ color: 'var(--text-secondary)', marginTop: '4px', fontSize: '14px' }}>
+            Exclusive recruitment drives organized for your campus and branch.
           </p>
         </div>
 
         <button
-          onClick={() => navigate('/student/feedback?tab=browse')}
+          onClick={() => navigate('/student/feedback')}
           style={{
             padding: '9px 18px',
-            background: 'rgba(124,58,237,0.1)',
-            border: '1px solid rgba(124,58,237,0.2)',
+            background: 'var(--bg-elevated)',
+            border: '1px solid var(--border)',
             borderRadius: 'var(--radius)',
-            color: '#a78bfa',
+            color: 'var(--accent-primary)',
             cursor: 'pointer',
             fontSize: '13px',
             fontWeight: 600,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
           }}
         >
-          💬 View Company Feedback
+          💬 Browse Interview Experiences
         </button>
       </div>
 
+      {/* College & Branch Selection Bar */}
+      <Card>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '18px' }}>🏛</span>
+              <span style={{ fontWeight: 700, fontSize: '14px', color: 'var(--text-primary)' }}>
+                Filter By Campus & Branch:
+              </span>
+            </div>
+            <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+              Campus: <strong style={{ color: 'var(--accent-primary)' }}>{selectedCollege}</strong> · Branch: <strong style={{ color: 'var(--accent-primary)' }}>{selectedBranch}</strong>
+            </span>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
+                Select College / University
+              </label>
+              <select
+                style={{
+                  width: '100%',
+                  background: 'var(--bg-elevated)',
+                  border: '1px solid var(--border)',
+                  borderRadius: '8px',
+                  color: 'var(--text-primary)',
+                  padding: '9px 12px',
+                  fontSize: '13px',
+                  cursor: 'pointer',
+                  outline: 'none',
+                }}
+                value={selectedCollege}
+                onChange={e => setSelectedCollege(e.target.value)}
+              >
+                {POPULAR_COLLEGES.map(c => (
+                  <option key={c} value={c}>
+                    {c === 'All Colleges' ? '🌐 All Colleges / Open Drives' : `🏛 ${c}`}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
+                Select Branch / Department
+              </label>
+              <select
+                style={{
+                  width: '100%',
+                  background: 'var(--bg-elevated)',
+                  border: '1px solid var(--border)',
+                  borderRadius: '8px',
+                  color: 'var(--text-primary)',
+                  padding: '9px 12px',
+                  fontSize: '13px',
+                  cursor: 'pointer',
+                  outline: 'none',
+                }}
+                value={selectedBranch}
+                onChange={e => setSelectedBranch(e.target.value)}
+              >
+                {BRANCH_OPTIONS.map(b => (
+                  <option key={b} value={b}>
+                    {b === 'All Branches' ? '🎓 All Branches' : `📚 ${b}`}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 600 }}>
+                Search Company or Branch
+              </label>
+              <input
+                type="text"
+                placeholder="🔍 Search company or branch..."
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                style={{
+                  width: '100%',
+                  background: 'var(--bg-elevated)',
+                  border: '1px solid var(--border)',
+                  borderRadius: '8px',
+                  color: 'var(--text-primary)',
+                  padding: '9px 12px',
+                  fontSize: '13px',
+                  outline: 'none',
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      </Card>
+
+      {/* Tabs */}
       <Tabs
         tabs={[
-          { value: 'active', label: `🟢 Active Drives (${drives.activeDrives.length})` },
-          { value: 'past',   label: `📁 Past Drives (${drives.pastDrives.length})` },
+          { value: 'active', label: `🟢 Active & Ongoing Drives (${drives.activeDrives?.length || 0})` },
+          { value: 'past',   label: `📁 Past & Completed Drives (${drives.pastDrives?.length || 0})` },
         ]}
         active={tab}
         onChange={setTab}
       />
 
       {loading ? (
-        <LoadingPage />
+        <LoadingPage text="Loading campus placement drives..." />
       ) : currentList.length === 0 ? (
         <EmptyState
           icon={tab === 'active' ? '🏢' : '📁'}
-          title={tab === 'active' ? 'No active drives' : 'No past drives'}
-          description={tab === 'active' ? 'New drives will appear here when posted' : 'Completed drives will show here'}
+          title={tab === 'active' ? 'No active on-campus drives found' : 'No past drives found'}
+          description={
+            selectedCollege !== 'All Colleges'
+              ? `No on-campus drives currently listed for ${selectedCollege}. Try selecting 'All Colleges' to view all available drives.`
+              : 'New placement opportunities will appear here when posted by coordinators.'
+          }
         />
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
@@ -116,6 +270,7 @@ export default function StudentDrives() {
         </div>
       )}
 
+      {/* Drive Detail Modal */}
       <Modal
         open={!!selected}
         onClose={() => setSelected(null)}
@@ -125,10 +280,11 @@ export default function StudentDrives() {
         {selected && <DriveDetail drive={selected} />}
       </Modal>
 
+      {/* Feedback Modal */}
       <Modal
         open={!!feedbackDrive}
         onClose={() => setFeedbackDrive(null)}
-        title={`Feedback — ${feedbackDrive?.companyName}`}
+        title={`Interview Experience — ${feedbackDrive?.companyName}`}
         width="600px"
       >
         {feedbackDrive && (
@@ -155,8 +311,8 @@ function DriveCard({ drive, isPast, onView, onApply, onFeedback }) {
   return (
     <Card
       style={{
-        border: isSelected ? '1px solid rgba(0,230,118,0.3)' : '1px solid var(--border)',
-        background: isSelected ? 'rgba(0,230,118,0.03)' : 'var(--bg-card)',
+        border: isSelected ? '1px solid rgba(52, 211, 153, 0.35)' : '1px solid var(--border)',
+        background: isSelected ? 'rgba(52, 211, 153, 0.04)' : 'var(--bg-card)',
         transition: 'var(--transition)',
       }}
     >
@@ -168,6 +324,24 @@ function DriveCard({ drive, isPast, onView, onApply, onFeedback }) {
               {drive.companyName}
             </h3>
 
+            {/* College Badge */}
+            <span
+              style={{
+                fontSize: '11px',
+                padding: '3px 8px',
+                borderRadius: '6px',
+                background: 'var(--bg-elevated)',
+                border: '1px solid var(--border)',
+                color: 'var(--text-secondary)',
+                fontWeight: 600,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px',
+              }}
+            >
+              🏛 {drive.collegeName || 'All Colleges'}
+            </span>
+
             {drive.overallStatus && (
               <Badge variant={meta.variant || 'default'} size="sm">
                 {meta.icon} {meta.label}
@@ -177,7 +351,7 @@ function DriveCard({ drive, isPast, onView, onApply, onFeedback }) {
 
           <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginBottom: '10px' }}>
             {drive.minPackage && (
-              <span style={{ fontSize: '12px', color: 'var(--accent-green)' }}>
+              <span style={{ fontSize: '12px', color: 'var(--accent-green)', fontWeight: 600 }}>
                 💰 {drive.minPackage}–{drive.maxPackage} LPA
               </span>
             )}
@@ -207,7 +381,7 @@ function DriveCard({ drive, isPast, onView, onApply, onFeedback }) {
           </div>
 
           {drive.roundStatuses?.length > 0 && (
-            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '6px' }}>
               {drive.roundStatuses.map((rs, i) => (
                 <span
                   key={i}
@@ -217,10 +391,10 @@ function DriveCard({ drive, isPast, onView, onApply, onFeedback }) {
                     borderRadius: '999px',
                     background:
                       rs.status === 'qualified'
-                        ? 'rgba(0,230,118,0.1)'
+                        ? 'rgba(52, 211, 153, 0.12)'
                         : rs.status === 'not_qualified' || rs.status === 'not_attended'
-                        ? 'rgba(255,71,87,0.1)'
-                        : 'rgba(0,212,255,0.1)',
+                        ? 'rgba(248, 113, 113, 0.12)'
+                        : 'rgba(56, 189, 248, 0.12)',
                     color:
                       rs.status === 'qualified'
                         ? 'var(--accent-green)'
@@ -228,6 +402,7 @@ function DriveCard({ drive, isPast, onView, onApply, onFeedback }) {
                         ? 'var(--accent-red)'
                         : 'var(--accent-primary)',
                     border: '1px solid currentColor',
+                    fontWeight: 600,
                   }}
                 >
                   R{rs.roundNumber}: {rs.status.replace('_', ' ')}
@@ -238,7 +413,7 @@ function DriveCard({ drive, isPast, onView, onApply, onFeedback }) {
 
           {isPast && drive.visibilityReason && (
             <p style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '8px' }}>
-              i {drive.visibilityReason}
+              ℹ️ {drive.visibilityReason}
             </p>
           )}
         </div>
@@ -254,6 +429,7 @@ function DriveCard({ drive, isPast, onView, onApply, onFeedback }) {
               color: 'var(--text-secondary)',
               cursor: 'pointer',
               fontSize: '12px',
+              fontWeight: 500,
             }}
           >
             View Details
@@ -263,7 +439,7 @@ function DriveCard({ drive, isPast, onView, onApply, onFeedback }) {
             <button
               onClick={onApply}
               style={{
-                padding: '8px 16px',
+                padding: '8px 18px',
                 background: 'var(--accent-primary)',
                 border: 'none',
                 borderRadius: '8px',
@@ -271,9 +447,10 @@ function DriveCard({ drive, isPast, onView, onApply, onFeedback }) {
                 cursor: 'pointer',
                 fontSize: '12px',
                 fontWeight: 700,
+                boxShadow: '0 2px 10px rgba(56, 189, 248, 0.25)',
               }}
             >
-              Apply Now
+              Apply Now →
             </button>
           )}
 
@@ -282,8 +459,8 @@ function DriveCard({ drive, isPast, onView, onApply, onFeedback }) {
               onClick={onFeedback}
               style={{
                 padding: '8px 16px',
-                background: 'rgba(255,107,53,0.1)',
-                border: '1px solid rgba(255,107,53,0.3)',
+                background: 'rgba(251, 191, 36, 0.1)',
+                border: '1px solid rgba(251, 191, 36, 0.3)',
                 borderRadius: '8px',
                 color: 'var(--accent-orange)',
                 cursor: 'pointer',
@@ -291,7 +468,7 @@ function DriveCard({ drive, isPast, onView, onApply, onFeedback }) {
                 fontWeight: 600,
               }}
             >
-              Give Feedback
+              ✍️ Give Feedback
             </button>
           )}
         </div>
@@ -305,23 +482,24 @@ function DriveDetail({ drive }) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
         {[
           ['Company', drive.companyName],
-          ['Package', drive.minPackage ? `${drive.minPackage}–${drive.maxPackage} LPA` : 'N/A'],
+          ['College Campus', drive.collegeName || 'All Colleges'],
+          ['Package (CTC)', drive.minPackage ? `${drive.minPackage}–${drive.maxPackage} LPA` : 'Not Specified'],
           ['CGPA Cut-off', drive.cgpaCutOff],
           ['Backlogs Allowed', drive.backlogsAllowed],
           ['Eligible Batches', (drive.eligibleBatches || []).join(', ')],
           ['Eligible Branches', (drive.eligibleBranches || []).join(', ')],
-          ['Status', drive.status],
-          ['Registration Deadline', extendedDeadline ? extendedDeadline.toLocaleDateString() : 'N/A'],
-          ['Registration Link', drive.registrationLink || 'N/A'],
+          ['Status', drive.status?.toUpperCase()],
+          ['Registration Deadline', extendedDeadline ? extendedDeadline.toLocaleDateString() : 'Open'],
+          ['Registration Link', drive.registrationLink || 'Direct Portal Apply'],
         ].map(([label, value]) => (
-          <div key={label} style={{ padding: '12px', background: 'var(--bg-elevated)', borderRadius: '10px' }}>
-            <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '4px' }}>
+          <div key={label} style={{ padding: '12px', background: 'var(--bg-elevated)', borderRadius: '10px', border: '1px solid var(--border)' }}>
+            <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '4px', fontWeight: 600, textTransform: 'uppercase' }}>
               {label}
             </p>
-            <p style={{ fontSize: '13px', fontWeight: 500 }}>
+            <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>
               {value}
             </p>
           </div>
@@ -330,10 +508,10 @@ function DriveDetail({ drive }) {
 
       {drive.description && (
         <div>
-          <h4 style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '8px' }}>
-            Description
+          <h4 style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '8px', fontWeight: 700, textTransform: 'uppercase' }}>
+            Job Description & Overview
           </h4>
-          <p style={{ fontSize: '13px', lineHeight: 1.7, color: 'var(--text-primary)' }}>
+          <p style={{ fontSize: '13px', lineHeight: 1.7, color: 'var(--text-primary)', whiteSpace: 'pre-line' }}>
             {drive.description}
           </p>
         </div>
@@ -341,20 +519,21 @@ function DriveDetail({ drive }) {
 
       {drive.rounds?.length > 0 && (
         <div>
-          <h4 style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '10px' }}>
-            Rounds
+          <h4 style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '10px', fontWeight: 700, textTransform: 'uppercase' }}>
+            Selection Rounds & Timeline
           </h4>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {drive.rounds.map((r, i) => (
               <div
                 key={i}
                 style={{
-                  padding: '12px',
+                  padding: '12px 14px',
                   background: 'var(--bg-elevated)',
                   borderRadius: '10px',
                   display: 'flex',
                   gap: '12px',
                   alignItems: 'flex-start',
+                  border: '1px solid var(--border)',
                 }}
               >
                 <div
@@ -362,8 +541,8 @@ function DriveDetail({ drive }) {
                     width: '28px',
                     height: '28px',
                     borderRadius: '50%',
-                    background: 'rgba(0,212,255,0.1)',
-                    border: '1px solid rgba(0,212,255,0.3)',
+                    background: 'rgba(56, 189, 248, 0.12)',
+                    border: '1px solid rgba(56, 189, 248, 0.3)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -377,27 +556,22 @@ function DriveDetail({ drive }) {
                 </div>
 
                 <div>
-                  <p style={{ fontSize: '13px', fontWeight: 600, marginBottom: '2px' }}>
+                  <p style={{ fontSize: '13px', fontWeight: 700, marginBottom: '2px', color: 'var(--text-primary)' }}>
                     {r.roundName}
                   </p>
                   {r.venue && (
                     <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-                      📍 {r.venue}
+                      📍 Venue: {r.venue}
                     </p>
                   )}
                   {r.date && (
                     <p style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-                      📅 {new Date(r.date).toLocaleDateString()}
+                      📅 Date: {new Date(r.date).toLocaleDateString()}
                     </p>
                   )}
                   {r.description && (
                     <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '4px' }}>
                       {r.description}
-                    </p>
-                  )}
-                  {r.eligibleList?.uploadedAt && (
-                    <p style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '4px' }}>
-                      Eligible list uploaded: {new Date(r.eligibleList.uploadedAt).toLocaleString()}
                     </p>
                   )}
                 </div>
@@ -413,8 +587,8 @@ function DriveDetail({ drive }) {
 function FeedbackForm({ drive, onSuccess }) {
   const [form, setForm] = useState({
     role: '',
-    outcome: '',
-    rounds: [{ roundName: '', description: '', challenges: '' }],
+    outcome: 'selected',
+    rounds: [{ roundName: 'Round 1: Technical / Online Test', description: '', challenges: '' }],
   });
 
   const [loading, setLoading] = useState(false);
@@ -422,7 +596,7 @@ function FeedbackForm({ drive, onSuccess }) {
   const addRound = () =>
     setForm(f => ({
       ...f,
-      rounds: [...f.rounds, { roundName: '', description: '', challenges: '' }],
+      rounds: [...f.rounds, { roundName: `Round ${f.rounds.length + 1}: `, description: '', challenges: '' }],
     }));
 
   const removeRound = (i) =>
@@ -454,7 +628,7 @@ function FeedbackForm({ drive, onSuccess }) {
 
       onSuccess();
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to submit');
+      toast.error(err.response?.data?.message || 'Failed to submit feedback');
     } finally {
       setLoading(false);
     }
@@ -468,29 +642,30 @@ function FeedbackForm({ drive, onSuccess }) {
     color: 'var(--text-primary)',
     padding: '9px 12px',
     fontSize: '13px',
+    outline: 'none',
   };
 
   return (
     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
       <Alert type="info">
-        Your feedback is completely anonymous — your identity is never stored.
+        🔒 Your feedback is completely anonymous — your identity is never stored in reviews.
       </Alert>
 
       <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
         <div style={{ flex: 1, minWidth: '220px' }}>
-          <label style={{ display: 'block', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
+          <label style={{ display: 'block', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px', fontWeight: 600 }}>
             Role Applied For
           </label>
           <input
             style={inputStyle}
             value={form.role}
             onChange={e => setForm({ ...form, role: e.target.value })}
-            placeholder="e.g. Systems Engineer"
+            placeholder="e.g. Systems Engineer, SDE"
           />
         </div>
 
         <div style={{ flex: 1, minWidth: '220px' }}>
-          <label style={{ display: 'block', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
+          <label style={{ display: 'block', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px', fontWeight: 600 }}>
             Outcome
           </label>
           <select
@@ -498,9 +673,9 @@ function FeedbackForm({ drive, onSuccess }) {
             value={form.outcome}
             onChange={e => setForm({ ...form, outcome: e.target.value })}
           >
-            <option value="">Select</option>
-            <option value="selected">Selected</option>
-            <option value="rejected">Rejected</option>
+            <option value="selected">🏆 Selected</option>
+            <option value="rejected">❌ Rejected / Not Shortlisted</option>
+            <option value="in_progress">⚡ In Progress</option>
           </select>
         </div>
       </div>
@@ -516,7 +691,7 @@ function FeedbackForm({ drive, onSuccess }) {
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-            <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--accent-primary)' }}>
+            <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--accent-primary)' }}>
               Round {i + 1}
             </span>
 
@@ -540,21 +715,21 @@ function FeedbackForm({ drive, onSuccess }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <input
               style={inputStyle}
-              placeholder="Round Name"
+              placeholder="Round Name (e.g. Technical Interview)"
               value={round.roundName}
               onChange={e => updateRound(i, 'roundName', e.target.value)}
             />
 
             <textarea
-              style={{ ...inputStyle, minHeight: '70px', resize: 'vertical' }}
-              placeholder="What happened in this round?"
+              style={{ ...inputStyle, minHeight: '65px', resize: 'vertical' }}
+              placeholder="What questions or topics were asked in this round?"
               value={round.description}
               onChange={e => updateRound(i, 'description', e.target.value)}
             />
 
-            <textarea
-              style={{ ...inputStyle, minHeight: '60px', resize: 'vertical' }}
-              placeholder="Challenges faced?"
+            <input
+              style={inputStyle}
+              placeholder="Challenges faced or tips for future candidates (optional)"
               value={round.challenges}
               onChange={e => updateRound(i, 'challenges', e.target.value)}
             />
@@ -573,9 +748,10 @@ function FeedbackForm({ drive, onSuccess }) {
           color: 'var(--text-secondary)',
           cursor: 'pointer',
           fontSize: '13px',
+          fontWeight: 600,
         }}
       >
-        + Add Round
+        + Add Another Round
       </button>
 
       <button
@@ -592,7 +768,7 @@ function FeedbackForm({ drive, onSuccess }) {
           fontSize: '14px',
         }}
       >
-        {loading ? 'Submitting...' : 'Submit Anonymous Feedback'}
+        {loading ? 'Submitting...' : '🚀 Submit Anonymous Experience'}
       </button>
     </form>
   );

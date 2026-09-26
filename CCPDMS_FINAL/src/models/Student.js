@@ -80,5 +80,4 @@ const studentSchema = new mongoose.Schema(
 );
 studentSchema.index({ passedOutYear: 1, branch: 1 });
 studentSchema.index({ cgpa: 1 });
-studentSchema.index({ rollNumber: 1 });
 module.exports = mongoose.model('Student', studentSchema);

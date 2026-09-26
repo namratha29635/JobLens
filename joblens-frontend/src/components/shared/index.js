@@ -170,25 +170,25 @@ const STUDENT_NAV = [
   {
     section: "Overview",
     items: [
-      { path: "/student", label: "Dashboard", icon: "grid" },
+      { path: "/student/dashboard", label: "Dashboard", icon: "grid" },
       { path: "/student/profile", label: "My Profile", icon: "user" },
     ],
   },
   {
-    section: "Drives",
+    section: "Placements",
     items: [
-      { path: "/student/oncampus", label: "On-Campus", icon: "building" },
-      { path: "/student/offcampus", label: "Off-Campus", icon: "globe" },
-      { path: "/student/status", label: "Application Status", icon: "pin" },
+      { path: "/student/drives", label: "On-Campus Drives", icon: "building" },
+      { path: "/student/offcampus", label: "Off-Campus Jobs", icon: "globe" },
     ],
   },
   {
-    section: "AI Tools",
+    section: "AI Placement Suite",
     items: [
-      { path: "/student/resume-match", label: "Resume Match AI", icon: "bot" },
-      { path: "/student/job-links", label: "Job Link Generator", icon: "link" },
+      { path: "/student/ai?tab=chatbot", label: "Placement Chatbot", icon: "bot" },
+      { path: "/student/ai?tab=resume", label: "Resume Match AI", icon: "folder" },
+      { path: "/student/ai?tab=joblinks", label: "Job Search Links", icon: "link" },
       {
-        path: "/student/fake-detect",
+        path: "/student/ai?tab=jobverifier",
         label: "Fake Job Detector",
         icon: "shield",
       },
@@ -197,7 +197,7 @@ const STUDENT_NAV = [
   {
     section: "Community",
     items: [
-      { path: "/student/feedback", label: "Company Feedback", icon: "chat" },
+      { path: "/student/feedback", label: "Interview Feedback", icon: "chat" },
     ],
   },
 ];
@@ -207,7 +207,12 @@ export const Sidebar = ({ role = "student" }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const isActive = (path) => location.pathname === path;
+  const isActive = (path) => {
+    if (path.includes('?')) {
+      return (location.pathname + location.search) === path;
+    }
+    return location.pathname === path;
+  };
   return (
     <aside className="sidebar">
       <div className="sidebar-logo">

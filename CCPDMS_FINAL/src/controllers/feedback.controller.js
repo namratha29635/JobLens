@@ -4,49 +4,58 @@ const Student = require('../models/Student');
 const { ApiResponse, ApiError } = require('../utils/ApiResponse');
 const asyncHandler = require('../utils/asyncHandler');
 // POST /api/feedback  — Student submits anonymous feedback
-//  • Only after terminal status (selected / rejected / not_shortlisted)
-//  • One feedback per student per drive
 //  • Student identity NEVER stored in a way that is returned via API
 exports.submitFeedback = asyncHandler(async (req, res, next) => {
   const student = await Student.findOne({ user: req.user._id }).select('_id passedOutYear');
   if (!student) return next(new ApiError(404, 'Student profile not found'));
-  const { driveId, driveType, companyName, role, rounds, outcome } = req.body;
-  if (!driveId || !driveType || !companyName)
-    return next(new ApiError(400, 'driveId, driveType, and companyName are required'));
-  if (!['on-campus', 'off-campus'].includes(driveType))
-    return next(new ApiError(400, 'driveType must be "on-campus" or "off-campus"'));
-  // For on-campus drives: verify terminal status
-  if (driveType === 'on-campus') {
-    const app = await Application.findOne({ student: student._id, drive: driveId });
-    if (!app)
-      return next(new ApiError(404, 'No application found for this drive'));
-    const TERMINAL = ['selected', 'rejected', 'not_shortlisted'];
-    if (!TERMINAL.includes(app.overallStatus))
-      return next(new ApiError(400, 'You can only submit feedback after your participation in the drive has ended (selected or eliminated)'));
-    if (app.feedbackSubmitted)
-      return next(new ApiError(409, 'You have already submitted feedback for this drive'));
+
+  const { driveId, driveType = 'on-campus', companyName, role, rounds, outcome } = req.body;
+  if (!companyName || !companyName.trim()) {
+    return next(new ApiError(400, 'Company name is required'));
   }
-  // Duplicate guard (enforced by DB unique index too)
-  const exists = await Feedback.findOne({ student: student._id, 'driveRef.driveId': driveId });
-  if (exists) return next(new ApiError(409, 'Feedback already submitted for this drive'));
-  await Feedback.create({
-    driveRef: { driveId, driveType },
-    student: student._id,          // select:false — never returned in GET
-    companyName: companyName.trim(),
-    role: role || '',
-    passedOutYear: student.passedOutYear,
-    rounds: Array.isArray(rounds) ? rounds : [],
-    outcome: outcome || undefined,
-  });
-  // Mark feedback submitted on application (on-campus only)
-  if (driveType === 'on-campus') {
+
+  const mongoose = require('mongoose');
+  const validDriveId = (driveId && mongoose.Types.ObjectId.isValid(driveId))
+    ? driveId
+    : new mongoose.Types.ObjectId();
+
+  const validDriveType = ['on-campus', 'off-campus', 'general', 'internship', 'referral'].includes(driveType)
+    ? driveType
+    : 'on-campus';
+
+  // If application exists for this on-campus drive, mark feedback submitted
+  if (driveId && mongoose.Types.ObjectId.isValid(driveId)) {
     await Application.updateOne(
       { student: student._id, drive: driveId },
       { $set: { feedbackSubmitted: true } }
-    );
+    ).catch(() => {});
   }
+
+  const sanitizedRounds = Array.isArray(rounds)
+    ? rounds
+        .map(r => ({
+          roundName: (r.roundName || '').trim(),
+          description: (r.description || '').trim(),
+          challenges: (r.challenges || '').trim(),
+        }))
+        .filter(r => r.roundName || r.description || r.challenges)
+    : [];
+
+  const createdFeedback = await Feedback.create({
+    driveRef: {
+      driveId: validDriveId,
+      driveType: validDriveType,
+    },
+    student: student._id,          // select:false — never returned in GET
+    companyName: companyName.trim(),
+    role: (role || '').trim(),
+    passedOutYear: student.passedOutYear || new Date().getFullYear(),
+    rounds: sanitizedRounds,
+    outcome: ['selected', 'rejected', 'in_progress'].includes(outcome) ? outcome : 'selected',
+  });
+
   res.status(201).json(
-    new ApiResponse(201, null, 'Thank you! Your feedback has been submitted anonymously.')
+    new ApiResponse(201, createdFeedback, 'Thank you! Your interview experience has been shared anonymously.')
   );
 });
 // GET /api/feedback/companies  — All company names that have at least 1 feedback

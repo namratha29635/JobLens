@@ -22,4 +22,10 @@ router.get('/drives/offcampus',                     authorize('student'), studen
 // ── AI Features ─────────────────────────────────────────────────────────────
 router.post('/job-links',    authorize('student'), studentCtrl.generateJobLinks);
 router.post('/resume-match', authorize('student'), studentCtrl.resumeMatch);
+// ── Notifications ───────────────────────────────────────────────────────────
+router.get('/notifications',             authorize('student'), studentCtrl.getNotifications);
+router.patch('/notifications/read-all',  authorize('student'), studentCtrl.markAllNotificationsRead);
+router.patch('/notifications/:id/read',  authorize('student'), studentCtrl.markNotificationRead);
+router.delete('/notifications/:id',      authorize('student'), studentCtrl.deleteNotification);
+
 module.exports = router;

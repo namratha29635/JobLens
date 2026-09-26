@@ -1,34 +1,43 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap');
 
 :root {
-  --bg-primary: #0a0f1e;
-  --bg-secondary: #0f172a;
-  --bg-card: #141c2e;
-  --bg-elevated: #1a2540;
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --bg-elevated: #f1f5f9;
+  --bg-hover: #e2e8f0;
 
-  --accent-primary: #00d4ff;
-  --accent-secondary: #7c3aed;
-  --accent-green: #00e676;
-  --accent-orange: #ff9f43;
-  --accent-red: #ff4757;
+  --brand: #2563eb;
+  --brand-dark: #1d4ed8;
+  --brand-light: #3b82f6;
+  --brand-bg: rgba(37, 99, 235, 0.08);
 
-  --text-primary: #f5f7ff;
-  --text-secondary: #9aa6bd;
-  --text-muted: #62708a;
+  --accent-primary: #0284c7;
+  --accent-secondary: #6366f1;
+  --accent-green: #16a34a;
+  --accent-orange: #ea580c;
+  --accent-red: #dc2626;
 
-  --border: #1e2d45;
-  --border-light: #253553;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
 
-  --shadow-glow: 0 0 40px rgba(0, 212, 255, 0.08);
-  --shadow-card: 0 8px 30px rgba(0, 0, 0, 0.35);
+  --border: #e2e8f0;
+  --border-light: #cbd5e1;
+  --border-accent: rgba(2, 132, 199, 0.35);
 
-  --font-display: 'Space Grotesk', sans-serif;
-  --font-body: 'Inter', sans-serif;
+  --shadow-glow: 0 4px 20px -2px rgba(2, 132, 199, 0.12);
+  --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.07), 0 1px 2px -1px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.04);
 
-  --radius: 14px;
-  --radius-lg: 24px;
+  --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
-  --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+
+  --transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 * {
@@ -39,27 +48,20 @@
 
 html {
   scroll-behavior: smooth;
+  color-scheme: light;
 }
 
 body {
-  background: linear-gradient(
-    180deg,
-    #0a0f1e 0%,
-    #0d1326 100%
-  );
-
+  background: #f8fafc;
+  background-image: radial-gradient(at 15% 15%, rgba(37, 99, 235, 0.04) 0px, transparent 55%), radial-gradient(at 85% 85%, rgba(2, 132, 199, 0.04) 0px, transparent 55%);
+  background-attachment: fixed;
   color: var(--text-primary);
-
   font-family: var(--font-body);
-
   font-size: 14px;
-
-  line-height: 1.65;
-
+  line-height: 1.6;
   min-height: 100vh;
-
   -webkit-font-smoothing: antialiased;
-
+  -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
 }
 
@@ -263,22 +265,14 @@ select:focus {
 
 .sidebar {
   width: 250px;
-
   min-height: 100vh;
-
   position: sticky;
-
   top: 0;
-
   overflow: hidden;
-
   flex-shrink: 0;
-
-  background: rgba(20, 28, 46, 0.92);
-
-  backdrop-filter: blur(16px);
-
-  border-right: 1px solid rgba(255,255,255,0.04);
+  background: #ffffff;
+  border-right: 1px solid var(--border);
+  box-shadow: 1px 0 3px 0 rgba(0, 0, 0, 0.03);
 }
 
 .sidebar.collapsed {
@@ -291,95 +285,65 @@ select:focus {
 .drive-card,
 .dashboard-status-card,
 .dashboard-graph-box {
-  background: rgba(20, 28, 46, 0.82);
-
-  backdrop-filter: blur(14px);
-
-  border: 1px solid rgba(255,255,255,0.05);
-
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
-
   transition: var(--transition);
 }
 
 .card:hover,
 .drive-card:hover,
 .dashboard-status-card:hover {
-  transform: translateY(-3px);
-
-  border-color: rgba(0,212,255,0.18);
+  transform: translateY(-2px);
+  border-color: var(--border-light);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.07), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
 }
 
 /* DASHBOARD */
 
 .dashboard-status-row {
   display: flex;
-
   gap: 18px;
-
   flex-wrap: wrap;
-
   justify-content: space-between;
-
   margin-bottom: 32px;
 }
 
 .dashboard-status-card {
   flex: 1;
-
   min-width: 170px;
-
-  border-radius: 24px;
-
+  border-radius: 20px;
   padding: 24px 18px;
-
   text-align: center;
 }
 
 .dashboard-status-circle {
-  width: 100px;
-
-  height: 100px;
-
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
-
-  border: 5px solid;
-
+  border: 4px solid;
   margin: 0 auto 14px auto;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
-  font-size: 30px;
-
+  font-size: 26px;
   font-weight: 800;
-
   font-family: var(--font-display);
-
-  background: rgba(255,255,255,0.03);
-
-  box-shadow: 0 0 30px rgba(0,212,255,0.08);
+  background: var(--bg-elevated);
 }
 
 .dashboard-status-card p {
   margin: 0;
-
   font-size: 14px;
-
   color: var(--text-secondary);
-
   font-weight: 600;
 }
 
 .dashboard-graph-box {
   margin-top: 12px;
-
   padding: 22px;
-
-  border-radius: 24px;
+  border-radius: 20px;
 }
 
 /* MOBILE */

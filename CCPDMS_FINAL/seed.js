@@ -30,23 +30,17 @@ const CONFIG = {
     process.env.MONGO_URI ||
     "mongodb+srv://<user>:<pass>@cluster.mongodb.net/ccpdms?retryWrites=true&w=majority",
   coordinator: {
-    email: "coordinator@college.edu", // ← CHANGE THIS
-    password: "Coord@1234", // ← CHANGE THIS  (min 8 chars)
+    email: "coordinator@college.edu",
+    password: "Test@123",
     name: "Dr. Placement Coordinator",
   },
-  // One student email per batch-branch slot.
-  // Format: studentEmails[batch][branch] = 'email'
-  // Batches: 2026, 2027, 2028, 2029
-  // Branches: CSE, ECE, EEE, MECH, CIVIL, IT, AIDS, AIML, DS
-  // You can change any of these emails — all others stay as generated defaults.
   customStudentEmails: {
-    // Example overrides — edit freely:
-    "22CS001": "23MH1A05L3@acoe.edu.in", // ← CHANGE (CSE 2026)
-    "22IT001": "23MH1A05M1@acoe.edu.in", // ← CHANGE (IT  2026)
-    "23CS001": "23MH1A05M8@acoe.edu.in", // ← CHANGE (CSE 2027)
+    "22CS001": "student@college.edu",
+    "22IT001": "23MH1A05M1@acoe.edu.in",
+    "23CS001": "23MH1A05M8@acoe.edu.in",
   },
 
-  defaultPassword: "Student@123", // ← same password for ALL students initially
+  defaultPassword: "Test@123",
 };
 const BRANCHES = [
   "CSE",
@@ -277,20 +271,14 @@ function buildStudentRows() {
 // MAIN SEED
 async function seed() {
   console.log("\n🔌 Connecting to MongoDB...");
-  await mongoose.connect(CONFIG.MONGO_URI);
+  const connectDB = require('./src/config/db');
+  await connectDB();
   console.log("✅ Connected\n");
   // ── Drop existing data
   console.log("🗑️  Clearing existing collections...");
-  await Promise.all([
-    User.deleteMany({}),
-    Student.deleteMany({}),
-    OnCampusDrive.deleteMany({}),
-    OffCampusDrive.deleteMany({}),
-    Round.deleteMany({}),
-    Application.deleteMany({}),
-    Feedback.deleteMany({}),
-    AuditLog.deleteMany({}),
-  ]);
+  for (const m of [User, Student, OnCampusDrive, OffCampusDrive, Round, Application, Feedback, AuditLog]) {
+    await m.deleteMany({});
+  }
   console.log("✅ Cleared\n");
   // 1. COORDINATOR
   console.log("👤 Creating coordinator...");
@@ -314,7 +302,7 @@ async function seed() {
       email: s.email,
       password: CONFIG.defaultPassword,
       role: "student",
-      isFirstLogin: true,
+      isFirstLogin: false,
       isActive: true,
     });
     const stuDoc = await Student.create({

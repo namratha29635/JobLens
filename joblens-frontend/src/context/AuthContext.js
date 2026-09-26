@@ -39,6 +39,14 @@ export const AuthProvider = ({ children }) => {
     setProfile(p);
     return { user: u, profile: p };
   };
+  const register = async (userData) => {
+    const res = await authAPI.register(userData);
+    const { token, user: u, profile: p } = res.data.data;
+    localStorage.setItem("joblens_token", token);
+    setUser(u);
+    setProfile(p);
+    return { user: u, profile: p };
+  };
   const logout = () => {
     localStorage.removeItem("joblens_token");
     localStorage.removeItem("joblens_user");
@@ -58,6 +66,7 @@ export const AuthProvider = ({ children }) => {
         profile,
         loading,
         login,
+        register,
         logout,
         refreshProfile,
         setProfile,

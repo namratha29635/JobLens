@@ -15,10 +15,16 @@ exports.login = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password)
     return next(new ApiError(400, 'Email and password are required'));
+  
+  const normalizedEmail = email.toLowerCase().trim();
   // password field is select:false
-  const user = await User.findOne({ email: email.toLowerCase().trim() }).select('+password');
-  if (!user || !(await user.comparePassword(password)))
-    return next(new ApiError(401, 'Invalid email or password'));
+  const user = await User.findOne({ email: normalizedEmail }).select('+password');
+  if (!user) {
+    return next(new ApiError(404, 'Account does not exist. Please create an account first.'));
+  }
+  if (!(await user.comparePassword(password))) {
+    return next(new ApiError(401, 'Incorrect password. Please try again.'));
+  }
   if (!user.isActive)
     return next(new ApiError(403, 'Account is deactivated. Contact the placement coordinator.'));
   // Update last login timestamp
@@ -128,3 +134,153 @@ exports.getMe = asyncHandler(async (req, res) => {
     })
   );
 });
+
+// POST /api/auth/register
+exports.register = asyncHandler(async (req, res, next) => {
+  const {
+    name,
+    email,
+    password,
+    role = 'student',
+    rollNumber,
+    branch = 'CSE',
+    passedOutYear = 2026,
+    cgpa = 8.0,
+    contact = '',
+  } = req.body;
+
+  if (!email || !password)
+    return next(new ApiError(400, 'Email and password are required'));
+
+  if (password.length < 6)
+    return next(new ApiError(400, 'Password must be at least 6 characters'));
+
+  const normalizedEmail = email.toLowerCase().trim();
+  const existingUser = await User.findOne({ email: normalizedEmail });
+  if (existingUser)
+    return next(new ApiError(400, 'An account with this email already exists'));
+
+  const validRoles = ['student', 'coordinator'];
+  const userRole = validRoles.includes(role) ? role : 'student';
+
+  if (userRole === 'student') {
+    const studentName = (name && name.trim()) ? name.trim() : normalizedEmail.split('@')[0];
+    const roll = (rollNumber && rollNumber.trim() ? rollNumber.trim() : `JL${Date.now().toString().slice(-6)}`).toUpperCase();
+
+    const existingStudent = await Student.findOne({ rollNumber: roll });
+    if (existingStudent)
+      return next(new ApiError(400, 'A student with this roll number already exists'));
+
+    const user = await User.create({
+      email: normalizedEmail,
+      password,
+      role: 'student',
+      isFirstLogin: false,
+      isActive: true,
+      lastLogin: new Date(),
+    });
+
+    const validBranches = ['CSE', 'ECE', 'EEE', 'MECH', 'CIVIL', 'IT', 'AIDS', 'AIML', 'DS'];
+    const chosenBranch = validBranches.includes(branch) ? branch : 'CSE';
+
+    const profile = await Student.create({
+      user: user._id,
+      rollNumber: roll,
+      name: studentName,
+      passedOutYear: Number(passedOutYear) || 2026,
+      branch: chosenBranch,
+      collegeEmail: normalizedEmail,
+      cgpa: Number(cgpa) ? Math.min(10, Math.max(0, Number(cgpa))) : 8.0,
+      contact: contact || '',
+      activeBacklogs: 0,
+      totalBacklogs: 0,
+    });
+
+    const token = signToken(user._id);
+
+    return res.status(201).json(
+      new ApiResponse(201, {
+        token,
+        user: {
+          id: user._id,
+          email: user.email,
+          role: user.role,
+          isFirstLogin: user.isFirstLogin,
+        },
+        profile,
+      }, 'Account registered successfully')
+    );
+  } else {
+    // Coordinator
+    const user = await User.create({
+      email: normalizedEmail,
+      password,
+      role: 'coordinator',
+      isFirstLogin: false,
+      isActive: true,
+      lastLogin: new Date(),
+    });
+
+    const token = signToken(user._id);
+
+    return res.status(201).json(
+      new ApiResponse(201, {
+        token,
+        user: {
+          id: user._id,
+          email: user.email,
+          role: user.role,
+          isFirstLogin: user.isFirstLogin,
+        },
+        profile: null,
+      }, 'Coordinator account registered successfully')
+    );
+  }
+});
+
+// POST /api/auth/seed-demo
+exports.seedDemoUsers = asyncHandler(async (req, res) => {
+  const created = [];
+  let coord = await User.findOne({ email: 'coordinator@college.edu' });
+  if (!coord) {
+    coord = await User.create({
+      email: 'coordinator@college.edu',
+      password: 'Test@123',
+      role: 'coordinator',
+      isFirstLogin: false,
+      isActive: true,
+    });
+    created.push('coordinator@college.edu');
+  }
+
+  let stuUser = await User.findOne({ email: 'student@college.edu' });
+  if (!stuUser) {
+    stuUser = await User.create({
+      email: 'student@college.edu',
+      password: 'Test@123',
+      role: 'student',
+      isFirstLogin: false,
+      isActive: true,
+    });
+    created.push('student@college.edu');
+  }
+
+  let stuProfile = await Student.findOne({ collegeEmail: 'student@college.edu' });
+  if (!stuProfile && stuUser) {
+    stuProfile = await Student.create({
+      user: stuUser._id,
+      rollNumber: '22CS001',
+      name: 'Demo Student',
+      passedOutYear: 2026,
+      branch: 'CSE',
+      collegeEmail: 'student@college.edu',
+      cgpa: 8.5,
+      activeBacklogs: 0,
+      totalBacklogs: 0,
+    });
+    created.push('Student Profile (22CS001)');
+  }
+
+  res.status(200).json(new ApiResponse(200, { created }, 'Demo users verified/seeded'));
+});
+

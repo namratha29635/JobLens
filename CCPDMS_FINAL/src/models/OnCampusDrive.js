@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const onCampusDriveSchema = new mongoose.Schema(
   {
     companyName: { type: String, required: true, trim: true },
+    collegeName: { type: String, trim: true, default: 'All Colleges' },
     eligibleBatches:  { type: [Number], required: true },
     eligibleBranches: { type: [String], required: true },
     cgpaCutOff:       { type: Number, required: true, min: 0, max: 10 },

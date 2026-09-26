@@ -8,38 +8,38 @@
   --college-accent: #fbbf24;     /* gold */
   --college-light: #fff7ed;
 
-  /* Semantic tokens – DARK (default) */
-  --bg-base:       #0a0e1a;
-  --bg-surface:    #111827;
-  --bg-elevated:   #1a2235;
-  --bg-card:       #1e2d3d;
-  --bg-hover:      #243347;
-  --border:        rgba(255,255,255,0.08);
-  --border-accent: rgba(249,115,22,0.4);
+  /* Semantic tokens – LIGHT (default) */
+  --bg-base:       #f8fafc;
+  --bg-surface:    #ffffff;
+  --bg-elevated:   #f1f5f9;
+  --bg-card:       #ffffff;
+  --bg-hover:      #e2e8f0;
+  --border:        #e2e8f0;
+  --border-accent: rgba(37,99,235,0.4);
 
-  --text-primary:  #f1f5f9;
-  --text-secondary:#94a3b8;
-  --text-muted:    #64748b;
+  --text-primary:  #0f172a;
+  --text-secondary:#475569;
+  --text-muted:    #94a3b8;
 
-  --brand:         #f97316;
-  --brand-light:   #fdba74;
-  --brand-dark:    #c2410c;
-  --brand-bg:      rgba(249,115,22,0.12);
-  --brand-bg-hover:rgba(249,115,22,0.2);
+  --brand:         #2563eb;
+  --brand-light:   #3b82f6;
+  --brand-dark:    #1d4ed8;
+  --brand-bg:      rgba(37,99,235,0.08);
+  --brand-bg-hover:rgba(37,99,235,0.15);
 
-  --success:       #22c55e;
-  --success-bg:    rgba(34,197,94,0.12);
-  --warning:       #f59e0b;
-  --warning-bg:    rgba(245,158,11,0.12);
-  --danger:        #ef4444;
-  --danger-bg:     rgba(239,68,68,0.12);
-  --info:          #3b82f6;
-  --info-bg:       rgba(59,130,246,0.12);
+  --success:       #16a34a;
+  --success-bg:    rgba(22,163,74,0.1);
+  --warning:       #ea580c;
+  --warning-bg:    rgba(234,88,12,0.1);
+  --danger:        #dc2626;
+  --danger-bg:     rgba(220,38,38,0.1);
+  --info:          #0284c7;
+  --info-bg:       rgba(2,132,199,0.1);
 
-  --shadow-sm:   0 1px 3px rgba(0,0,0,0.4);
-  --shadow-md:   0 4px 16px rgba(0,0,0,0.5);
-  --shadow-lg:   0 8px 32px rgba(0,0,0,0.6);
-  --shadow-brand: 0 4px 20px rgba(249,115,22,0.3);
+  --shadow-sm:   0 1px 3px rgba(0,0,0,0.05);
+  --shadow-md:   0 4px 16px rgba(0,0,0,0.08);
+  --shadow-lg:   0 8px 32px rgba(0,0,0,0.1);
+  --shadow-brand: 0 4px 20px rgba(37,99,235,0.2);
 
   --radius-sm: 6px;
   --radius:    10px;

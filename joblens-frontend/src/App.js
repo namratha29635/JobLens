@@ -3,8 +3,10 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 
-// Auth Pages
+// Auth & Landing Pages
+import Landing from "./pages/Landing";
 import Login from "./pages/auth/Login";
+import Signup from "./pages/auth/Signup";
 import { ChangePassword, ForgotPassword } from "./pages/auth/ChangePassword";
 
 // Layout
@@ -13,18 +15,29 @@ import { LoadingPage } from "./components/ui";
 
 // Coordinator Pages
 import CoordinatorDashboard from "./pages/coordinator/Dashboard";
+import CoordinatorJobPostings from "./pages/coordinator/JobPostings";
+import CoordinatorVerifyJobs from "./pages/coordinator/VerifyJobs";
+import CoordinatorApplications from "./pages/coordinator/Applications";
 import CoordinatorDrives from "./pages/coordinator/Drives";
 import CoordinatorStudents from "./pages/coordinator/Students";
+import CoordinatorCompanies from "./pages/coordinator/Companies";
+import CoordinatorReports from "./pages/coordinator/Reports";
+import CoordinatorSettings from "./pages/coordinator/Settings";
 import RoundsPage from "./pages/coordinator/Rounds";
 import { NotifyPage, AuditLogsPage } from "./pages/coordinator/Notify";
 
 // Student Pages
 import StudentDashboard from "./pages/student/Dashboard";
-import StudentDrives from "./pages/student/Drives";
+import StudentBrowseJobs from "./pages/student/BrowseJobs";
+import StudentApplications from "./pages/student/Applications";
+import StudentSavedJobs from "./pages/student/SavedJobs";
 import StudentProfile from "./pages/student/Profile";
+import StudentNotifications from "./pages/student/Notifications";
+import StudentSettings from "./pages/student/Settings";
 import OffCampusDrives from "./pages/student/OffCampus";
 import FeedbackPage from "./pages/student/Feedback";
 import AITools from "./pages/student/AITools";
+import JobVerifier from "./pages/student/JobVerifier";
 
 import "./index.css";
 
@@ -57,41 +70,59 @@ function WithLayout({ children }) {
 function AppRoutes() {
   const { user, loading } = useAuth();
 
-  if (loading) return <LoadingPage text="Loading JobLens..." />;
+  if (loading) return <LoadingPage text="Loading JobPortal & JobVerifier..." />;
 
   return (
     <Routes>
-      {/* Public */}
+      {/* Public Landing & Auth */}
+      <Route path="/" element={<Landing />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
+      <Route path="/register" element={<Signup />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/change-password" element={<ChangePassword />} />
 
-      {/* Root redirect */}
-      <Route
-        path="/"
-        element={
-          user ? (
-            <Navigate
-              to={
-                user.role === "coordinator"
-                  ? "/coordinator/dashboard"
-                  : "/student/dashboard"
-              }
-              replace
-            />
-          ) : (
-            <Navigate to="/login" replace />
-          )
-        }
-      />
-
       {/* COORDINATOR ROUTES */}
+      <Route
+        path="/coordinator"
+        element={<Navigate to="/coordinator/dashboard" replace />}
+      />
       <Route
         path="/coordinator/dashboard"
         element={
           <ProtectedRoute role="coordinator">
             <WithLayout>
               <CoordinatorDashboard />
+            </WithLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/coordinator/postings"
+        element={
+          <ProtectedRoute role="coordinator">
+            <WithLayout>
+              <CoordinatorJobPostings />
+            </WithLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/coordinator/verify"
+        element={
+          <ProtectedRoute role="coordinator">
+            <WithLayout>
+              <CoordinatorVerifyJobs />
+            </WithLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/coordinator/applications"
+        element={
+          <ProtectedRoute role="coordinator">
+            <WithLayout>
+              <CoordinatorApplications />
             </WithLayout>
           </ProtectedRoute>
         }
@@ -111,10 +142,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute role="coordinator">
             <WithLayout>
-              <CoordinatorDrives />
+              <CoordinatorJobPostings />
             </WithLayout>
           </ProtectedRoute>
         }
+      />
+      <Route
+        path="/coordinator/new-drive"
+        element={<Navigate to="/coordinator/postings" replace />}
       />
       <Route
         path="/coordinator/students"
@@ -122,6 +157,26 @@ function AppRoutes() {
           <ProtectedRoute role="coordinator">
             <WithLayout>
               <CoordinatorStudents />
+            </WithLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/coordinator/companies"
+        element={
+          <ProtectedRoute role="coordinator">
+            <WithLayout>
+              <CoordinatorCompanies />
+            </WithLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/coordinator/reports"
+        element={
+          <ProtectedRoute role="coordinator">
+            <WithLayout>
+              <CoordinatorReports />
             </WithLayout>
           </ProtectedRoute>
         }
@@ -137,21 +192,25 @@ function AppRoutes() {
         }
       />
       <Route
-        path="/coordinator/offcampus"
-        element={
-          <ProtectedRoute role="coordinator">
-            <WithLayout>
-              <CoordinatorDrives />
-            </WithLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
         path="/coordinator/notify"
         element={
           <ProtectedRoute role="coordinator">
             <WithLayout>
               <NotifyPage />
+            </WithLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/coordinator/notifications"
+        element={<Navigate to="/coordinator/notify" replace />}
+      />
+      <Route
+        path="/coordinator/settings"
+        element={
+          <ProtectedRoute role="coordinator">
+            <WithLayout>
+              <CoordinatorSettings />
             </WithLayout>
           </ProtectedRoute>
         }
@@ -169,6 +228,10 @@ function AppRoutes() {
 
       {/* STUDENT ROUTES */}
       <Route
+        path="/student"
+        element={<Navigate to="/student/dashboard" replace />}
+      />
+      <Route
         path="/student/dashboard"
         element={
           <ProtectedRoute role="student">
@@ -179,24 +242,52 @@ function AppRoutes() {
         }
       />
       <Route
-        path="/student/drives"
+        path="/student/browse"
         element={
           <ProtectedRoute role="student">
             <WithLayout>
-              <StudentDrives />
+              <StudentBrowseJobs />
             </WithLayout>
           </ProtectedRoute>
         }
       />
       <Route
-        path="/student/offcampus"
+        path="/student/applications"
         element={
           <ProtectedRoute role="student">
             <WithLayout>
-              <OffCampusDrives />
+              <StudentApplications />
             </WithLayout>
           </ProtectedRoute>
         }
+      />
+      <Route
+        path="/student/saved"
+        element={
+          <ProtectedRoute role="student">
+            <WithLayout>
+              <StudentSavedJobs />
+            </WithLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/student/verifier"
+        element={
+          <ProtectedRoute role="student">
+            <WithLayout>
+              <JobVerifier />
+            </WithLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/student/job-verifier"
+        element={<Navigate to="/student/verifier" replace />}
+      />
+      <Route
+        path="/student/fake-detect"
+        element={<Navigate to="/student/verifier" replace />}
       />
       <Route
         path="/student/profile"
@@ -204,6 +295,40 @@ function AppRoutes() {
           <ProtectedRoute role="student">
             <WithLayout>
               <StudentProfile />
+            </WithLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/student/notifications"
+        element={
+          <ProtectedRoute role="student">
+            <WithLayout>
+              <StudentNotifications />
+            </WithLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/student/settings"
+        element={
+          <ProtectedRoute role="student">
+            <WithLayout>
+              <StudentSettings />
+            </WithLayout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/student/drives"
+        element={<Navigate to="/student/browse" replace />}
+      />
+      <Route
+        path="/student/offcampus"
+        element={
+          <ProtectedRoute role="student">
+            <WithLayout>
+              <OffCampusDrives />
             </WithLayout>
           </ProtectedRoute>
         }
@@ -228,6 +353,18 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/student/resume-match"
+        element={<Navigate to="/student/ai?tab=resume" replace />}
+      />
+      <Route
+        path="/student/job-links"
+        element={<Navigate to="/student/ai?tab=joblinks" replace />}
+      />
+      <Route
+        path="/student/chatbot"
+        element={<Navigate to="/student/ai?tab=chatbot" replace />}
+      />
 
       {/* 404 */}
       <Route path="*" element={<Navigate to="/" replace />} />
@@ -245,23 +382,25 @@ export default function App() {
           toastOptions={{
             duration: 3500,
             style: {
-              background: "var(--bg-elevated)",
-              color: "var(--text-primary)",
-              border: "1px solid var(--border)",
+              background: "#ffffff",
+              color: "#0f172a",
+              border: "1px solid #e2e8f0",
+              boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04)",
               borderRadius: "10px",
               fontSize: "13px",
               fontFamily: "var(--font-body)",
+              fontWeight: 500,
             },
             success: {
               iconTheme: {
-                primary: "var(--accent-green)",
-                secondary: "var(--bg-primary)",
+                primary: "#10b981",
+                secondary: "#ffffff",
               },
             },
             error: {
               iconTheme: {
-                primary: "var(--accent-red)",
-                secondary: "var(--bg-primary)",
+                primary: "#ef4444",
+                secondary: "#ffffff",
               },
             },
           }}

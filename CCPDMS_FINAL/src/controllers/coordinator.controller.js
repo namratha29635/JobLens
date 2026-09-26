@@ -2,6 +2,7 @@ const Student = require('../models/Student');
 const OnCampusDrive = require('../models/OnCampusDrive');
 const OffCampusDrive = require('../models/OffCampusDrive');
 const Application = require('../models/Application');
+const Notification = require('../models/Notification');
 const AuditLog = require('../models/AuditLog');
 const { sendBulkEmails } = require('../services/email.service');
 const { ApiResponse, ApiError } = require('../utils/ApiResponse');
@@ -14,36 +15,36 @@ const BATCHES = [2026, 2027, 2028, 2029];
 // + placement percentage
 // Also returns summary counts for total drives, frozen drives, etc.
 exports.getDashboard = asyncHandler(async (req, res) => {
-  const batchData = await Promise.all(
-    BATCHES.map(async (batch) => {
-      const branchStats = await Promise.all(
-        BRANCHES.map(async (branch) => {
-          const [total, selected] = await Promise.all([
-            Student.countDocuments({ passedOutYear: batch, branch }),
-            Student.countDocuments({ passedOutYear: batch, branch, 'stats.drivesSelected': { $gt: 0 } }),
-          ]);
-          return {
-            branch,
-            total,
-            selected,
-            percentage: total > 0 ? parseFloat(((selected / total) * 100).toFixed(1)) : 0,
-          };
-        })
-      );
+  // Fetch students in a single lightweight query
+  const students = await Student.find({}, 'passedOutYear branch stats.drivesSelected').lean();
 
-      const batchTotal = branchStats.reduce((s, b) => s + b.total, 0);
-      const batchSelected = branchStats.reduce((s, b) => s + b.selected, 0);
-
+  const batchData = BATCHES.map((batch) => {
+    const batchStudents = students.filter((s) => s.passedOutYear === batch);
+    const branchStats = BRANCHES.map((branch) => {
+      const branchStudents = batchStudents.filter((s) => s.branch === branch);
+      const total = branchStudents.length;
+      const selected = branchStudents.filter((s) => s.stats?.drivesSelected > 0).length;
       return {
-        batch,
-        total: batchTotal,
-        selected: batchSelected,
-        placementPercent:
-          batchTotal > 0 ? parseFloat(((batchSelected / batchTotal) * 100).toFixed(1)) : 0,
-        branches: branchStats,
+        branch,
+        total,
+        selected,
+        percentage: total > 0 ? parseFloat(((selected / total) * 100).toFixed(1)) : 0,
       };
-    })
-  );
+    });
+
+    const batchTotal = batchStudents.length;
+    const batchSelected = batchStudents.filter((s) => s.stats?.drivesSelected > 0).length;
+
+    return {
+      batch,
+      total: batchTotal,
+      selected: batchSelected,
+      placementPercent:
+        batchTotal > 0 ? parseFloat(((batchSelected / batchTotal) * 100).toFixed(1)) : 0,
+      branches: branchStats,
+    };
+  });
+
   // Summary counts
   const totalOnCampusDrives = await OnCampusDrive.countDocuments();
   const totalOffCampusDrives = await OffCampusDrive.countDocuments();
@@ -53,6 +54,7 @@ exports.getDashboard = asyncHandler(async (req, res) => {
     new ApiResponse(200, {
       batchData,
       summary: {
+        totalStudents: students.length,
         totalOnCampusDrives,
         totalOffCampusDrives,
         frozenDrives,
@@ -156,37 +158,296 @@ exports.getStudentDetail = asyncHandler(async (req, res, next) => {
 
   res.status(200).json(new ApiResponse(200, { student, applications }));
 });
-// POST /api/coordinator/notify  — Bulk email to batch/branch filtered students
+// POST /api/coordinator/notify  — Bulk email & in-app notification to batch/branch or drive applicants
 exports.sendNotification = asyncHandler(async (req, res, next) => {
-  const { subject, message, batch, branch } = req.body;
+  const { subject, message, batch, branch, driveId, applicationStatus, customEmails } = req.body;
 
   if (!subject || !message)
     return next(new ApiError(400, 'subject and message are required'));
 
-  const filter = {};
-  if (batch) filter.passedOutYear = Number(batch);
-  if (branch) filter.branch = branch;
+  let targetStudents = [];
 
-  const students = await Student.find(filter).select('collegeEmail name');
-  if (!students.length)
-    return next(new ApiError(404, 'No students found matching the given filters'));
+  // Custom explicit email list
+  if (Array.isArray(customEmails) && customEmails.length > 0) {
+    const validEmails = customEmails.filter(e => typeof e === 'string' && e.includes('@'));
+    targetStudents = await Student.find({ collegeEmail: { $in: validEmails } }).select('_id user collegeEmail name');
+  } else if (driveId) {
+    // Target applicants of a specific drive
+    const appFilter = { drive: driveId };
+    if (applicationStatus) appFilter.overallStatus = applicationStatus;
 
-  const emails = students.map((s) => s.collegeEmail);
+    const applications = await Application.find(appFilter).populate('student', '_id user collegeEmail name');
+    targetStudents = applications.map(a => a.student).filter(Boolean);
+  } else {
+    // Target batch/branch filtered students
+    const filter = {};
+    if (batch) filter.passedOutYear = Number(batch);
+    if (branch) filter.branch = branch;
 
-  sendBulkEmails({ to: emails, subject, text: message }); // fire-and-forget
+    targetStudents = await Student.find(filter).select('_id user collegeEmail name');
+  }
+
+  // Deduplicate target students by _id
+  const seen = new Set();
+  targetStudents = targetStudents.filter(s => {
+    if (!s || !s._id) return false;
+    const id = s._id.toString();
+    if (seen.has(id)) return false;
+    seen.add(id);
+    return true;
+  });
+
+  if (!targetStudents.length)
+    return next(new ApiError(404, 'No recipient students found matching the given filters'));
+
+  // 1. Create In-App Notification records in MongoDB for every recipient student
+  const category = subject.toLowerCase().includes('shortlist') ? 'shortlist'
+    : subject.toLowerCase().includes('congrat') || subject.toLowerCase().includes('offer') ? 'offer'
+    : subject.toLowerCase().includes('schedule') || subject.toLowerCase().includes('venue') ? 'schedule'
+    : subject.toLowerCase().includes('reminder') ? 'reminder'
+    : 'announcement';
+
+  const notificationDocs = targetStudents.map(s => ({
+    student: s._id,
+    user: s.user || s._id,
+    title: subject.trim(),
+    message: message.trim(),
+    sender: req.user?.email ? `Placement Cell (${req.user.email})` : 'Placement Cell (CCPDMS)',
+    drive: driveId || undefined,
+    category,
+    isRead: false,
+  }));
+
+  await Notification.insertMany(notificationDocs).catch(err => console.error('[Notification] DB Insert Error:', err.message));
+
+  // 2. Dispatch SMTP emails in the background
+  const emails = targetStudents.map(s => s.collegeEmail).filter(Boolean);
+  if (emails.length > 0) {
+    sendBulkEmails({ to: emails, subject, text: message });
+  }
 
   await AuditLog.create({
     user: req.user._id, action: 'NOTIFICATION_SENT',
     entity: 'Student',
-    details: { subject, recipientCount: emails.length, batch: batch || 'All', branch: branch || 'All' },
+    details: {
+      subject,
+      recipientCount: targetStudents.length,
+      batch: batch || 'All',
+      branch: branch || 'All',
+      driveId: driveId || null,
+      statusFilter: applicationStatus || 'All',
+    },
     ip: req.ip,
   });
 
   res.status(200).json(
-    new ApiResponse(200, { recipientCount: emails.length },
-      `Notification dispatched to ${emails.length} students`)
+    new ApiResponse(200, { recipientCount: targetStudents.length },
+      `Notification dispatched to ${targetStudents.length} student${targetStudents.length === 1 ? '' : 's'}`)
   );
 });
+
+// GET /api/coordinator/notifications/history
+exports.getNotificationHistory = asyncHandler(async (req, res) => {
+  const logs = await AuditLog.find({ action: 'NOTIFICATION_SENT' })
+    .populate('user', 'email role')
+    .sort({ createdAt: -1 })
+    .limit(50)
+    .lean();
+
+  res.status(200).json(new ApiResponse(200, { notifications: logs }));
+});
+
+// GET /api/coordinator/audience-count
+exports.getAudienceCount = asyncHandler(async (req, res) => {
+  const { batch, branch, driveId, applicationStatus } = req.query;
+
+  let count = 0;
+  if (driveId) {
+    const filter = { drive: driveId };
+    if (applicationStatus) filter.overallStatus = applicationStatus;
+    count = await Application.countDocuments(filter);
+  } else {
+    const filter = {};
+    if (batch) filter.passedOutYear = Number(batch);
+    if (branch) filter.branch = branch;
+    count = await Student.countDocuments(filter);
+  }
+
+  res.status(200).json(new ApiResponse(200, { count }));
+});
+
+// ── APPLICATIONS MANAGEMENT ──────────────────────────────────────────────────
+// GET /api/coordinator/applications?driveId=&status=&batch=&branch=&search=&page=&limit=
+exports.getAllApplications = asyncHandler(async (req, res) => {
+  const {
+    driveId, status, batch, branch, search,
+    page = 1, limit = 25,
+  } = req.query;
+
+  const appFilter = {};
+  if (driveId) appFilter.drive = driveId;
+  if (status) appFilter.overallStatus = status;
+
+  const skip = (Number(page) - 1) * Number(limit);
+
+  // Populate student and drive
+  let query = Application.find(appFilter)
+    .populate('student', 'rollNumber name branch passedOutYear cgpa activeBacklogs collegeEmail contact resume')
+    .populate('drive', 'companyName minPackage maxPackage status isFrozen selectionRatio eligibleBatches eligibleBranches')
+    .sort({ appliedAt: -1 });
+
+  const allApps = await query.lean();
+
+  // In-memory filter for student fields (search, branch, batch) if provided
+  let filtered = allApps.filter((app) => {
+    if (!app.student) return false;
+    if (batch && app.student.passedOutYear !== Number(batch)) return false;
+    if (branch && app.student.branch !== branch) return false;
+    if (search) {
+      const q = search.toLowerCase();
+      const matchName = app.student.name?.toLowerCase().includes(q);
+      const matchRoll = app.student.rollNumber?.toLowerCase().includes(q);
+      const matchEmail = app.student.collegeEmail?.toLowerCase().includes(q);
+      const matchCompany = app.drive?.companyName?.toLowerCase().includes(q);
+      if (!matchName && !matchRoll && !matchEmail && !matchCompany) return false;
+    }
+    return true;
+  });
+
+  const total = filtered.length;
+  const paginated = filtered.slice(skip, skip + Number(limit));
+
+  // Compute status summary counts
+  const summary = {
+    total,
+    registered: filtered.filter(a => a.overallStatus === 'registered').length,
+    shortlisted: filtered.filter(a => a.overallStatus === 'shortlisted').length,
+    in_progress: filtered.filter(a => a.overallStatus === 'in_progress').length,
+    selected: filtered.filter(a => a.overallStatus === 'selected').length,
+    rejected: filtered.filter(a => a.overallStatus === 'rejected' || a.overallStatus === 'not_shortlisted').length,
+  };
+
+  res.status(200).json(
+    new ApiResponse(200, {
+      applications: paginated,
+      summary,
+      pagination: {
+        total,
+        page: Number(page),
+        limit: Number(limit),
+        pages: Math.ceil(total / Number(limit)) || 1,
+      },
+    })
+  );
+});
+
+// PATCH /api/coordinator/applications/:id/status
+exports.updateApplicationStatus = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+  const { overallStatus, eliminatedAtRound } = req.body;
+
+  const validStatuses = ['registered', 'shortlisted', 'in_progress', 'selected', 'rejected', 'not_shortlisted'];
+  if (!overallStatus || !validStatuses.includes(overallStatus)) {
+    return next(new ApiError(400, `Invalid status. Must be one of: ${validStatuses.join(', ')}`));
+  }
+
+  const application = await Application.findById(id).populate('student', 'name stats').populate('drive', 'companyName');
+  if (!application) return next(new ApiError(404, 'Application not found'));
+
+  const prevStatus = application.overallStatus;
+  application.overallStatus = overallStatus;
+  if (eliminatedAtRound !== undefined) application.eliminatedAtRound = eliminatedAtRound;
+  await application.save();
+
+  // If status changed to selected, update student stats
+  if (overallStatus === 'selected' && prevStatus !== 'selected' && application.student) {
+    await Student.findByIdAndUpdate(application.student._id, { $inc: { 'stats.drivesSelected': 1 } });
+  } else if (prevStatus === 'selected' && overallStatus !== 'selected' && application.student) {
+    await Student.findByIdAndUpdate(application.student._id, { $inc: { 'stats.drivesSelected': -1 } });
+  }
+
+  await AuditLog.create({
+    user: req.user._id, action: 'APPLICATION_STATUS_UPDATED',
+    entity: 'Application', entityId: application._id,
+    details: {
+      studentId: application.student?._id,
+      companyName: application.drive?.companyName,
+      oldStatus: prevStatus,
+      newStatus: overallStatus,
+    },
+    ip: req.ip,
+  });
+
+  // Create real-time student notification
+  if (application.student) {
+    try {
+      const company = application.drive?.companyName || 'Placement Drive';
+      let notifTitle = `Application Status Update: ${company}`;
+      let notifMsg = `Your application status for ${company} is now ${overallStatus.toUpperCase().replace('_', ' ')}.`;
+      let cat = 'reminder';
+
+      if (overallStatus === 'shortlisted') {
+        notifTitle = `🎉 Congratulations! Shortlisted for ${company}`;
+        notifMsg = `Congratulations! You have been shortlisted for the next round of ${company}. Please check the drive page for schedule details.`;
+        cat = 'round_shortlist';
+      } else if (overallStatus === 'selected') {
+        notifTitle = `🏆 Congratulations! Selected for ${company}`;
+        notifMsg = `Hearty congratulations! You have been selected for ${company}. Check your student portal and email for official offer details.`;
+        cat = 'round_shortlist';
+      } else if (overallStatus === 'rejected' || overallStatus === 'not_shortlisted') {
+        notifTitle = `Application Update: ${company}`;
+        notifMsg = `Thank you for participating in the ${company} recruitment process. Unfortunately, you were not shortlisted for the subsequent round.`;
+        cat = 'reminder';
+      }
+
+      await Notification.create({
+        student: application.student._id,
+        user: application.student.user,
+        title: notifTitle,
+        message: notifMsg,
+        sender: 'Placement Cell',
+        category: cat,
+        drive: application.drive?._id,
+        isRead: false,
+      });
+    } catch (e) {
+      console.error('Failed to create status change notification:', e);
+    }
+  }
+
+  res.status(200).json(new ApiResponse(200, application, `Application status updated to ${overallStatus}`));
+});
+
+// POST /api/coordinator/applications/bulk-status
+exports.bulkUpdateApplications = asyncHandler(async (req, res, next) => {
+  const { applicationIds, overallStatus } = req.body;
+
+  if (!Array.isArray(applicationIds) || applicationIds.length === 0) {
+    return next(new ApiError(400, 'applicationIds array is required'));
+  }
+
+  const validStatuses = ['registered', 'shortlisted', 'in_progress', 'selected', 'rejected', 'not_shortlisted'];
+  if (!overallStatus || !validStatuses.includes(overallStatus)) {
+    return next(new ApiError(400, `Invalid status. Must be one of: ${validStatuses.join(', ')}`));
+  }
+
+  const result = await Application.updateMany(
+    { _id: { $in: applicationIds } },
+    { $set: { overallStatus } }
+  );
+
+  await AuditLog.create({
+    user: req.user._id, action: 'BULK_APPLICATIONS_UPDATED',
+    entity: 'Application',
+    details: { count: applicationIds.length, newStatus: overallStatus },
+    ip: req.ip,
+  });
+
+  res.status(200).json(
+    new ApiResponse(200, { modifiedCount: result.modifiedCount }, `Updated ${result.modifiedCount} applications to ${overallStatus}`)
+  );
+});
+
 // GET /api/coordinator/auditlogs Section
 exports.getAuditLogs = asyncHandler(async (req, res) => {
   const { entity, action, page = 1, limit = 20 } = req.query;
@@ -217,3 +478,4 @@ exports.getAuditLogs = asyncHandler(async (req, res) => {
     })
   );
 });
+

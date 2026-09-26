@@ -1,10 +1,22 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { studentAPI } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
 import { Card, Badge, Tabs, Spinner, ProgressBar, Alert } from '../../components/ui';
 import toast from 'react-hot-toast';
 export default function AITools() {
-  const [tab, setTab] = useState('chatbot');
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const initialTab = searchParams.get('tab') || 'chatbot';
+  const [tab, setTab] = useState(initialTab);
+
+  useEffect(() => {
+    const qTab = new URLSearchParams(location.search).get('tab');
+    if (qTab && ['chatbot', 'resume', 'joblinks', 'jobverifier'].includes(qTab)) {
+      setTab(qTab);
+    }
+  }, [location.search]);
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       <div>
@@ -352,25 +364,11 @@ function ResumeMatch() {
     if (!profile?.resume?.url && !profile?.skills?.length) return toast.error('Please update your profile with skills first');
     setAiLoading(true);
     try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 1000,
-          system: 'You are an expert career counselor and ATS specialist. Analyze resumes against job descriptions and provide specific, actionable feedback. Always respond in valid JSON.',
-          messages: [{
-            role: 'user',
-            content: `Analyze this student profile against the job description and return ONLY a JSON object:\n\nStudent Profile:\n- Branch: ${profile?.branch}\n- CGPA: ${profile?.cgpa}\n- Skills: ${(profile?.skills || []).join(', ')}\n- Projects: ${(profile?.projects || []).map(p => p.title).join(', ')}\n- Internships: ${(profile?.internships || []).map(i => `${i.role} at ${i.company}`).join(', ')}\n- Certifications: ${(profile?.certifications || []).join(', ')}\n\nJob Description:\n${jobDesc}\n\nReturn JSON with these exact keys:\n{\n  "fitScore": <0-100 number>,\n  "matchedSkills": ["skill1"],\n  "missingSkills": ["skill1"],\n  "strengths": ["strength1"],\n  "gaps": ["gap1"],\n  "atsKeywords": ["kw1"],\n  "preparationPlan": ["step1"],\n  "summary": "2-3 sentence overall assessment"\n}`,
-          }],
-        }),
-      });
-      const data   = await response.json();
-      const text   = data.content?.[0]?.text || '{}';
-      const parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
-      setAiResult(parsed);
-    } catch {
-      toast.error('AI analysis failed. Check your connection.');
+      const res = await studentAPI.resumeMatch({ jobDescription: jobDesc, deepAnalysis: true });
+      setAiResult(res.data.data);
+      toast.success('AI Deep Analysis complete!');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'AI analysis failed. Please try again.');
     } finally { setAiLoading(false); }
   };
   return (
@@ -552,12 +550,29 @@ function JobLinks() {
 }
 // JOB VERIFIER — New Feature
 function JobVerifier() {
-  const [form, setForm]       = useState({ companyName: '', jobLink: '', jobDescription: '' });
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const initialCompany = searchParams.get('company') || '';
+  const initialLink = searchParams.get('link') || '';
+
+  const [form, setForm]       = useState({ companyName: initialCompany, jobLink: initialLink, jobDescription: '' });
   const [loading, setLoading] = useState(false);
   const [result, setResult]   = useState(null);
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
   const [histLoading, setHistLoading] = useState(false);
+
+  useEffect(() => {
+    const company = new URLSearchParams(location.search).get('company');
+    const link = new URLSearchParams(location.search).get('link');
+    if (company || link) {
+      setForm(prev => ({
+        ...prev,
+        companyName: company || prev.companyName,
+        jobLink: link || prev.jobLink,
+      }));
+    }
+  }, [location.search]);
   const handleChange = (field) => (e) =>
     setForm(prev => ({ ...prev, [field]: e.target.value }));
   const handleCheck = async () => {

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
-import { ThemeSwitcher } from "../../components/shared";
+import { useAuth } from "../context/AuthContext";
+import { ThemeSwitcher } from "../components/shared";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -44,7 +44,7 @@ export default function Login() {
         style={{
           flex: 1,
           background:
-            "linear-gradient(135deg, #0a0e1a 0%, #1a2235 50%, #0f172a 100%)",
+            "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%)",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",

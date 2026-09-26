@@ -7,7 +7,7 @@ const BRANCHES = ['CSE', 'ECE', 'EEE', 'MECH', 'CIVIL', 'IT', 'AIDS', 'AIML', 'D
 const BATCHES = [2026, 2027, 2028, 2029];
 const DriveForm = ({ initial = {}, onSubmit, loading }) => {
   const [form, setForm] = useState({
-    companyName: '', eligibleBatches: [], eligibleBranches: [], cgpaCutOff: '', backlogsAllowed: '0',
+    companyName: '', collegeName: 'All Colleges', eligibleBatches: [], eligibleBranches: [], cgpaCutOff: '', backlogsAllowed: '0',
     description: '', minPackage: '', maxPackage: '', registrationDeadline: '',
     registrationLink: '', status: 'active', ...initial
   });
@@ -33,6 +33,13 @@ const DriveForm = ({ initial = {}, onSubmit, loading }) => {
           <input className="form-input" required value={form.companyName}
             onChange={e => setForm({ ...form, companyName: e.target.value })} placeholder="e.g. TCS, Infosys" />
         </div>
+        <div className="form-group">
+          <label className="form-label">College Campus</label>
+          <input className="form-input" value={form.collegeName}
+            onChange={e => setForm({ ...form, collegeName: e.target.value })} placeholder="e.g. All Colleges / VNR VJIET / CBIT" />
+        </div>
+      </div>
+      <div className="form-row cols-2">
         <div className="form-group">
           <label className="form-label">Status</label>
           <select className="form-select" value={form.status}

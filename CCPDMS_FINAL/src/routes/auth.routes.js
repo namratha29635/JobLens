@@ -4,6 +4,9 @@ const authCtrl = require('../controllers/auth.controller');
 const { protect } = require('../middleware/auth.middleware');
 // Public routes
 router.post('/login', authCtrl.login);
+router.post('/register', authCtrl.register);
+router.post('/signup', authCtrl.register);
+router.post('/seed-demo', authCtrl.seedDemoUsers);
 router.post('/forgot-password', authCtrl.forgotPassword);
 router.post('/reset-password', authCtrl.resetPassword);
 // Protected routes (token required; change-password is exempt from isFirstLogin check in middleware)

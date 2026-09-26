@@ -1,19 +1,34 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import toast from 'react-hot-toast';
 
 export default function Login() {
-  const [form, setForm] = useState({ email: '', password: '' });
+  const location = useLocation();
+  const [form, setForm] = useState({
+    email: location.state?.email || '',
+    password: '',
+  });
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
   const { login } = useAuth();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (location.state?.email) {
+      setForm(prev => ({ ...prev, email: location.state.email }));
+    }
+  }, [location.state]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.email || !form.password) return toast.error('Please fill all fields');
+    if (!form.email || !form.password) {
+      setErrorMsg('Please fill all fields');
+      return toast.error('Please fill all fields');
+    }
     setLoading(true);
+    setErrorMsg('');
     try {
       const { user } = await login(form.email, form.password);
       if (user.isFirstLogin) {
@@ -25,7 +40,9 @@ export default function Login() {
         navigate('/student/dashboard');
       }
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Login failed');
+      const msg = err.response?.data?.message || 'Login failed. Please check credentials.';
+      setErrorMsg(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -50,6 +67,26 @@ export default function Login() {
       </div>
 
       <div style={{ width: '100%', maxWidth: '440px', animation: 'slideUp 0.4s ease' }}>
+        {/* Back to Home Link */}
+        <div style={{ marginBottom: '16px' }}>
+          <button
+            type="button"
+            onClick={() => navigate('/')}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'var(--text-muted)',
+              fontSize: '13px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+            }}
+          >
+            ← Back to Home
+          </button>
+        </div>
+
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: '40px' }}>
           <div style={{
@@ -81,6 +118,46 @@ export default function Login() {
           <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '22px', marginBottom: '24px' }}>
             Sign In
           </h2>
+
+          {errorMsg && (
+            <div style={{
+              background: 'rgba(239, 68, 68, 0.12)',
+              border: '1px solid rgba(239, 68, 68, 0.35)',
+              borderRadius: 'var(--radius)',
+              padding: '12px 14px',
+              marginBottom: '18px',
+              color: '#f87171',
+              fontSize: '13px',
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: '10px',
+            }}>
+              <span style={{ fontSize: '16px', lineHeight: 1 }}>⚠️</span>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontWeight: 500 }}>{errorMsg}</div>
+                {errorMsg.toLowerCase().includes('not exist') && (
+                  <button
+                    type="button"
+                    onClick={() => navigate('/signup')}
+                    style={{
+                      marginTop: '6px',
+                      background: 'none',
+                      border: 'none',
+                      padding: 0,
+                      color: 'var(--accent-primary)',
+                      fontSize: '12px',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      textDecoration: 'underline',
+                      display: 'block',
+                    }}
+                  >
+                    Click here to create an account now →
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
             <div>
@@ -151,18 +228,63 @@ export default function Login() {
             </button>
           </form>
 
-          <div style={{ marginTop: '20px', textAlign: 'center' }}>
+          <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '13px' }}>
             <button
+              type="button"
               onClick={() => navigate('/forgot-password')}
-              style={{ background: 'none', border: 'none', color: 'var(--accent-primary)', cursor: 'pointer', fontSize: '13px' }}
+              style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '12px' }}
             >
               Forgot password?
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/signup')}
+              style={{ background: 'none', border: 'none', color: 'var(--accent-primary)', cursor: 'pointer', fontWeight: 600, fontSize: '13px' }}
+            >
+              Create Account →
             </button>
           </div>
         </div>
 
-        <p style={{ textAlign: 'center', marginTop: '20px', fontSize: '12px', color: 'var(--text-muted)' }}>
-          Accounts are created by the Placement Coordinator
+        {/* Demo Credentials */}
+        <div style={{
+          marginTop: '20px',
+          padding: '16px',
+          background: 'var(--bg-card)',
+          borderRadius: 'var(--radius)',
+          border: '1px solid var(--border)',
+        }}>
+          <p style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>
+            Quick Demo Login (1-Click Fill)
+          </p>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button
+              type="button"
+              onClick={() => setForm({ email: 'coordinator@college.edu', password: 'Test@123' })}
+              style={{
+                flex: 1, padding: '8px 10px', background: 'var(--bg-elevated)', border: '1px solid var(--border)',
+                borderRadius: '8px', color: 'var(--text-secondary)', fontSize: '12px', cursor: 'pointer', textAlign: 'left',
+              }}
+            >
+              💼 <strong style={{ color: 'var(--text-primary)' }}>Coordinator</strong>
+              <div style={{ fontSize: '10px', color: 'var(--text-muted)', marginTop: '2px' }}>coordinator@college.edu</div>
+            </button>
+            <button
+              type="button"
+              onClick={() => setForm({ email: 'student@college.edu', password: 'Test@123' })}
+              style={{
+                flex: 1, padding: '8px 10px', background: 'var(--bg-elevated)', border: '1px solid var(--border)',
+                borderRadius: '8px', color: 'var(--text-secondary)', fontSize: '12px', cursor: 'pointer', textAlign: 'left',
+              }}
+            >
+              🎓 <strong style={{ color: 'var(--text-primary)' }}>Student</strong>
+              <div style={{ fontSize: '10px', color: 'var(--text-muted)', marginTop: '2px' }}>student@college.edu</div>
+            </button>
+          </div>
+        </div>
+
+        <p style={{ textAlign: 'center', marginTop: '16px', fontSize: '12px', color: 'var(--text-muted)' }}>
+          JobLens Campus Placement & Drive Management System
         </p>
       </div>
     </div>

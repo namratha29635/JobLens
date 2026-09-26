@@ -13,8 +13,14 @@ router.get('/placement-stats/:batch', coordCtrl.getPlacementStats);
 router.get('/students', coordCtrl.getStudentList);
 // Single student full profile
 router.get('/students/:studentId', coordCtrl.getStudentDetail);
-// Bulk notification email
+// Applications Management
+router.get('/applications', coordCtrl.getAllApplications);
+router.patch('/applications/:id/status', coordCtrl.updateApplicationStatus);
+router.post('/applications/bulk-status', coordCtrl.bulkUpdateApplications);
+// Bulk notification email & history
 router.post('/notify', coordCtrl.sendNotification);
+router.get('/notifications/history', coordCtrl.getNotificationHistory);
+router.get('/audience-count', coordCtrl.getAudienceCount);
 // Audit logs
 router.get('/audit-logs', coordCtrl.getAuditLogs);
 module.exports = router;

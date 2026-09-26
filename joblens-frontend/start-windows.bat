@@ -12,25 +12,13 @@ if %errorlevel% neq 0 (
 )
 
 :: Backend
-echo [1/3] Starting Backend (Express + MongoDB)...
-cd /d "%~dp0CCPDMS_FINAL"
-if not exist node_modules (
-    echo Installing backend dependencies...
-    npm install
-)
-start "JobLens Backend" cmd /k "npm start"
+echo [1/2] Starting Backend (Express + MongoDB)...
+start "JobLens Backend" cmd /k "cd /d \"%~dp0..\CCPDMS_FINAL\" && node server.js"
 timeout /t 3 /nobreak >nul
 
 :: Frontend
-echo [2/3] Setting up Frontend...
-cd /d "%~dp0joblens-frontend"
-if not exist node_modules (
-    echo Installing frontend dependencies (this may take 2-3 mins)...
-    npm install
-)
-
-echo [3/3] Starting Frontend (React)...
-start "JobLens Frontend" cmd /k "npm start"
+echo [2/2] Starting Frontend (React)...
+start "JobLens Frontend" cmd /k "cd /d \"%~dp0\" && npm start"
 
 echo.
 echo ==========================================

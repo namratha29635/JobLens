@@ -7,8 +7,8 @@ const roundExpSchema = new mongoose.Schema({
 const feedbackSchema = new mongoose.Schema(
   {
     driveRef: {
-      driveId:   { type: mongoose.Schema.Types.ObjectId, required: true },
-      driveType: { type: String, enum: ['on-campus', 'off-campus'], required: true },
+      driveId:   { type: mongoose.Schema.Types.ObjectId, default: () => new mongoose.Types.ObjectId() },
+      driveType: { type: String, enum: ['on-campus', 'off-campus', 'general', 'internship', 'referral'], default: 'general' },
     },
     student: {
       type: mongoose.Schema.Types.ObjectId,
@@ -16,13 +16,14 @@ const feedbackSchema = new mongoose.Schema(
       required: true,
       select: false,   // NEVER returned via API
     },
-    companyName:  { type: String, required: true },
-    role:         { type: String },
+    companyName:  { type: String, required: true, trim: true },
+    role:         { type: String, trim: true },
     passedOutYear:{ type: Number },
     rounds:       [roundExpSchema],
     outcome: {
       type: String,
-      enum: ['selected', 'rejected'],
+      enum: ['selected', 'rejected', 'in_progress'],
+      default: 'selected',
     },
   },
   { timestamps: true }

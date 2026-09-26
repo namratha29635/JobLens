@@ -4,37 +4,132 @@ import { roundsAPI, onCampusAPI } from '../../services/api';
 import { Card, Badge, Modal, LoadingPage, EmptyState, Spinner, Alert } from '../../components/ui';
 import toast from 'react-hot-toast';
 export default function RoundsPage() {
-  const [params] = useSearchParams();
-  const driveId = params.get('driveId');
-  const company = params.get('company') || 'Drive';
+  const [params, setParams] = useSearchParams();
+  const urlDriveId = params.get('driveId');
+  const urlCompany = params.get('company');
+
+  const [drives, setDrives] = useState([]);
+  const [drivesLoading, setDrivesLoading] = useState(true);
+  const [selectedDriveId, setSelectedDriveId] = useState(urlDriveId || '');
   const [rounds, setRounds] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [showCreate, setShowCreate] = useState(false);
   const [uploadModal, setUploadModal] = useState(null); // { roundId, type }
+
+  // 1. Fetch available on-campus drives
+  useEffect(() => {
+    onCampusAPI.getAll({ limit: 100 })
+      .then(res => {
+        const driveList = res.data?.data?.drives || [];
+        setDrives(driveList);
+        if (!selectedDriveId && driveList.length > 0) {
+          setSelectedDriveId(driveList[0]._id);
+        }
+      })
+      .catch(() => toast.error('Failed to load drives'))
+      .finally(() => setDrivesLoading(false));
+  }, []);
+
+  // Update selectedDriveId if URL param changes
+  useEffect(() => {
+    if (urlDriveId) {
+      setSelectedDriveId(urlDriveId);
+    }
+  }, [urlDriveId]);
+
+  const currentDrive = drives.find(d => d._id === selectedDriveId);
+  const companyName = currentDrive?.companyName || urlCompany || 'Drive';
+
+  // 2. Fetch rounds when selectedDriveId changes
   const fetchRounds = async () => {
-    if (!driveId) return setLoading(false);
+    if (!selectedDriveId) return setRounds([]);
     setLoading(true);
     try {
-      const res = await roundsAPI.getByDrive(driveId);
+      const res = await roundsAPI.getByDrive(selectedDriveId);
       setRounds(res.data.data || []);
-    } catch { toast.error('Failed to load rounds'); }
-    finally { setLoading(false); }
+    } catch {
+      toast.error('Failed to load rounds');
+    } finally {
+      setLoading(false);
+    }
   };
-  useEffect(() => { fetchRounds(); }, [driveId]);
-  if (!driveId) return (
-    <EmptyState icon="🔍" title="No drive selected" description="Select a drive from the Drives page to manage its rounds" />
-  );
+
+  useEffect(() => {
+    if (selectedDriveId) {
+      fetchRounds();
+    }
+  }, [selectedDriveId]);
+
+  if (drivesLoading) return <LoadingPage text="Loading drives..." />;
+
+  if (drives.length === 0) {
+    return (
+      <EmptyState
+        icon="🏢"
+        title="No Drives Found"
+        description="Create an on-campus drive first before managing recruitment rounds."
+      />
+    );
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      {/* Header with Drive Selector */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '28px', fontWeight: 800 }}>Round Management</h1>
-          <p style={{ color: 'var(--text-secondary)', marginTop: '4px' }}>{company}</p>
+          <p style={{ color: 'var(--text-secondary)', marginTop: '4px' }}>
+            Manage rounds, venues, and student qualification lists
+          </p>
         </div>
-        <button
-          onClick={() => setShowCreate(true)}
-          style={{ padding: '10px 20px', background: 'var(--accent-primary)', color: 'var(--bg-primary)', border: 'none', borderRadius: 'var(--radius)', cursor: 'pointer', fontWeight: 700, fontSize: '14px' }}
-        >+ Add Round</button>
+
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ fontSize: '13px', color: 'var(--text-secondary)', fontWeight: 500 }}>Drive:</span>
+            <select
+              value={selectedDriveId}
+              onChange={e => {
+                setSelectedDriveId(e.target.value);
+                const d = drives.find(x => x._id === e.target.value);
+                if (d) setParams({ driveId: d._id, company: d.companyName });
+              }}
+              style={{
+                background: 'var(--bg-elevated)',
+                border: '1px solid var(--border)',
+                borderRadius: '8px',
+                color: 'var(--text-primary)',
+                padding: '9px 14px',
+                fontSize: '13px',
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
+            >
+              {drives.map(d => (
+                <option key={d._id} value={d._id}>
+                  {d.companyName} {d.isFrozen ? '🔒 (Frozen)' : `(${d.status})`}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {!currentDrive?.isFrozen && (
+            <button
+              onClick={() => setShowCreate(true)}
+              style={{
+                padding: '9px 18px',
+                background: 'var(--accent-primary)',
+                color: 'var(--bg-primary)',
+                border: 'none',
+                borderRadius: 'var(--radius)',
+                cursor: 'pointer',
+                fontWeight: 700,
+                fontSize: '13px',
+              }}
+            >
+              + Add Round
+            </button>
+          )}
+        </div>
       </div>
       {loading ? <LoadingPage /> : rounds.length === 0 ? (
         <EmptyState icon="🔄" title="No rounds yet" description="Create the first round for this drive" />
@@ -50,8 +145,8 @@ export default function RoundsPage() {
           ))}
         </div>
       )}
-      <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Create New Round">
-        <CreateRoundForm driveId={driveId} onSuccess={() => { setShowCreate(false); fetchRounds(); }} />
+      <Modal open={showCreate} onClose={() => setShowCreate(false)} title={`Create New Round — ${companyName}`}>
+        <CreateRoundForm driveId={selectedDriveId} onSuccess={() => { setShowCreate(false); fetchRounds(); }} />
       </Modal>
       <Modal
         open={!!uploadModal}
