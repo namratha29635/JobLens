@@ -69,10 +69,6 @@ function WithLayout({ children }) {
 
 // App Routes
 function AppRoutes() {
-  const { user, loading } = useAuth();
-
-  if (loading) return <LoadingPage text="Loading JobPortal & JobVerifier..." />;
-
   return (
     <Routes>
       {/* Public Landing & Auth */}

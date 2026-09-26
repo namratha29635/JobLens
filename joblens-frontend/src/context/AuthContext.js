@@ -18,7 +18,11 @@ export const AuthProvider = ({ children }) => {
       return;
     }
     try {
-      const res = await authAPI.getMe();
+      const authPromise = authAPI.getMe();
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Auth timeout")), 4000)
+      );
+      const res = await Promise.race([authPromise, timeoutPromise]);
       setUser(res.data.data.user);
       setProfile(res.data.data.profile);
     } catch {
