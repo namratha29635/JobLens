@@ -245,7 +245,7 @@ export default function Landing() {
                   whiteSpace: 'nowrap',
                 }}
               >
-                Student Sign Up
+                Sign Up
               </button>
             </>
           )}
@@ -365,7 +365,7 @@ export default function Landing() {
                 cursor: 'pointer',
               }}
             >
-              Student Sign Up
+              Sign Up
             </button>
           </div>
         </div>

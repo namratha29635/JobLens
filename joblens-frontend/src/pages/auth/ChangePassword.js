@@ -25,33 +25,33 @@ export function ChangePassword() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-primary)', padding: '20px' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#090d16', color: '#f8fafc', padding: '20px' }}>
       <div style={{ width: '100%', maxWidth: '440px' }}>
-        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '36px' }}>
+        <div style={{ background: '#ffffff', color: '#0f172a', border: '1px solid #e2e8f0', borderRadius: '16px', padding: '36px', boxShadow: '0 20px 45px -10px rgba(0, 0, 0, 0.5)' }}>
           <div style={{ marginBottom: '24px' }}>
             <div style={{ fontSize: '32px', marginBottom: '12px' }}>🔐</div>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '22px', marginBottom: '8px' }}>Change Password</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '22px', marginBottom: '8px', color: '#0f172a' }}>Change Password</h2>
+            <p style={{ color: '#64748b', fontSize: '13px' }}>
               {user?.isFirstLogin ? 'First login — please set a new password to continue.' : 'Update your account password.'}
             </p>
           </div>
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {['currentPassword', 'newPassword', 'confirm'].map((field) => (
               <div key={field}>
-                <label style={{ display: 'block', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 500 }}>
+                <label style={{ display: 'block', fontSize: '12px', color: '#334155', marginBottom: '6px', fontWeight: 600 }}>
                   {field === 'currentPassword' ? 'Current Password' : field === 'newPassword' ? 'New Password' : 'Confirm New Password'}
                 </label>
                 <input
                   type="password"
                   value={form[field]}
                   onChange={e => setForm({ ...form, [field]: e.target.value })}
-                  style={{ width: '100%', background: 'var(--bg-elevated)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', color: 'var(--text-primary)', padding: '12px 16px', fontSize: '14px' }}
+                  style={{ width: '100%', background: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '8px', color: '#0f172a', padding: '12px 16px', fontSize: '14px', outline: 'none' }}
                 />
               </div>
             ))}
             <button
               type="submit" disabled={loading}
-              style={{ width: '100%', padding: '13px', background: 'var(--accent-primary)', color: 'var(--bg-primary)', border: 'none', borderRadius: 'var(--radius)', fontSize: '14px', fontWeight: 700, cursor: 'pointer', opacity: loading ? 0.7 : 1 }}
+              style={{ width: '100%', padding: '13px', background: 'linear-gradient(135deg, #4f46e5, #172554)', color: '#ffffff', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: 700, cursor: 'pointer', opacity: loading ? 0.7 : 1 }}
             >
               {loading ? 'Saving...' : 'Update Password'}
             </button>
@@ -93,34 +93,34 @@ export function ForgotPassword() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-primary)', padding: '20px' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#090d16', color: '#f8fafc', padding: '20px' }}>
       <div style={{ width: '100%', maxWidth: '440px' }}>
-        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '36px' }}>
-          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '22px', marginBottom: '24px' }}>
+        <div style={{ background: '#ffffff', color: '#0f172a', border: '1px solid #e2e8f0', borderRadius: '16px', padding: '36px', boxShadow: '0 20px 45px -10px rgba(0, 0, 0, 0.5)' }}>
+          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '22px', marginBottom: '24px', color: '#0f172a' }}>
             {step === 1 ? '📧 Forgot Password' : '🔢 Enter OTP'}
           </h2>
           {step === 1 ? (
             <form onSubmit={sendOtp} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <input type="email" placeholder="College email" value={email} onChange={e => setEmail(e.target.value)}
-                style={{ width: '100%', background: 'var(--bg-elevated)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', color: 'var(--text-primary)', padding: '12px 16px', fontSize: '14px' }} />
+                style={{ width: '100%', background: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '8px', color: '#0f172a', padding: '12px 16px', fontSize: '14px', outline: 'none' }} />
               <button type="submit" disabled={loading}
-                style={{ padding: '13px', background: 'var(--accent-primary)', color: 'var(--bg-primary)', border: 'none', borderRadius: 'var(--radius)', fontSize: '14px', fontWeight: 700, cursor: 'pointer' }}>
+                style={{ padding: '13px', background: 'linear-gradient(135deg, #4f46e5, #172554)', color: '#ffffff', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: 700, cursor: 'pointer' }}>
                 {loading ? 'Sending...' : 'Send OTP'}
               </button>
             </form>
           ) : (
             <form onSubmit={resetPass} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <input placeholder="Enter 6-digit OTP" value={otp} onChange={e => setOtp(e.target.value)}
-                style={{ width: '100%', background: 'var(--bg-elevated)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', color: 'var(--text-primary)', padding: '12px 16px', fontSize: '14px' }} />
+                style={{ width: '100%', background: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '8px', color: '#0f172a', padding: '12px 16px', fontSize: '14px', outline: 'none' }} />
               <input type="password" placeholder="New Password (min 8 chars)" value={newPassword} onChange={e => setNewPassword(e.target.value)}
-                style={{ width: '100%', background: 'var(--bg-elevated)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', color: 'var(--text-primary)', padding: '12px 16px', fontSize: '14px' }} />
+                style={{ width: '100%', background: '#f8fafc', border: '1px solid #cbd5e1', borderRadius: '8px', color: '#0f172a', padding: '12px 16px', fontSize: '14px', outline: 'none' }} />
               <button type="submit" disabled={loading}
-                style={{ padding: '13px', background: 'var(--accent-primary)', color: 'var(--bg-primary)', border: 'none', borderRadius: 'var(--radius)', fontSize: '14px', fontWeight: 700, cursor: 'pointer' }}>
+                style={{ padding: '13px', background: 'linear-gradient(135deg, #4f46e5, #172554)', color: '#ffffff', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: 700, cursor: 'pointer' }}>
                 {loading ? 'Resetting...' : 'Reset Password'}
               </button>
             </form>
           )}
-          <button onClick={() => navigate('/login')} style={{ marginTop: '16px', background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '13px', display: 'block', width: '100%', textAlign: 'center' }}>
+          <button onClick={() => navigate('/login')} style={{ marginTop: '16px', background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', fontSize: '13px', display: 'block', width: '100%', textAlign: 'center' }}>
             ← Back to Login
           </button>
         </div>

@@ -57,8 +57,8 @@ export default function Login() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'var(--bg-primary)',
-        color: 'var(--text-primary)',
+        background: '#090d16',
+        color: '#f8fafc',
         padding: '24px 16px',
         position: 'relative',
         overflowX: 'hidden',
@@ -84,7 +84,7 @@ export default function Login() {
             style={{
               background: 'none',
               border: 'none',
-              color: 'var(--text-muted)',
+              color: '#94a3b8',
               fontSize: '13px',
               fontWeight: 600,
               cursor: 'pointer',
@@ -128,7 +128,7 @@ export default function Login() {
             <span className="brand-letter-j">J</span>
             <span className="brand-letters-rest">obLens</span>
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '13px', fontWeight: 500 }}>
+          <p style={{ color: '#94a3b8', fontSize: '13px', fontWeight: 500 }}>
             Job Search and AI Verification
           </p>
         </div>
@@ -136,14 +136,15 @@ export default function Login() {
         {/* Form Card */}
         <div
           style={{
-            background: 'var(--bg-card)',
-            border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-lg)',
+            background: '#ffffff',
+            border: '1px solid #e2e8f0',
+            borderRadius: '16px',
             padding: 'clamp(24px, 5vw, 36px)',
-            boxShadow: 'var(--shadow-elevation)',
+            boxShadow: '0 20px 45px -10px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1)',
+            color: '#0f172a',
           }}
         >
-          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '20px', fontWeight: 700, marginBottom: '20px' }}>
+          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '20px', fontWeight: 700, marginBottom: '20px', color: '#0f172a' }}>
             Sign In
           </h2>
 
@@ -191,7 +192,7 @@ export default function Login() {
 
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div>
-              <label style={{ display: 'block', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 600 }}>
+              <label style={{ display: 'block', fontSize: '12px', color: '#334155', marginBottom: '6px', fontWeight: 600 }}>
                 Email
               </label>
               <input
@@ -201,19 +202,20 @@ export default function Login() {
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 style={{
                   width: '100%',
-                  background: 'var(--bg-elevated)',
-                  border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius)',
-                  color: 'var(--text-primary)',
+                  background: '#f8fafc',
+                  border: '1px solid #cbd5e1',
+                  borderRadius: '8px',
+                  color: '#0f172a',
                   padding: '12px 16px',
                   fontSize: '14px',
+                  outline: 'none',
                 }}
                 required
               />
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 600 }}>
+              <label style={{ display: 'block', fontSize: '12px', color: '#334155', marginBottom: '6px', fontWeight: 600 }}>
                 Password
               </label>
               <div style={{ position: 'relative' }}>
@@ -224,12 +226,13 @@ export default function Login() {
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
                   style={{
                     width: '100%',
-                    background: 'var(--bg-elevated)',
-                    border: '1px solid var(--border)',
-                    borderRadius: 'var(--radius)',
-                    color: 'var(--text-primary)',
+                    background: '#f8fafc',
+                    border: '1px solid #cbd5e1',
+                    borderRadius: '8px',
+                    color: '#0f172a',
                     padding: '12px 48px 12px 16px',
                     fontSize: '14px',
+                    outline: 'none',
                   }}
                   required
                 />
@@ -244,7 +247,7 @@ export default function Login() {
                     background: 'none',
                     border: 'none',
                     cursor: 'pointer',
-                    color: 'var(--text-secondary)',
+                    color: '#64748b',
                     fontSize: '16px',
                   }}
                   aria-label="Toggle password visibility"
@@ -263,7 +266,7 @@ export default function Login() {
                 background: 'linear-gradient(135deg, #4f46e5, #172554)',
                 color: '#ffffff',
                 border: 'none',
-                borderRadius: 'var(--radius)',
+                borderRadius: '8px',
                 fontSize: '15px',
                 fontWeight: 700,
                 cursor: loading ? 'not-allowed' : 'pointer',
@@ -313,9 +316,10 @@ export default function Login() {
               style={{
                 background: 'none',
                 border: 'none',
-                color: 'var(--text-secondary)',
+                color: '#64748b',
                 cursor: 'pointer',
                 fontSize: '12px',
+                fontWeight: 500,
               }}
             >
               Forgot password?
@@ -326,7 +330,7 @@ export default function Login() {
               style={{
                 background: 'none',
                 border: 'none',
-                color: 'var(--brand)',
+                color: '#4f46e5',
                 cursor: 'pointer',
                 fontWeight: 700,
                 fontSize: '13px',
@@ -342,16 +346,17 @@ export default function Login() {
           style={{
             marginTop: '16px',
             padding: '16px',
-            background: 'var(--bg-card)',
-            borderRadius: 'var(--radius)',
-            border: '1px solid var(--border)',
-            boxShadow: 'var(--shadow-card)',
+            background: '#ffffff',
+            borderRadius: '12px',
+            border: '1px solid #e2e8f0',
+            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.3)',
+            color: '#0f172a',
           }}
         >
           <p
             style={{
               fontSize: '11px',
-              color: 'var(--text-muted)',
+              color: '#64748b',
               fontWeight: 700,
               textTransform: 'uppercase',
               letterSpacing: '0.05em',
@@ -367,17 +372,17 @@ export default function Login() {
               style={{
                 flex: '1 1 140px',
                 padding: '8px 10px',
-                background: 'var(--bg-elevated)',
-                border: '1px solid var(--border)',
+                background: '#f8fafc',
+                border: '1px solid #e2e8f0',
                 borderRadius: '8px',
-                color: 'var(--text-secondary)',
+                color: '#334155',
                 fontSize: '12px',
                 cursor: 'pointer',
                 textAlign: 'left',
               }}
             >
-              💼 <strong style={{ color: 'var(--text-primary)' }}>Coordinator</strong>
-              <div style={{ fontSize: '10px', color: 'var(--text-muted)', marginTop: '2px' }}>coordinator@college.edu</div>
+              💼 <strong style={{ color: '#0f172a' }}>Coordinator</strong>
+              <div style={{ fontSize: '10px', color: '#64748b', marginTop: '2px' }}>coordinator@college.edu</div>
             </button>
             <button
               type="button"
@@ -385,22 +390,22 @@ export default function Login() {
               style={{
                 flex: '1 1 140px',
                 padding: '8px 10px',
-                background: 'var(--bg-elevated)',
-                border: '1px solid var(--border)',
+                background: '#f8fafc',
+                border: '1px solid #e2e8f0',
                 borderRadius: '8px',
-                color: 'var(--text-secondary)',
+                color: '#334155',
                 fontSize: '12px',
                 cursor: 'pointer',
                 textAlign: 'left',
               }}
             >
-              🎓 <strong style={{ color: 'var(--text-primary)' }}>Student</strong>
-              <div style={{ fontSize: '10px', color: 'var(--text-muted)', marginTop: '2px' }}>student@college.edu</div>
+              🎓 <strong style={{ color: '#0f172a' }}>Student</strong>
+              <div style={{ fontSize: '10px', color: '#64748b', marginTop: '2px' }}>student@college.edu</div>
             </button>
           </div>
         </div>
 
-        <p style={{ textAlign: 'center', marginTop: '16px', fontSize: '12px', color: 'var(--text-muted)' }}>
+        <p style={{ textAlign: 'center', marginTop: '16px', fontSize: '12px', color: '#94a3b8' }}>
           JobLens · Job Search and AI Verification
         </p>
       </div>
