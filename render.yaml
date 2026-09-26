@@ -1,0 +1,49 @@
+services:
+  # ── 1. Backend Web Service ──────────────────────────────────────────
+  - type: web
+    name: joblens-backend
+    runtime: node
+    rootDir: CCPDMS_FINAL
+    plan: free
+    region: oregon
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: MONGO_URI
+        value: mongodb+srv://mnamratha046_db_user:saqY32nrCsMEjGEH@cluster0.rzm9jwj.mongodb.net/joblens?retryWrites=true&w=majority
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: CLIENT_URL
+        value: "*"
+      - key: APP_URL
+        value: "https://joblens-frontend.onrender.com"
+      - key: MAX_FILE_SIZE_MB
+        value: "10"
+      - key: UPLOAD_PATH
+        value: "./uploads"
+      - key: COLLEGE_EMAIL_DOMAIN
+        value: "college.edu"
+
+  # ── 2. Frontend Static Site ─────────────────────────────────────────
+  - type: static
+    name: joblens-frontend
+    rootDir: joblens-frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: build
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: REACT_APP_API_URL
+        fromService:
+          type: web
+          name: joblens-backend
+          property: host
