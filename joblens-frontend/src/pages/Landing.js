@@ -428,12 +428,12 @@ export default function Landing() {
           style={{
             fontSize: 'clamp(15px, 2vw, 18px)',
             color: 'var(--text-secondary)',
-            maxWidth: '750px',
+            maxWidth: '650px',
             margin: '0 auto 32px',
             lineHeight: 1.6,
           }}
         >
-          Discover verified job opportunities, track applications in real-time, verify suspicious postings, and match off-campus drives directly against your resume skills.
+          Discover verified opportunities, verify job postings with AI, and track applications in real time.
         </p>
 
         {/* Hero Role Login Buttons */}
