@@ -19,8 +19,8 @@ export default function ThreeJsBackground({ className = '', style = {} }) {
     const width = container.clientWidth || window.innerWidth;
     const height = container.clientHeight || window.innerHeight;
 
-    const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
-    camera.position.z = 70;
+    const camera = new THREE.PerspectiveCamera(55, width / height, 0.1, 1000);
+    camera.position.set(0, 10, 65);
 
     let renderer;
     try {
@@ -38,79 +38,119 @@ export default function ThreeJsBackground({ className = '', style = {} }) {
     renderer.setClearColor(0x000000, 0);
     container.appendChild(renderer.domElement);
 
-    // Particle nodes + constellation lines
-    const particleCount = 75;
-    const maxDistance = 22;
-    const positions = new Float32Array(particleCount * 3);
-    const velocities = [];
+    // ──────────────────────────────────────────────────────────────────────────
+    // 1. TOPOGRAPHICAL 3D MAP-LIKE TERRAIN STRUCTURE WITH LIGHT SQUARES
+    // ──────────────────────────────────────────────────────────────────────────
+    const gridCols = 38;
+    const gridRows = 28;
+    const gridGeo = new THREE.PlaneGeometry(280, 200, gridCols, gridRows);
 
-    for (let i = 0; i < particleCount; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 120;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 90;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 40;
+    // Perturb vertices to create an undulating topographical landscape / map
+    const posAttr = gridGeo.attributes.position;
+    const baseZ = new Float32Array(posAttr.count);
 
-      velocities.push({
-        x: (Math.random() - 0.5) * 0.08,
-        y: (Math.random() - 0.5) * 0.08,
-        z: (Math.random() - 0.5) * 0.05,
-      });
+    for (let i = 0; i < posAttr.count; i++) {
+      const x = posAttr.getX(i);
+      const y = posAttr.getY(i);
+      // Realistic digital contour height formula
+      const elevation =
+        Math.sin(x * 0.035) * Math.cos(y * 0.035) * 6 +
+        Math.sin(x * 0.08 + y * 0.06) * 2.5 +
+        Math.cos(x * 0.05 - y * 0.04) * 3;
+      posAttr.setZ(i, elevation);
+      baseZ[i] = elevation;
     }
+    gridGeo.computeVertexNormals();
 
-    const particleGeometry = new THREE.BufferGeometry();
-    particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-
-    const particleMaterial = new THREE.PointsMaterial({
+    // Layer A: Light semi-translucent square face tiles (the "light squares")
+    const faceMaterial = new THREE.MeshBasicMaterial({
       color: 0x6366f1,
-      size: 3.5,
       transparent: true,
-      opacity: 0.55,
-      blending: THREE.NormalBlending,
+      opacity: 0.035,
+      side: THREE.DoubleSide,
     });
+    const mapFacesMesh = new THREE.Mesh(gridGeo, faceMaterial);
+    mapFacesMesh.rotation.x = -1.18;
+    mapFacesMesh.position.set(0, -18, -15);
+    scene.add(mapFacesMesh);
 
-    const particles = new THREE.Points(particleGeometry, particleMaterial);
-    scene.add(particles);
-
-    // Dynamic Line Connections Geometry
-    const maxLines = (particleCount * (particleCount - 1)) / 2;
-    const linePositions = new Float32Array(maxLines * 6);
-    const lineGeometry = new THREE.BufferGeometry();
-    lineGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
-
-    const lineMaterial = new THREE.LineBasicMaterial({
-      color: 0x38bdf8,
-      transparent: true,
-      opacity: 0.18,
-      blending: THREE.NormalBlending,
-    });
-
-    const linesMesh = new THREE.LineSegments(lineGeometry, lineMaterial);
-    scene.add(linesMesh);
-
-    // Gentle Wave Grid in the background
-    const gridGeo = new THREE.PlaneGeometry(160, 100, 20, 14);
-    const gridMat = new THREE.MeshBasicMaterial({
+    // Layer B: Crisp luminous wireframe grid lines
+    const wireMat = new THREE.MeshBasicMaterial({
       color: 0x4f46e5,
       wireframe: true,
       transparent: true,
-      opacity: 0.07,
+      opacity: 0.16,
     });
-    const gridMesh = new THREE.Mesh(gridGeo, gridMat);
-    gridMesh.position.z = -25;
-    gridMesh.rotation.x = -0.4;
-    scene.add(gridMesh);
+    const mapWireMesh = new THREE.Mesh(gridGeo, wireMat);
+    mapWireMesh.rotation.x = -1.18;
+    mapWireMesh.position.set(0, -18, -15);
+    scene.add(mapWireMesh);
 
-    // Mouse parallax
+    // Layer C: Subtle glowing nodes at map grid junctions
+    const gridPointsMat = new THREE.PointsMaterial({
+      color: 0x06b6d4,
+      size: 2.4,
+      transparent: true,
+      opacity: 0.35,
+    });
+    const gridPoints = new THREE.Points(gridGeo, gridPointsMat);
+    gridPoints.rotation.x = -1.18;
+    gridPoints.position.set(0, -18, -15);
+    scene.add(gridPoints);
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // 2. FLOATING DATA NODES & DELICATE CONSTELLATION PULSES
+    // ──────────────────────────────────────────────────────────────────────────
+    const nodeCount = 50;
+    const nodePositions = new Float32Array(nodeCount * 3);
+    const nodeVelocities = [];
+
+    for (let i = 0; i < nodeCount; i++) {
+      nodePositions[i * 3] = (Math.random() - 0.5) * 140;
+      nodePositions[i * 3 + 1] = (Math.random() - 0.5) * 90;
+      nodePositions[i * 3 + 2] = (Math.random() - 0.5) * 30;
+
+      nodeVelocities.push({
+        x: (Math.random() - 0.5) * 0.05,
+        y: (Math.random() - 0.5) * 0.05,
+        z: (Math.random() - 0.5) * 0.03,
+      });
+    }
+
+    const nodeGeo = new THREE.BufferGeometry();
+    nodeGeo.setAttribute('position', new THREE.BufferAttribute(nodePositions, 3));
+
+    const nodeMat = new THREE.PointsMaterial({
+      color: 0x38bdf8,
+      size: 3.0,
+      transparent: true,
+      opacity: 0.45,
+    });
+    const nodesMesh = new THREE.Points(nodeGeo, nodeMat);
+    scene.add(nodesMesh);
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // 3. SCROLL & MOUSE INTERACTION
+    // ──────────────────────────────────────────────────────────────────────────
     let mouseX = 0;
     let mouseY = 0;
     let targetX = 0;
     let targetY = 0;
+    let currentScroll = 0;
+    let targetScroll = 0;
 
     const handleMouseMove = (event) => {
-      mouseX = (event.clientX / window.innerWidth - 0.5) * 1.5;
-      mouseY = (event.clientY / window.innerHeight - 0.5) * 1.5;
+      mouseX = (event.clientX / window.innerWidth - 0.5) * 1.2;
+      mouseY = (event.clientY / window.innerHeight - 0.5) * 1.2;
+    };
+
+    const handleScroll = () => {
+      const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      targetScroll = Math.min(Math.max(window.scrollY / maxScroll, 0), 1);
     };
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
     // Handle Resize
     const handleResize = () => {
@@ -124,7 +164,9 @@ export default function ThreeJsBackground({ className = '', style = {} }) {
 
     window.addEventListener('resize', handleResize);
 
-    // Animation Loop
+    // ──────────────────────────────────────────────────────────────────────────
+    // 4. ANIMATION LOOP
+    // ──────────────────────────────────────────────────────────────────────────
     let animId;
     let clock = new THREE.Clock();
 
@@ -134,54 +176,56 @@ export default function ThreeJsBackground({ className = '', style = {} }) {
       if (document.hidden) return;
 
       const elapsed = clock.getElapsedTime();
-      const posArray = particleGeometry.attributes.position.array;
 
-      // Update particle positions & wrap around boundaries
-      for (let i = 0; i < particleCount; i++) {
-        posArray[i * 3] += velocities[i].x;
-        posArray[i * 3 + 1] += velocities[i].y;
-        posArray[i * 3 + 2] += velocities[i].z;
+      // Smooth scroll interpolation
+      currentScroll += (targetScroll - currentScroll) * 0.06;
 
-        if (posArray[i * 3] < -60 || posArray[i * 3] > 60) velocities[i].x = -velocities[i].x;
-        if (posArray[i * 3 + 1] < -45 || posArray[i * 3 + 1] > 45) velocities[i].y = -velocities[i].y;
-        if (posArray[i * 3 + 2] < -20 || posArray[i * 3 + 2] > 20) velocities[i].z = -velocities[i].z;
+      // Dynamic wave on map structure vertices
+      const posArray = gridGeo.attributes.position.array;
+      for (let i = 0; i < posAttr.count; i++) {
+        const x = posAttr.getX(i);
+        const y = posAttr.getY(i);
+        const dynamicWave =
+          Math.sin(elapsed * 0.6 + x * 0.04) * 1.2 +
+          Math.cos(elapsed * 0.4 + y * 0.04) * 1.0;
+        posArray[i * 3 + 2] = baseZ[i] + dynamicWave;
       }
-      particleGeometry.attributes.position.needsUpdate = true;
+      gridGeo.attributes.position.needsUpdate = true;
 
-      // Update dynamic connecting constellation lines
-      let lineIndex = 0;
-      for (let i = 0; i < particleCount; i++) {
-        for (let j = i + 1; j < particleCount; j++) {
-          const dx = posArray[i * 3] - posArray[j * 3];
-          const dy = posArray[i * 3 + 1] - posArray[j * 3 + 1];
-          const dz = posArray[i * 3 + 2] - posArray[j * 3 + 2];
-          const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+      // Move & wrap floating node particles
+      const nodePosArray = nodeGeo.attributes.position.array;
+      for (let i = 0; i < nodeCount; i++) {
+        nodePosArray[i * 3] += nodeVelocities[i].x;
+        nodePosArray[i * 3 + 1] += nodeVelocities[i].y;
+        nodePosArray[i * 3 + 2] += nodeVelocities[i].z;
 
-          if (dist < maxDistance) {
-            linePositions[lineIndex++] = posArray[i * 3];
-            linePositions[lineIndex++] = posArray[i * 3 + 1];
-            linePositions[lineIndex++] = posArray[i * 3 + 2];
-
-            linePositions[lineIndex++] = posArray[j * 3];
-            linePositions[lineIndex++] = posArray[j * 3 + 1];
-            linePositions[lineIndex++] = posArray[j * 3 + 2];
-          }
-        }
+        if (nodePosArray[i * 3] < -70 || nodePosArray[i * 3] > 70) nodeVelocities[i].x = -nodeVelocities[i].x;
+        if (nodePosArray[i * 3 + 1] < -45 || nodePosArray[i * 3 + 1] > 45) nodeVelocities[i].y = -nodeVelocities[i].y;
+        if (nodePosArray[i * 3 + 2] < -15 || nodePosArray[i * 3 + 2] > 15) nodeVelocities[i].z = -nodeVelocities[i].z;
       }
+      nodeGeo.attributes.position.needsUpdate = true;
 
-      lineGeometry.setDrawRange(0, lineIndex / 3);
-      lineGeometry.attributes.position.needsUpdate = true;
+      // Scroll response: as the user scrolls through the page (Hero -> Features -> etc.)
+      // the map-like structure in the background translates and tilts smoothly
+      const scrollYOffset = currentScroll * 22;
+      const scrollRotZ = currentScroll * 0.12;
 
-      // Gentle grid wave
-      gridMesh.rotation.z = Math.sin(elapsed * 0.1) * 0.05;
+      mapFacesMesh.position.y = -18 + scrollYOffset;
+      mapFacesMesh.rotation.z = scrollRotZ;
+
+      mapWireMesh.position.y = -18 + scrollYOffset;
+      mapWireMesh.rotation.z = scrollRotZ;
+
+      gridPoints.position.y = -18 + scrollYOffset;
+      gridPoints.rotation.z = scrollRotZ;
 
       // Smooth mouse parallax
       targetX += (mouseX - targetX) * 0.05;
       targetY += (mouseY - targetY) * 0.05;
 
-      camera.position.x = targetX * 12;
-      camera.position.y = -targetY * 8;
-      camera.lookAt(0, 0, 0);
+      camera.position.x = targetX * 10;
+      camera.position.y = 10 - targetY * 6;
+      camera.lookAt(0, 0, -10);
 
       renderer.render(scene, camera);
     };
@@ -191,14 +235,15 @@ export default function ThreeJsBackground({ className = '', style = {} }) {
     return () => {
       cancelAnimationFrame(animId);
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleResize);
 
-      particleGeometry.dispose();
-      particleMaterial.dispose();
-      lineGeometry.dispose();
-      lineMaterial.dispose();
       gridGeo.dispose();
-      gridMat.dispose();
+      faceMaterial.dispose();
+      wireMat.dispose();
+      gridPointsMat.dispose();
+      nodeGeo.dispose();
+      nodeMat.dispose();
 
       if (renderer) {
         renderer.dispose();

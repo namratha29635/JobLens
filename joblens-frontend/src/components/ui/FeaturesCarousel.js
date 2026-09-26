@@ -1,0 +1,412 @@
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+
+const FEATURES_DATA = [
+  {
+    id: 1,
+    icon: '🏢',
+    title: 'Hiring Drive Management',
+    desc: 'Coordinators publish verified off-campus & hiring drives with cutoffs, eligible branches, and CTC packages. Eligible candidates can apply with a single click.',
+    tag: 'Off-Campus Drives',
+    color: '#4f46e5',
+    bg: 'rgba(79, 70, 229, 0.08)',
+  },
+  {
+    id: 2,
+    icon: '🎯',
+    title: 'Resume–Job Matching',
+    desc: 'AI extracts your skills and compares them directly against the job description to calculate your match score and highlight missing high-priority skills.',
+    tag: 'Match Score %',
+    color: '#0891b2',
+    bg: 'rgba(6, 182, 212, 0.08)',
+  },
+  {
+    id: 3,
+    icon: '🛡️',
+    title: 'Job Scam Verification',
+    desc: 'Scan suspicious off-campus postings for upfront registration fee demands, urgent pressure tactics, unrealistic compensation claims, and unverified recruiter domains.',
+    tag: 'Scam Shield',
+    color: '#ef4444',
+    bg: 'rgba(239, 68, 68, 0.08)',
+  },
+  {
+    id: 4,
+    icon: '📝',
+    title: 'Application Tracking',
+    desc: 'Track every step of your application lifecycle from Applied ➔ Shortlisted ➔ Interview Rounds ➔ Final Selection with full history and feedback.',
+    tag: 'Real-Time Stages',
+    color: '#10b981',
+    bg: 'rgba(16, 185, 129, 0.08)',
+  },
+  {
+    id: 5,
+    icon: '🔔',
+    title: 'Instant Notifications',
+    desc: 'Instant in-app alerts and notifications whenever new drives are announced, interview rounds are scheduled, or shortlist results are published.',
+    tag: 'Live Alerts',
+    color: '#f59e0b',
+    bg: 'rgba(245, 158, 11, 0.08)',
+  },
+  {
+    id: 6,
+    icon: '📊',
+    title: 'Coordinator Command Hub',
+    desc: 'Powerful operations center for coordinators to filter applicants by branch, batch, and CGPA, review PDF resumes directly, and broadcast instant updates.',
+    tag: 'Placement Reports',
+    color: '#0f172a',
+    bg: 'rgba(15, 23, 42, 0.08)',
+  },
+];
+
+export default function FeaturesCarousel() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [itemsPerView, setItemsPerView] = useState(3);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+  const containerRef = useRef(null);
+
+  // Responsive itemsPerView calculation
+  useEffect(() => {
+    const updateView = () => {
+      if (window.innerWidth < 768) {
+        setItemsPerView(1);
+      } else if (window.innerWidth < 1080) {
+        setItemsPerView(2);
+      } else {
+        setItemsPerView(3);
+      }
+    };
+    updateView();
+    window.addEventListener('resize', updateView);
+    return () => window.removeEventListener('resize', updateView);
+  }, []);
+
+  const maxIndex = Math.max(0, FEATURES_DATA.length - itemsPerView);
+
+  const nextSlide = useCallback(() => {
+    setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
+  }, [maxIndex]);
+
+  const prevSlide = useCallback(() => {
+    setCurrentIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
+  }, [maxIndex]);
+
+  // Auto-move carousel every 3.2 seconds unless hovered or touched
+  useEffect(() => {
+    if (isPaused) return;
+    const interval = setInterval(() => {
+      nextSlide();
+    }, 3200);
+    return () => clearInterval(interval);
+  }, [isPaused, nextSlide]);
+
+  // Touch gesture handlers for mobile
+  const handleTouchStart = (e) => {
+    setIsPaused(true);
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    const diff = touchStartX.current - touchEndX.current;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) {
+        nextSlide();
+      } else {
+        prevSlide();
+      }
+    }
+    setIsPaused(false);
+  };
+
+  return (
+    <div
+      ref={containerRef}
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      style={{
+        position: 'relative',
+        width: '100%',
+        maxWidth: '1200px',
+        margin: '0 auto',
+        padding: '10px 0 20px',
+      }}
+    >
+      {/* Top Controls Bar: Active Counter & Navigation Arrows */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '20px',
+          padding: '0 8px',
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span
+            style={{
+              fontSize: '12px',
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              letterSpacing: '0.08em',
+              color: 'var(--brand)',
+              background: 'rgba(79, 70, 229, 0.08)',
+              padding: '4px 12px',
+              borderRadius: '999px',
+              border: '1px solid rgba(79, 70, 229, 0.2)',
+            }}
+          >
+            Interactive Feature Explorer
+          </span>
+          <span style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: 600 }}>
+            {currentIndex + 1} of {maxIndex + 1}
+          </span>
+        </div>
+
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button
+            type="button"
+            onClick={prevSlide}
+            aria-label="Previous feature"
+            style={{
+              width: '38px',
+              height: '38px',
+              borderRadius: '50%',
+              background: '#ffffff',
+              border: '1px solid var(--border)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: 'var(--text-primary)',
+              cursor: 'pointer',
+              boxShadow: 'var(--shadow-card)',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            <ChevronLeft size={18} />
+          </button>
+          <button
+            type="button"
+            onClick={nextSlide}
+            aria-label="Next feature"
+            style={{
+              width: '38px',
+              height: '38px',
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, #4f46e5, #172554)',
+              border: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#ffffff',
+              cursor: 'pointer',
+              boxShadow: '0 4px 14px rgba(79, 70, 229, 0.28)',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            <ChevronRight size={18} />
+          </button>
+        </div>
+      </div>
+
+      {/* Overflow Carousel Viewport */}
+      <div
+        style={{
+          overflow: 'hidden',
+          width: '100%',
+          borderRadius: 'var(--radius-xl)',
+          padding: '4px 4px 14px',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            transform: `translateX(-${currentIndex * (100 / itemsPerView)}%)`,
+            transition: 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)',
+            gap: '0px',
+          }}
+        >
+          {FEATURES_DATA.map((item) => (
+            <div
+              key={item.id}
+              style={{
+                flex: `0 0 ${100 / itemsPerView}%`,
+                maxWidth: `${100 / itemsPerView}%`,
+                padding: '0 10px',
+                boxSizing: 'border-box',
+              }}
+            >
+              <div
+                className="feature-carousel-card"
+                style={{
+                  height: '100%',
+                  minHeight: '280px',
+                  padding: '30px 26px',
+                  background: '#ffffff',
+                  border: '1px solid var(--border)',
+                  borderRadius: 'var(--radius-lg)',
+                  boxShadow: 'var(--shadow-card)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+                  position: 'relative',
+                  overflow: 'hidden',
+                }}
+              >
+                {/* Subtle top indicator bar */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: '3px',
+                    background: item.color,
+                    opacity: 0.85,
+                  }}
+                />
+
+                <div>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: '18px',
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: '48px',
+                        height: '48px',
+                        borderRadius: '14px',
+                        background: item.bg,
+                        color: item.color,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '24px',
+                        boxShadow: `0 4px 12px ${item.bg}`,
+                      }}
+                    >
+                      {item.icon}
+                    </div>
+
+                    <span
+                      style={{
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        color: item.color,
+                        background: item.bg,
+                        padding: '4px 10px',
+                        borderRadius: '999px',
+                        letterSpacing: '0.04em',
+                      }}
+                    >
+                      {item.tag}
+                    </span>
+                  </div>
+
+                  <h3
+                    style={{
+                      fontFamily: 'var(--font-display)',
+                      fontSize: '19px',
+                      fontWeight: 700,
+                      color: 'var(--midnight)',
+                      marginBottom: '10px',
+                      lineHeight: 1.3,
+                    }}
+                  >
+                    {item.title}
+                  </h3>
+
+                  <p
+                    style={{
+                      color: 'var(--slate)',
+                      fontSize: '13.5px',
+                      lineHeight: 1.65,
+                      margin: 0,
+                    }}
+                  >
+                    {item.desc}
+                  </p>
+                </div>
+
+                <div
+                  style={{
+                    marginTop: '22px',
+                    paddingTop: '14px',
+                    borderTop: '1px solid var(--border)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      color: 'var(--brand)',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                    }}
+                  >
+                    Active in Platform →
+                  </span>
+                  <span
+                    style={{
+                      fontSize: '11px',
+                      color: 'var(--text-muted)',
+                      fontWeight: 600,
+                    }}
+                  >
+                    Module 0{item.id}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Pagination Dot Indicators */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '8px',
+          marginTop: '16px',
+        }}
+      >
+        {Array.from({ length: maxIndex + 1 }).map((_, idx) => (
+          <button
+            key={idx}
+            type="button"
+            onClick={() => setCurrentIndex(idx)}
+            aria-label={`Go to slide ${idx + 1}`}
+            style={{
+              height: '7px',
+              width: currentIndex === idx ? '28px' : '8px',
+              borderRadius: '999px',
+              background: currentIndex === idx ? 'var(--brand)' : 'var(--border-light)',
+              border: 'none',
+              cursor: 'pointer',
+              padding: 0,
+              transition: 'all 0.3s ease',
+            }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
