@@ -30,8 +30,16 @@ if (fs.existsSync(threeuiDir)) {
   const styleCss = path.join(threeuiDir, 'lib-dist', 'style.css');
   if (fs.existsSync(styleCss)) {
     let css = fs.readFileSync(styleCss, 'utf8');
+    let changed = false;
     if (css.includes('radial-gradient(closest-side,')) {
       css = css.replaceAll('radial-gradient(closest-side,', 'radial-gradient(closest-side at center,');
+      changed = true;
+    }
+    if (css.includes('radial-gradient(50% 50%,')) {
+      css = css.replaceAll('radial-gradient(50% 50%,', 'radial-gradient(circle at 50% 50%,');
+      changed = true;
+    }
+    if (changed) {
       fs.writeFileSync(styleCss, css);
       console.log('[ThreeUI Patch] Fixed autoprefixer gradient syntax in style.css');
     }
