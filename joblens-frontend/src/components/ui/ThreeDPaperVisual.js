@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import * as ThreeUI from '@designcodeio/threeui';
-import '@designcodeio/threeui/style.css';
 
 // Safely resolve ThreeDPaper from @designcodeio/threeui across all environments
 const ThreeDPaperComponent = ThreeUI.ThreeDPaper || ThreeUI.WovenCloth;
