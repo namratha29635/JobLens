@@ -80,7 +80,7 @@ export default function PlacementTracker() {
                   {['oncampus','offcampus'].map(t => (
                     <button key={t} onClick={() => setTab(t)}
                       className={`tab-btn${tab===t?' active':''}`}>
-                      {t==='oncampus'?'🏢 On-Campus':'🌐 Off-Campus'}
+                      {t==='oncampus'?'🏢 Verified Drives':'🌐 Off-Campus Drives'}
                     </button>
                   ))}
                 </div>

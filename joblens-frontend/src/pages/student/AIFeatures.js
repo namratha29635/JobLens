@@ -538,7 +538,7 @@ export function DriveChatbot({ drives = [] }) {
         body: JSON.stringify({
           model: 'claude-sonnet-4-20250514',
           max_tokens: 400,
-          system: `You are a helpful campus placement assistant named PlaceMate. ${context}. Answer student questions about placement drives, round schedules, packages, eligibility, interview prep. Be concise and helpful. Use emojis sparingly.`,
+          system: `You are a helpful off-campus career and job assistant named PlaceMate. ${context}. Answer student questions about recruitment drives, round schedules, packages, eligibility, interview prep. Be concise and helpful. Use emojis sparingly.`,
           messages: [
             ...messages.filter(m=>m.role!=='bot'||messages.indexOf(m)>0).map(m => ({ role:m.role==='bot'?'assistant':'user', content:m.text })),
             { role:'user', content:userMsg }

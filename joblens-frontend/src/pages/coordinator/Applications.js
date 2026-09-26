@@ -167,7 +167,7 @@ export default function CoordinatorApplications() {
             📥 Student Applications Hub
           </h1>
           <p style={{ color: 'var(--text-secondary)', marginTop: '4px', fontSize: '14px' }}>
-            Review, shortlist, and dispatch updates to students who applied to on-campus placement drives.
+            Review, shortlist, and dispatch updates to students who applied to recruitment drives.
           </p>
         </div>
 
@@ -242,7 +242,7 @@ export default function CoordinatorApplications() {
           {/* Drive Selector */}
           <div style={{ flex: 1.5, minWidth: '200px' }}>
             <label style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px', fontWeight: 700 }}>
-              FILTER BY ON-CAMPUS DRIVE
+              FILTER BY RECRUITMENT DRIVE
             </label>
             <select
               style={{ ...inputStyle, width: '100%' }}

@@ -100,7 +100,7 @@ export default function ApplicationStatus() {
           {loading ? <Spinner text="Loading applications..." /> :
             drives.length === 0 ? (
               <EmptyState icon="📋" title="No applications yet"
-                msg="Apply to on-campus drives to track your status here." />
+                msg="Apply to verified drives to track your status here." />
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
                 {selected.length > 0 && (

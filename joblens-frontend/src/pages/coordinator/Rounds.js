@@ -67,7 +67,7 @@ export default function RoundsPage() {
       <EmptyState
         icon="🏢"
         title="No Drives Found"
-        description="Create an on-campus drive first before managing recruitment rounds."
+        description="Create a recruitment drive first before managing recruitment rounds."
       />
     );
   }

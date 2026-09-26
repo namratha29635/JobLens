@@ -12,7 +12,7 @@ const EMAIL_TEMPLATES = [
     id: 'announcement',
     title: '📣 Drive Announcement',
     subject: 'Placement Drive Announcement: [Company Name] — Eligibility & Registration',
-    message: `Dear Students,\n\nWe are pleased to announce that [Company Name] will be conducting an on-campus placement drive for eligible students.\n\nKey Details:\n• Company: [Company Name]\n• Role: Graduate Trainee / Software Engineer\n• Package: [Package in LPA]\n• Eligibility: B.Tech in CSE/IT/ECE with CGPA >= 6.5\n• Last Date to Register: [Date]\n\nPlease log in to JobLens and submit your application with an updated resume before the deadline.\n\nBest regards,\nPlacement & Career Development Cell (CCPDMS)`,
+    message: `Dear Students,\n\nWe are pleased to announce that [Company Name] will be conducting a recruitment drive for eligible candidates.\n\nKey Details:\n• Company: [Company Name]\n• Role: Graduate Trainee / Software Engineer\n• Package: [Package in LPA]\n• Eligibility: B.Tech in CSE/IT/ECE with CGPA >= 6.5\n• Last Date to Register: [Date]\n\nPlease log in to JobLens and submit your application with an updated resume before the deadline.\n\nBest regards,\nJobLens Career Development & Recruitment Team`,
   },
   {
     id: 'shortlist',
@@ -24,13 +24,13 @@ const EMAIL_TEMPLATES = [
     id: 'congrats',
     title: '🏆 Offer / Selection Congratulations',
     subject: 'Congratulations! Official Selection & Offer Letter — [Company Name]',
-    message: `Dear Student,\n\nHeartiest congratulations on your selection in [Company Name] during the recent on-campus placement drive!\n\nYour hard work, technical competence, and interview performance have yielded a great result. Further onboarding instructions and official offer letters will be shared via your registered email.\n\nWe wish you a wonderful and prosperous professional career ahead.\n\nWarm regards,\nTraining & Placement Cell`,
+    message: `Dear Student,\n\nHeartiest congratulations on your selection in [Company Name] during the recent recruitment drive!\n\nYour hard work, technical competence, and interview performance have yielded a great result. Further onboarding instructions and official offer letters will be shared via your registered email.\n\nWe wish you a wonderful and prosperous professional career ahead.\n\nWarm regards,\nTraining & Placement Cell`,
   },
   {
     id: 'resume_reminder',
     title: '⚠️ Resume Update Reminder',
     subject: 'Action Required: Update Your Resume on JobLens for Upcoming Placement Drives',
-    message: `Dear Students,\n\nSeveral leading recruiters are scheduled to conduct on-campus hiring drives this month. To ensure your profile is accurately matched and eligible, please verify that your latest resume (PDF) and technical skills are updated on your JobLens profile.\n\nStudents without an active resume will not be shortlisted for drive registrations.\n\nRegards,\nPlacement Cell`,
+    message: `Dear Students,\n\nSeveral leading recruiters are scheduled to conduct recruitment drives this month. To ensure your profile is accurately matched and eligible, please verify that your latest resume (PDF) and technical skills are updated on your JobLens profile.\n\nStudents without an active resume will not be shortlisted for drive registrations.\n\nRegards,\nPlacement Cell`,
   },
 ];
 
@@ -415,7 +415,7 @@ export function NotifyPage() {
                 {targetType === 'drive' && (
                   <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', background: 'var(--bg-elevated)', padding: '14px', borderRadius: '8px', border: '1px solid var(--border)' }}>
                     <div style={{ flex: 1.5, minWidth: '180px' }}>
-                      <label style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>ON-CAMPUS DRIVE *</label>
+                      <label style={{ fontSize: '11px', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>RECRUITMENT DRIVE *</label>
                       <select
                         style={inputStyle}
                         value={form.driveId}

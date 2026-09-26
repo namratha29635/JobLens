@@ -215,17 +215,17 @@ export default function OnCampusDrives() {
     <div className="app-layout">
       <Sidebar role="coordinator" />
       <div className="main-content">
-        <Topbar title="On-Campus Drives" />
+        <Topbar title="Verified Drives" />
         <div className="page-body">
           <div className="page-header">
             <div>
-              <h1 className="page-title">On-Campus Drives</h1>
-              <p className="page-subtitle">Manage all on-campus recruitment drives</p>
+              <h1 className="page-title">Verified Drives</h1>
+              <p className="page-subtitle">Manage all recruitment drives</p>
             </div>
             <button className="btn btn-primary" onClick={() => setShowForm(true)}>＋ New Drive</button>
           </div>
           {loading ? <Spinner text="Loading drives..." /> :
-            drives.length === 0 ? <EmptyState icon="🏢" title="No drives yet" msg="Create your first on-campus drive." action={<button className="btn btn-primary" onClick={() => setShowForm(true)}>＋ Create Drive</button>} /> :
+            drives.length === 0 ? <EmptyState icon="🏢" title="No drives yet" msg="Create your first recruitment drive." action={<button className="btn btn-primary" onClick={() => setShowForm(true)}>＋ Create Drive</button>} /> :
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px,1fr))', gap: 16 }}>
                 {drives.map(d => (
                   <div key={d._id} className="drive-card" onClick={() => selectDrive(d)}>

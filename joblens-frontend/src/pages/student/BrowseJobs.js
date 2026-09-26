@@ -232,7 +232,7 @@ export default function BrowseJobs() {
             </h2>
 
             <p style={{ color: 'var(--text-secondary)', fontSize: '14px', lineHeight: 1.6, marginBottom: '24px' }}>
-              Our AI engine scans your tech stack, projects, and CGPA to rank campus placement drives from highest to lowest compatibility score.
+              Our AI engine scans your tech stack, projects, and CGPA to rank off-campus job drives from highest to lowest compatibility score.
             </p>
 
             {parsingResume ? (

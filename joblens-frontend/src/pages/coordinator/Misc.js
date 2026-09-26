@@ -171,7 +171,7 @@ export function NewDrive() {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20, maxWidth: 700 }}>
             {[
-              { icon: '🏢', title: 'On-Campus Drive', desc: 'For drives conducted at campus — manage rounds, eligible lists, and results.', path: '/coordinator/oncampus', color: 'var(--brand)' },
+              { icon: '🏢', title: 'Verified Recruitment Drive', desc: 'Direct employer hiring drives — manage rounds, eligible lists, and results.', path: '/coordinator/postings', color: 'var(--brand)' },
               { icon: '🌐', title: 'Off-Campus Drive', desc: 'Verified external drives — jobs, internships, and hackathons.', path: '/coordinator/offcampus', color: 'var(--success)' },
             ].map(opt => (
               <div key={opt.title} className="card clickable" onClick={() => navigate(opt.path)}

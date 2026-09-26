@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import ThreeJsBackground from '../../components/ui/ThreeJsBackground';
 import toast from 'react-hot-toast';
 
 const BRANCHES = ['CSE', 'IT', 'ECE', 'EEE', 'AIDS', 'AIML', 'DS', 'MECH', 'CIVIL'];
@@ -76,7 +77,7 @@ export default function Signup() {
 
   const inputStyle = {
     width: '100%',
-    background: 'var(--bg-elevated)',
+    background: '#f8fafc',
     border: '1px solid var(--border)',
     borderRadius: 'var(--radius)',
     color: 'var(--text-primary)',
@@ -91,7 +92,7 @@ export default function Signup() {
     fontSize: '12px',
     color: 'var(--text-secondary)',
     marginBottom: '5px',
-    fontWeight: 500,
+    fontWeight: 600,
   };
 
   return (
@@ -101,13 +102,24 @@ export default function Signup() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'var(--bg-primary)',
-        backgroundImage:
-          'radial-gradient(ellipse at 20% 50%, rgba(0,212,255,0.05) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(124,58,237,0.05) 0%, transparent 60%)',
-        padding: '30px 20px',
+        background: '#f5f7fb',
+        padding: '30px 16px',
+        position: 'relative',
+        overflowX: 'hidden',
+        width: '100%',
       }}
     >
-      <div style={{ width: '100%', maxWidth: '480px', animation: 'slideUp 0.4s ease' }}>
+      <ThreeJsBackground />
+
+      <div
+        style={{
+          width: '100%',
+          maxWidth: '480px',
+          animation: 'slideUp 0.35s ease',
+          position: 'relative',
+          zIndex: 2,
+        }}
+      >
         {/* Back to Home Link */}
         <div style={{ marginBottom: '14px' }}>
           <button
@@ -118,6 +130,7 @@ export default function Signup() {
               border: 'none',
               color: 'var(--text-muted)',
               fontSize: '13px',
+              fontWeight: 600,
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
@@ -129,7 +142,7 @@ export default function Signup() {
         </div>
 
         {/* Logo Header */}
-        <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '28px' }}>
           <div
             style={{
               display: 'inline-flex',
@@ -137,11 +150,12 @@ export default function Signup() {
               justifyContent: 'center',
               width: '56px',
               height: '56px',
-              background: 'linear-gradient(135deg, rgba(0,212,255,0.15), rgba(124,58,237,0.15))',
-              border: '1px solid rgba(0,212,255,0.2)',
+              background: 'linear-gradient(135deg, #06b6d4, #4f46e5)',
               borderRadius: '16px',
               marginBottom: '12px',
               fontSize: '24px',
+              boxShadow: '0 6px 18px rgba(79, 70, 229, 0.28)',
+              color: '#ffffff',
             }}
           >
             🎯
@@ -151,7 +165,7 @@ export default function Signup() {
               fontFamily: 'var(--font-display)',
               fontSize: '30px',
               fontWeight: 800,
-              background: 'linear-gradient(135deg, var(--accent-primary), #7c3aed)',
+              background: 'linear-gradient(135deg, #0f172a, #4f46e5)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               marginBottom: '6px',
@@ -159,7 +173,7 @@ export default function Signup() {
           >
             JobLens
           </h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '13px', fontWeight: 500 }}>
             Create your account to get started
           </p>
         </div>
@@ -167,21 +181,21 @@ export default function Signup() {
         {/* Card */}
         <div
           style={{
-            background: 'var(--bg-card)',
+            background: '#ffffff',
             border: '1px solid var(--border)',
             borderRadius: 'var(--radius-lg)',
-            padding: '32px',
-            boxShadow: '0 0 60px rgba(0,212,255,0.05)',
+            padding: 'clamp(22px, 5vw, 32px)',
+            boxShadow: 'var(--shadow-elevation)',
           }}
         >
           {/* Role selector tabs */}
           <div
             style={{
               display: 'flex',
-              background: 'var(--bg-elevated)',
+              background: '#f1f5f9',
               borderRadius: 'var(--radius)',
               padding: '4px',
-              marginBottom: '24px',
+              marginBottom: '20px',
               border: '1px solid var(--border)',
             }}
           >
@@ -190,15 +204,16 @@ export default function Signup() {
               onClick={() => setRole('student')}
               style={{
                 flex: 1,
-                padding: '8px',
+                padding: '9px',
                 border: 'none',
                 borderRadius: 'calc(var(--radius) - 2px)',
-                background: role === 'student' ? 'var(--accent-primary)' : 'transparent',
-                color: role === 'student' ? 'var(--bg-primary)' : 'var(--text-secondary)',
+                background: role === 'student' ? 'linear-gradient(135deg, #4f46e5, #172554)' : 'transparent',
+                color: role === 'student' ? '#ffffff' : 'var(--text-secondary)',
                 fontWeight: 700,
                 fontSize: '13px',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
+                boxShadow: role === 'student' ? '0 2px 8px rgba(79, 70, 229, 0.2)' : 'none',
               }}
             >
               🎓 Student
@@ -208,29 +223,30 @@ export default function Signup() {
               onClick={() => setRole('coordinator')}
               style={{
                 flex: 1,
-                padding: '8px',
+                padding: '9px',
                 border: 'none',
                 borderRadius: 'calc(var(--radius) - 2px)',
-                background: role === 'coordinator' ? 'var(--accent-primary)' : 'transparent',
-                color: role === 'coordinator' ? 'var(--bg-primary)' : 'var(--text-secondary)',
+                background: role === 'coordinator' ? 'linear-gradient(135deg, #4f46e5, #172554)' : 'transparent',
+                color: role === 'coordinator' ? '#ffffff' : 'var(--text-secondary)',
                 fontWeight: 700,
                 fontSize: '13px',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
+                boxShadow: role === 'coordinator' ? '0 2px 8px rgba(79, 70, 229, 0.2)' : 'none',
               }}
             >
               💼 Coordinator
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
             {/* Full Name */}
             <div>
               <label style={labelStyle}>Full Name</label>
               <input
                 type="text"
                 name="name"
-                placeholder={role === 'student' ? 'John Doe' : 'Dr. Placement Coordinator'}
+                placeholder={role === 'student' ? 'John Doe' : 'Dr. Coordinator Admin'}
                 value={form.name}
                 onChange={handleChange}
                 style={inputStyle}
@@ -241,12 +257,12 @@ export default function Signup() {
             {/* Email */}
             <div>
               <label style={labelStyle}>
-                {role === 'student' ? 'College Email' : 'Official Email'}
+                {role === 'student' ? 'Email Address' : 'Official Email'}
               </label>
               <input
                 type="email"
                 name="email"
-                placeholder={role === 'student' ? 'yourroll@college.edu' : 'coordinator@college.edu'}
+                placeholder={role === 'student' ? 'student@domain.com' : 'coordinator@domain.com'}
                 value={form.email}
                 onChange={handleChange}
                 style={inputStyle}
@@ -257,7 +273,7 @@ export default function Signup() {
             {/* Student-only fields */}
             {role === 'student' && (
               <>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '10px' }}>
                   <div>
                     <label style={labelStyle}>Roll Number</label>
                     <input
@@ -278,7 +294,7 @@ export default function Signup() {
                       style={{ ...inputStyle, cursor: 'pointer' }}
                     >
                       {BRANCHES.map((b) => (
-                        <option key={b} value={b} style={{ background: 'var(--bg-elevated)', color: 'var(--text-primary)' }}>
+                        <option key={b} value={b}>
                           {b}
                         </option>
                       ))}
@@ -286,7 +302,7 @@ export default function Signup() {
                   </div>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '10px' }}>
                   <div>
                     <label style={labelStyle}>Graduation Batch</label>
                     <select
@@ -296,7 +312,7 @@ export default function Signup() {
                       style={{ ...inputStyle, cursor: 'pointer' }}
                     >
                       {BATCHES.map((y) => (
-                        <option key={y} value={y} style={{ background: 'var(--bg-elevated)', color: 'var(--text-primary)' }}>
+                        <option key={y} value={y}>
                           {y} Batch
                         </option>
                       ))}
@@ -347,6 +363,7 @@ export default function Signup() {
                     color: 'var(--text-secondary)',
                     fontSize: '16px',
                   }}
+                  aria-label="Toggle password visibility"
                 >
                   {showPass ? '🙈' : '👁'}
                 </button>
@@ -374,9 +391,9 @@ export default function Signup() {
               style={{
                 width: '100%',
                 padding: '13px',
-                marginTop: '6px',
-                background: 'linear-gradient(135deg, var(--accent-primary), #0099cc)',
-                color: 'var(--bg-primary)',
+                marginTop: '4px',
+                background: 'linear-gradient(135deg, #4f46e5, #172554)',
+                color: '#ffffff',
                 border: 'none',
                 borderRadius: 'var(--radius)',
                 fontSize: '15px',
@@ -388,7 +405,7 @@ export default function Signup() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '8px',
-                boxShadow: '0 4px 15px rgba(0,212,255,0.2)',
+                boxShadow: '0 4px 14px rgba(79, 70, 229, 0.25)',
               }}
             >
               {loading ? (
@@ -398,7 +415,7 @@ export default function Signup() {
                       width: 16,
                       height: 16,
                       border: '2px solid transparent',
-                      borderTop: '2px solid var(--bg-primary)',
+                      borderTop: '2px solid #ffffff',
                       borderRadius: '50%',
                       animation: 'spin 0.7s linear infinite',
                     }}
@@ -412,7 +429,7 @@ export default function Signup() {
           </form>
 
           {/* Already have an account link */}
-          <div style={{ marginTop: '22px', textAlign: 'center', fontSize: '13px', color: 'var(--text-secondary)' }}>
+          <div style={{ marginTop: '20px', textAlign: 'center', fontSize: '13px', color: 'var(--text-secondary)' }}>
             Already have an account?{' '}
             <button
               type="button"
@@ -420,9 +437,9 @@ export default function Signup() {
               style={{
                 background: 'none',
                 border: 'none',
-                color: 'var(--accent-primary)',
+                color: 'var(--brand)',
                 cursor: 'pointer',
-                fontWeight: 600,
+                fontWeight: 700,
                 fontSize: '13px',
                 padding: 0,
               }}
@@ -432,8 +449,8 @@ export default function Signup() {
           </div>
         </div>
 
-        <p style={{ textAlign: 'center', marginTop: '20px', fontSize: '12px', color: 'var(--text-muted)' }}>
-          JobLens Campus Placement & Drive Management System
+        <p style={{ textAlign: 'center', marginTop: '16px', fontSize: '12px', color: 'var(--text-muted)' }}>
+          JobLens Off-Campus Job Discovery & Verification Platform
         </p>
       </div>
     </div>

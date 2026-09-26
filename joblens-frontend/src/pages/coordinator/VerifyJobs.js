@@ -94,7 +94,7 @@ export default function CoordinatorVerifyJobs() {
             Job Verification & Fraud Prevention Registry
           </h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginTop: '4px' }}>
-            Review, validate recruiter credentials, check corporate registries, and issue Level 1–3 verification badges for campus drives.
+            Review, validate recruiter credentials, check corporate registries, and issue Level 1–3 verification badges for off-campus drives.
           </p>
         </div>
 

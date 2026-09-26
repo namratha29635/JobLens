@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import ThreeJsBackground from '../components/ui/ThreeJsBackground';
+import ThreeDPaperVisual from '../components/ui/ThreeDPaperVisual';
+import { Menu, X } from 'lucide-react';
 
 export default function Landing() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleAuthRedirect = (defaultPath) => {
     if (user) {
@@ -20,6 +24,7 @@ export default function Landing() {
 
   const scrollToSection = (e, id) => {
     e.preventDefault();
+    setMobileMenuOpen(false);
     const el = document.getElementById(id);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
@@ -30,40 +35,45 @@ export default function Landing() {
     <div
       style={{
         minHeight: '100vh',
-        background: 'var(--bg-primary)',
+        background: '#f5f7fb',
         color: 'var(--text-primary)',
         fontFamily: 'var(--font-body)',
         display: 'flex',
         flexDirection: 'column',
         position: 'relative',
         overflowX: 'hidden',
+        width: '100%',
+        maxWidth: '100vw',
       }}
     >
-      {/* Background Gradients & Ambient Glow */}
+      {/* Interactive WebGL / Three.js Canvas Background */}
+      <ThreeJsBackground />
+
+      {/* Subtle Ambient Light Orbs */}
       <div
         style={{
           position: 'fixed',
-          top: '-10%',
-          left: '15%',
-          width: '500px',
-          height: '500px',
-          background: 'radial-gradient(circle, rgba(56, 189, 248, 0.12) 0%, transparent 70%)',
-          filter: 'blur(60px)',
+          top: '-15%',
+          left: '10%',
+          width: '550px',
+          height: '550px',
+          background: 'radial-gradient(circle, rgba(6, 182, 212, 0.08) 0%, transparent 70%)',
+          filter: 'blur(70px)',
           pointerEvents: 'none',
-          zIndex: 0,
+          zIndex: 1,
         }}
       />
       <div
         style={{
           position: 'fixed',
-          bottom: '10%',
-          right: '10%',
+          bottom: '5%',
+          right: '5%',
           width: '600px',
           height: '600px',
-          background: 'radial-gradient(circle, rgba(124, 58, 237, 0.1) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(79, 70, 229, 0.07) 0%, transparent 70%)',
           filter: 'blur(80px)',
           pointerEvents: 'none',
-          zIndex: 0,
+          zIndex: 1,
         }}
       />
 
@@ -76,12 +86,15 @@ export default function Landing() {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          padding: '18px 48px',
-          background: 'rgba(255, 255, 255, 0.85)',
+          padding: '14px clamp(16px, 4vw, 48px)',
+          background: 'rgba(255, 255, 255, 0.90)',
           backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
           borderBottom: '1px solid var(--border)',
+          width: '100%',
         }}
       >
+        {/* Brand Logo */}
         <div
           onClick={() => navigate('/')}
           style={{
@@ -96,12 +109,13 @@ export default function Landing() {
               width: '38px',
               height: '38px',
               borderRadius: '10px',
-              background: 'linear-gradient(135deg, #38bdf8, #818cf8)',
+              background: 'linear-gradient(135deg, #06b6d4, #4f46e5)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               fontSize: '20px',
-              boxShadow: '0 0 15px rgba(56, 189, 248, 0.4)',
+              boxShadow: '0 4px 14px rgba(79, 70, 229, 0.3)',
+              color: '#ffffff',
             }}
           >
             🎯
@@ -112,10 +126,12 @@ export default function Landing() {
                 fontFamily: 'var(--font-display)',
                 fontSize: '22px',
                 fontWeight: 800,
-                background: 'linear-gradient(135deg, #38bdf8, #818cf8)',
+                background: 'linear-gradient(135deg, #0f172a, #4f46e5)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 letterSpacing: '-0.02em',
+                display: 'block',
+                lineHeight: 1.1,
               }}
             >
               JobLens
@@ -125,29 +141,28 @@ export default function Landing() {
                 display: 'block',
                 fontSize: '9px',
                 color: 'var(--text-muted)',
-                letterSpacing: '0.12em',
+                letterSpacing: '0.1em',
                 textTransform: 'uppercase',
-                fontWeight: 600,
+                fontWeight: 700,
               }}
             >
-              AI Job & Placement Portal
+              Off-Campus Job & AI Verification
             </span>
           </div>
         </div>
 
-        {/* Navigation Links */}
+        {/* Desktop Navigation Links */}
         <nav
           style={{
-            display: 'flex',
             alignItems: 'center',
-            gap: '32px',
+            gap: '28px',
           }}
           className="desktop-only"
         >
           <a
             href="#home"
             onClick={(e) => scrollToSection(e, 'home')}
-            style={{ color: 'var(--text-primary)', textDecoration: 'none', fontSize: '14px', fontWeight: 500, cursor: 'pointer' }}
+            style={{ color: 'var(--text-primary)', textDecoration: 'none', fontSize: '14px', fontWeight: 600, cursor: 'pointer' }}
           >
             Home
           </a>
@@ -174,20 +189,21 @@ export default function Landing() {
           </a>
         </nav>
 
-        {/* Auth CTA Buttons */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        {/* Auth CTA Buttons & Mobile Hamburger */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           {user ? (
             <button
               onClick={() => handleAuthRedirect('/')}
               style={{
                 padding: '9px 18px',
                 borderRadius: 'var(--radius)',
-                background: 'var(--accent-primary)',
-                color: 'var(--bg-primary)',
+                background: 'linear-gradient(135deg, #4f46e5, #172554)',
+                color: '#ffffff',
                 border: 'none',
                 fontWeight: 700,
                 fontSize: '13px',
                 cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(79, 70, 229, 0.25)',
               }}
             >
               Go to Dashboard →
@@ -196,8 +212,9 @@ export default function Landing() {
             <>
               <button
                 onClick={() => navigate('/login')}
+                className="desktop-only"
                 style={{
-                  padding: '9px 18px',
+                  padding: '8px 16px',
                   borderRadius: 'var(--radius)',
                   background: 'transparent',
                   color: 'var(--text-primary)',
@@ -212,34 +229,140 @@ export default function Landing() {
               <button
                 onClick={() => navigate('/signup')}
                 style={{
-                  padding: '9px 20px',
+                  padding: '8px 16px',
                   borderRadius: 'var(--radius)',
-                  background: 'linear-gradient(135deg, #38bdf8, #2563eb)',
+                  background: 'linear-gradient(135deg, #4f46e5, #172554)',
                   color: '#ffffff',
                   border: 'none',
                   fontWeight: 700,
                   fontSize: '13px',
                   cursor: 'pointer',
-                  boxShadow: '0 4px 15px rgba(56, 189, 248, 0.25)',
+                  boxShadow: '0 4px 12px rgba(79, 70, 229, 0.25)',
+                  whiteSpace: 'nowrap',
                 }}
               >
                 Student Sign Up
               </button>
             </>
           )}
+
+          {/* Mobile Menu Toggle Button */}
+          <button
+            type="button"
+            className="mobile-only"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            style={{
+              background: '#f1f5f9',
+              border: '1px solid var(--border)',
+              borderRadius: '8px',
+              padding: '8px',
+              color: 'var(--text-primary)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
         </div>
       </header>
+
+      {/* Mobile Menu Dropdown Modal */}
+      {mobileMenuOpen && (
+        <div
+          style={{
+            position: 'fixed',
+            top: '68px',
+            left: 0,
+            right: 0,
+            background: '#ffffff',
+            borderBottom: '1px solid var(--border)',
+            boxShadow: 'var(--shadow-floating)',
+            zIndex: 99,
+            padding: '20px 24px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '14px',
+            animation: 'slideUp 0.2s ease',
+          }}
+        >
+          <a
+            href="#home"
+            onClick={(e) => scrollToSection(e, 'home')}
+            style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)', padding: '6px 0' }}
+          >
+            Home
+          </a>
+          <a
+            href="#features"
+            onClick={(e) => scrollToSection(e, 'features')}
+            style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-secondary)', padding: '6px 0' }}
+          >
+            Features
+          </a>
+          <a
+            href="#how-it-works"
+            onClick={(e) => scrollToSection(e, 'how-it-works')}
+            style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-secondary)', padding: '6px 0' }}
+          >
+            How it Works
+          </a>
+          <a
+            href="#about"
+            onClick={(e) => scrollToSection(e, 'about')}
+            style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-secondary)', padding: '6px 0' }}
+          >
+            About
+          </a>
+          <div style={{ borderTop: '1px solid var(--border)', paddingTop: '14px', display: 'flex', gap: '10px' }}>
+            <button
+              onClick={() => { setMobileMenuOpen(false); navigate('/login'); }}
+              style={{
+                flex: 1,
+                padding: '10px',
+                borderRadius: 'var(--radius)',
+                background: 'var(--bg-elevated)',
+                border: '1px solid var(--border)',
+                fontWeight: 600,
+                fontSize: '13px',
+                cursor: 'pointer',
+              }}
+            >
+              Sign In
+            </button>
+            <button
+              onClick={() => { setMobileMenuOpen(false); navigate('/signup'); }}
+              style={{
+                flex: 1,
+                padding: '10px',
+                borderRadius: 'var(--radius)',
+                background: 'linear-gradient(135deg, #4f46e5, #172554)',
+                color: '#ffffff',
+                border: 'none',
+                fontWeight: 700,
+                fontSize: '13px',
+                cursor: 'pointer',
+              }}
+            >
+              Student Sign Up
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* ── HERO SECTION ──────────────────────────────────────────────────── */}
       <section
         id="home"
         style={{
-          padding: '80px 24px 60px',
+          padding: 'clamp(40px, 8vw, 72px) 20px clamp(40px, 6vw, 60px)',
           maxWidth: '1100px',
           margin: '0 auto',
           textAlign: 'center',
           position: 'relative',
-          zIndex: 1,
+          zIndex: 2,
+          width: '100%',
         }}
       >
         <div
@@ -249,12 +372,12 @@ export default function Landing() {
             gap: '8px',
             padding: '6px 16px',
             borderRadius: '20px',
-            background: 'rgba(56, 189, 248, 0.1)',
-            border: '1px solid rgba(56, 189, 248, 0.3)',
-            color: 'var(--accent-primary)',
+            background: 'rgba(79, 70, 229, 0.08)',
+            border: '1px solid rgba(79, 70, 229, 0.25)',
+            color: 'var(--brand)',
             fontSize: '13px',
-            fontWeight: 600,
-            marginBottom: '24px',
+            fontWeight: 700,
+            marginBottom: '20px',
           }}
         >
           <span>🚀</span> Next-Generation Job Discovery & AI Verification
@@ -263,17 +386,17 @@ export default function Landing() {
         <h1
           style={{
             fontFamily: 'var(--font-display)',
-            fontSize: 'clamp(36px, 6vw, 62px)',
+            fontSize: 'clamp(32px, 5.5vw, 56px)',
             fontWeight: 800,
             lineHeight: 1.15,
             letterSpacing: '-0.03em',
-            marginBottom: '20px',
+            marginBottom: '18px',
           }}
         >
           Your Smart Job Placement <br />
           <span
             style={{
-              background: 'linear-gradient(135deg, #38bdf8 20%, #818cf8 60%, #c084fc 100%)',
+              background: 'linear-gradient(135deg, #06b6d4 15%, #4f46e5 60%, #172554 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
             }}
@@ -284,10 +407,10 @@ export default function Landing() {
 
         <p
           style={{
-            fontSize: 'clamp(16px, 2vw, 19px)',
+            fontSize: 'clamp(15px, 2vw, 18px)',
             color: 'var(--text-secondary)',
             maxWidth: '750px',
-            margin: '0 auto 36px',
+            margin: '0 auto 32px',
             lineHeight: 1.6,
           }}
         >
@@ -299,9 +422,9 @@ export default function Landing() {
           style={{
             display: 'flex',
             justifyContent: 'center',
-            gap: '16px',
+            gap: '12px',
             flexWrap: 'wrap',
-            marginBottom: '48px',
+            marginBottom: '40px',
           }}
         >
           <button
@@ -310,15 +433,15 @@ export default function Landing() {
               display: 'flex',
               alignItems: 'center',
               gap: '10px',
-              padding: '14px 28px',
+              padding: '13px 26px',
               borderRadius: 'var(--radius)',
-              background: 'linear-gradient(135deg, #38bdf8, #2563eb)',
+              background: 'linear-gradient(135deg, #4f46e5, #172554)',
               color: '#ffffff',
               border: 'none',
               fontWeight: 700,
-              fontSize: '15px',
+              fontSize: '14px',
               cursor: 'pointer',
-              boxShadow: '0 6px 25px rgba(56, 189, 248, 0.35)',
+              boxShadow: '0 6px 20px rgba(79, 70, 229, 0.3)',
               transition: 'transform 0.2s ease',
             }}
           >
@@ -331,13 +454,13 @@ export default function Landing() {
               display: 'flex',
               alignItems: 'center',
               gap: '10px',
-              padding: '14px 28px',
+              padding: '13px 26px',
               borderRadius: 'var(--radius)',
-              background: 'var(--bg-card)',
+              background: '#ffffff',
               color: 'var(--text-primary)',
               border: '1px solid var(--border-light)',
               fontWeight: 700,
-              fontSize: '15px',
+              fontSize: '14px',
               cursor: 'pointer',
               boxShadow: 'var(--shadow-card)',
               transition: 'all 0.2s ease',
@@ -352,13 +475,13 @@ export default function Landing() {
               display: 'flex',
               alignItems: 'center',
               gap: '8px',
-              padding: '14px 24px',
+              padding: '13px 22px',
               borderRadius: 'var(--radius)',
-              background: 'rgba(124, 58, 237, 0.15)',
-              color: '#c084fc',
-              border: '1px solid rgba(124, 58, 237, 0.3)',
-              fontWeight: 600,
-              fontSize: '15px',
+              background: 'rgba(6, 182, 212, 0.1)',
+              color: '#0891b2',
+              border: '1px solid rgba(6, 182, 212, 0.3)',
+              fontWeight: 700,
+              fontSize: '14px',
               cursor: 'pointer',
             }}
           >
@@ -366,44 +489,61 @@ export default function Landing() {
           </button>
         </div>
 
+        {/* ── ThreeUI ThreeDPaper Interactive Visual Showcase ─────────────── */}
+        <div
+          style={{
+            maxWidth: '850px',
+            margin: '0 auto 36px',
+            height: 'clamp(220px, 35vw, 320px)',
+            borderRadius: '22px',
+            border: '1px solid rgba(79, 70, 229, 0.2)',
+            boxShadow: '0 16px 36px -10px rgba(15, 23, 42, 0.12)',
+            overflow: 'hidden',
+            position: 'relative',
+            background: 'linear-gradient(135deg, rgba(255,255,255,0.7), rgba(245,247,251,0.9))',
+          }}
+        >
+          <ThreeDPaperVisual variant="original" />
+        </div>
+
         {/* Live Metrics Strip */}
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: '16px',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))',
+            gap: '14px',
             maxWidth: '950px',
             margin: '0 auto',
             padding: '20px 24px',
-            background: 'var(--bg-card)',
+            background: '#ffffff',
             border: '1px solid var(--border)',
             borderRadius: 'var(--radius-lg)',
             boxShadow: 'var(--shadow-card)',
           }}
         >
           <div>
-            <div style={{ fontSize: '26px', fontWeight: 800, color: 'var(--accent-primary)', fontFamily: 'var(--font-display)' }}>
+            <div style={{ fontSize: '26px', fontWeight: 800, color: 'var(--brand)', fontFamily: 'var(--font-display)' }}>
               100%
             </div>
-            <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Verified Hiring Drives</div>
+            <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: 600 }}>Verified Hiring Drives</div>
           </div>
           <div>
             <div style={{ fontSize: '26px', fontWeight: 800, color: 'var(--accent-green)', fontFamily: 'var(--font-display)' }}>
               AI Powered
             </div>
-            <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Resume Keyword Matching</div>
+            <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: 600 }}>Resume Keyword Matching</div>
           </div>
           <div>
             <div style={{ fontSize: '26px', fontWeight: 800, color: 'var(--accent-orange)', fontFamily: 'var(--font-display)' }}>
               Live
             </div>
-            <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>In-App Multi-Channel Alerts</div>
+            <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: 600 }}>In-App Multi-Channel Alerts</div>
           </div>
           <div>
-            <div style={{ fontSize: '26px', fontWeight: 800, color: '#c084fc', fontFamily: 'var(--font-display)' }}>
+            <div style={{ fontSize: '26px', fontWeight: 800, color: '#0891b2', fontFamily: 'var(--font-display)' }}>
               Zero Fake
             </div>
-            <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Job Scam Risk Analyzer</div>
+            <div style={{ fontSize: '12px', color: 'var(--text-muted)', fontWeight: 600 }}>Job Scam Risk Analyzer</div>
           </div>
         </div>
       </section>
@@ -412,25 +552,26 @@ export default function Landing() {
       <section
         id="features"
         style={{
-          padding: '80px 24px',
+          padding: '70px 20px',
           maxWidth: '1200px',
           margin: '0 auto',
           position: 'relative',
-          zIndex: 1,
+          zIndex: 2,
+          width: '100%',
         }}
       >
-        <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '44px' }}>
           <h2
             style={{
               fontFamily: 'var(--font-display)',
-              fontSize: '32px',
+              fontSize: 'clamp(24px, 4vw, 32px)',
               fontWeight: 800,
               marginBottom: '12px',
             }}
           >
             Built for Modern Job Seekers & Placements
           </h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '15px', maxWidth: '600px', margin: '0 auto' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '14px', maxWidth: '600px', margin: '0 auto' }}>
             Comprehensive intelligent tools designed to give students and placement coordinators complete visibility and trust.
           </p>
         </div>
@@ -438,15 +579,16 @@ export default function Landing() {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: '24px',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
+            gap: '20px',
           }}
         >
           {/* Card 1 */}
           <div
+            className="card"
             style={{
-              padding: '30px',
-              background: 'var(--bg-card)',
+              padding: '28px',
+              background: '#ffffff',
               border: '1px solid var(--border)',
               borderRadius: 'var(--radius-lg)',
               transition: 'all 0.25s ease',
@@ -454,16 +596,16 @@ export default function Landing() {
           >
             <div
               style={{
-                width: '48px',
-                height: '48px',
+                width: '46px',
+                height: '46px',
                 borderRadius: '12px',
-                background: 'rgba(56, 189, 248, 0.12)',
-                color: 'var(--accent-primary)',
+                background: 'rgba(79, 70, 229, 0.08)',
+                color: 'var(--brand)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '24px',
-                marginBottom: '18px',
+                fontSize: '22px',
+                marginBottom: '16px',
               }}
             >
               🏢
@@ -471,16 +613,17 @@ export default function Landing() {
             <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '18px', fontWeight: 700, marginBottom: '8px' }}>
               Hiring Drive Management
             </h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: 1.6 }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: 1.6, margin: 0 }}>
               Coordinators publish verified off-campus & hiring drives with cutoffs, eligible branches, and CTC packages. Eligible candidates can apply with a single click.
             </p>
           </div>
 
           {/* Card 2 */}
           <div
+            className="card"
             style={{
-              padding: '30px',
-              background: 'var(--bg-card)',
+              padding: '28px',
+              background: '#ffffff',
               border: '1px solid var(--border)',
               borderRadius: 'var(--radius-lg)',
               transition: 'all 0.25s ease',
@@ -488,16 +631,16 @@ export default function Landing() {
           >
             <div
               style={{
-                width: '48px',
-                height: '48px',
+                width: '46px',
+                height: '46px',
                 borderRadius: '12px',
-                background: 'rgba(124, 58, 237, 0.12)',
-                color: '#c084fc',
+                background: 'rgba(6, 182, 212, 0.08)',
+                color: '#0891b2',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '24px',
-                marginBottom: '18px',
+                fontSize: '22px',
+                marginBottom: '16px',
               }}
             >
               🎯
@@ -505,16 +648,17 @@ export default function Landing() {
             <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '18px', fontWeight: 700, marginBottom: '8px' }}>
               Resume–Job Matching
             </h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: 1.6 }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: 1.6, margin: 0 }}>
               AI extracts your skills and compares them directly against the job description to calculate your match score and highlight missing high-priority skills.
             </p>
           </div>
 
           {/* Card 3 */}
           <div
+            className="card"
             style={{
-              padding: '30px',
-              background: 'var(--bg-card)',
+              padding: '28px',
+              background: '#ffffff',
               border: '1px solid var(--border)',
               borderRadius: 'var(--radius-lg)',
               transition: 'all 0.25s ease',
@@ -522,16 +666,16 @@ export default function Landing() {
           >
             <div
               style={{
-                width: '48px',
-                height: '48px',
+                width: '46px',
+                height: '46px',
                 borderRadius: '12px',
-                background: 'rgba(239, 68, 68, 0.12)',
+                background: 'rgba(239, 68, 68, 0.08)',
                 color: 'var(--accent-red)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '24px',
-                marginBottom: '18px',
+                fontSize: '22px',
+                marginBottom: '16px',
               }}
             >
               🛡️
@@ -539,16 +683,17 @@ export default function Landing() {
             <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '18px', fontWeight: 700, marginBottom: '8px' }}>
               Job Scam Verification
             </h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: 1.6 }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: 1.6, margin: 0 }}>
               Scan suspicious off-campus postings for upfront registration fee demands, urgent pressure tactics, unrealistic compensation claims, and unverified recruiter domains.
             </p>
           </div>
 
           {/* Card 4 */}
           <div
+            className="card"
             style={{
-              padding: '30px',
-              background: 'var(--bg-card)',
+              padding: '28px',
+              background: '#ffffff',
               border: '1px solid var(--border)',
               borderRadius: 'var(--radius-lg)',
               transition: 'all 0.25s ease',
@@ -556,16 +701,16 @@ export default function Landing() {
           >
             <div
               style={{
-                width: '48px',
-                height: '48px',
+                width: '46px',
+                height: '46px',
                 borderRadius: '12px',
-                background: 'rgba(52, 211, 153, 0.12)',
+                background: 'rgba(16, 185, 129, 0.08)',
                 color: 'var(--accent-green)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '24px',
-                marginBottom: '18px',
+                fontSize: '22px',
+                marginBottom: '16px',
               }}
             >
               📝
@@ -573,16 +718,17 @@ export default function Landing() {
             <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '18px', fontWeight: 700, marginBottom: '8px' }}>
               Application Tracking
             </h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: 1.6 }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: 1.6, margin: 0 }}>
               Track every step of your application lifecycle from Applied ➔ Shortlisted ➔ Interview Rounds ➔ Final Selection with full history and feedback.
             </p>
           </div>
 
           {/* Card 5 */}
           <div
+            className="card"
             style={{
-              padding: '30px',
-              background: 'var(--bg-card)',
+              padding: '28px',
+              background: '#ffffff',
               border: '1px solid var(--border)',
               borderRadius: 'var(--radius-lg)',
               transition: 'all 0.25s ease',
@@ -590,16 +736,16 @@ export default function Landing() {
           >
             <div
               style={{
-                width: '48px',
-                height: '48px',
+                width: '46px',
+                height: '46px',
                 borderRadius: '12px',
-                background: 'rgba(251, 191, 36, 0.12)',
+                background: 'rgba(245, 158, 11, 0.08)',
                 color: 'var(--accent-orange)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '24px',
-                marginBottom: '18px',
+                fontSize: '22px',
+                marginBottom: '16px',
               }}
             >
               🔔
@@ -607,16 +753,17 @@ export default function Landing() {
             <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '18px', fontWeight: 700, marginBottom: '8px' }}>
               Instant Notifications
             </h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: 1.6 }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: 1.6, margin: 0 }}>
               Instant in-app alerts and notifications whenever new drives are announced, interview rounds are scheduled, or shortlist results are published.
             </p>
           </div>
 
           {/* Card 6 */}
           <div
+            className="card"
             style={{
-              padding: '30px',
-              background: 'var(--bg-card)',
+              padding: '28px',
+              background: '#ffffff',
               border: '1px solid var(--border)',
               borderRadius: 'var(--radius-lg)',
               transition: 'all 0.25s ease',
@@ -624,16 +771,16 @@ export default function Landing() {
           >
             <div
               style={{
-                width: '48px',
-                height: '48px',
+                width: '46px',
+                height: '46px',
                 borderRadius: '12px',
-                background: 'rgba(56, 189, 248, 0.12)',
-                color: 'var(--accent-primary)',
+                background: 'rgba(15, 23, 42, 0.08)',
+                color: 'var(--midnight)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '24px',
-                marginBottom: '18px',
+                fontSize: '22px',
+                marginBottom: '16px',
               }}
             >
               📊
@@ -641,7 +788,7 @@ export default function Landing() {
             <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '18px', fontWeight: 700, marginBottom: '8px' }}>
               Coordinator Command Hub
             </h3>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: 1.6 }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: 1.6, margin: 0 }}>
               Powerful operations center for coordinators to filter applicants by branch, batch, and CGPA, review PDF resumes directly, and broadcast instant updates.
             </p>
           </div>
@@ -652,14 +799,15 @@ export default function Landing() {
       <section
         id="how-it-works"
         style={{
-          padding: '80px 24px',
+          padding: '70px 20px',
           maxWidth: '1200px',
           margin: '0 auto',
           position: 'relative',
-          zIndex: 1,
+          zIndex: 2,
+          width: '100%',
         }}
       >
-        <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '44px' }}>
           <div
             style={{
               display: 'inline-flex',
@@ -667,9 +815,9 @@ export default function Landing() {
               gap: '8px',
               padding: '5px 14px',
               borderRadius: '20px',
-              background: 'rgba(124, 58, 237, 0.1)',
-              border: '1px solid rgba(124, 58, 237, 0.3)',
-              color: '#c084fc',
+              background: 'rgba(79, 70, 229, 0.08)',
+              border: '1px solid rgba(79, 70, 229, 0.25)',
+              color: 'var(--brand)',
               fontSize: '12px',
               fontWeight: 700,
               textTransform: 'uppercase',
@@ -682,14 +830,14 @@ export default function Landing() {
           <h2
             style={{
               fontFamily: 'var(--font-display)',
-              fontSize: '32px',
+              fontSize: 'clamp(24px, 4vw, 32px)',
               fontWeight: 800,
               marginBottom: '12px',
             }}
           >
             How JobLens Works
           </h2>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '15px', maxWidth: '650px', margin: '0 auto' }}>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '14px', maxWidth: '650px', margin: '0 auto' }}>
             From uploading your resume to landing verified job offers, our intelligent platform powers every milestone of your career journey.
           </p>
         </div>
@@ -697,18 +845,19 @@ export default function Landing() {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-            gap: '20px',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))',
+            gap: '18px',
             position: 'relative',
           }}
         >
           {/* Step 1 */}
           <div
+            className="card"
             style={{
-              background: 'var(--bg-card)',
+              background: '#ffffff',
               border: '1px solid var(--border)',
               borderRadius: 'var(--radius-lg)',
-              padding: '28px 24px',
+              padding: '26px 22px',
               display: 'flex',
               flexDirection: 'column',
               position: 'relative',
@@ -719,36 +868,36 @@ export default function Landing() {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                marginBottom: '20px',
+                marginBottom: '18px',
               }}
             >
               <div
                 style={{
-                  width: '46px',
-                  height: '46px',
+                  width: '44px',
+                  height: '44px',
                   borderRadius: '12px',
-                  background: 'rgba(56, 189, 248, 0.15)',
-                  color: 'var(--accent-primary)',
+                  background: 'rgba(6, 182, 212, 0.1)',
+                  color: '#0891b2',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '22px',
+                  fontSize: '20px',
                 }}
               >
                 📄
               </div>
               <span
                 style={{
-                  fontSize: '24px',
+                  fontSize: '22px',
                   fontWeight: 900,
                   fontFamily: 'var(--font-display)',
-                  color: 'rgba(56, 189, 248, 0.3)',
+                  color: 'rgba(6, 182, 212, 0.3)',
                 }}
               >
                 01
               </span>
             </div>
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '17px', fontWeight: 700, marginBottom: '10px' }}>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '17px', fontWeight: 700, marginBottom: '8px' }}>
               1. Upload & Parse Resume
             </h3>
             <p style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: 1.6, margin: 0 }}>
@@ -758,11 +907,12 @@ export default function Landing() {
 
           {/* Step 2 */}
           <div
+            className="card"
             style={{
-              background: 'var(--bg-card)',
+              background: '#ffffff',
               border: '1px solid var(--border)',
               borderRadius: 'var(--radius-lg)',
-              padding: '28px 24px',
+              padding: '26px 22px',
               display: 'flex',
               flexDirection: 'column',
               position: 'relative',
@@ -773,36 +923,36 @@ export default function Landing() {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                marginBottom: '20px',
+                marginBottom: '18px',
               }}
             >
               <div
                 style={{
-                  width: '46px',
-                  height: '46px',
+                  width: '44px',
+                  height: '44px',
                   borderRadius: '12px',
-                  background: 'rgba(124, 58, 237, 0.15)',
-                  color: '#c084fc',
+                  background: 'rgba(79, 70, 229, 0.1)',
+                  color: 'var(--brand)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '22px',
+                  fontSize: '20px',
                 }}
               >
                 🤖
               </div>
               <span
                 style={{
-                  fontSize: '24px',
+                  fontSize: '22px',
                   fontWeight: 900,
                   fontFamily: 'var(--font-display)',
-                  color: 'rgba(124, 58, 237, 0.3)',
+                  color: 'rgba(79, 70, 229, 0.3)',
                 }}
               >
                 02
               </span>
             </div>
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '17px', fontWeight: 700, marginBottom: '10px' }}>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '17px', fontWeight: 700, marginBottom: '8px' }}>
               2. AI Resume–Job Matching
             </h3>
             <p style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: 1.6, margin: 0 }}>
@@ -812,11 +962,12 @@ export default function Landing() {
 
           {/* Step 3 */}
           <div
+            className="card"
             style={{
-              background: 'var(--bg-card)',
+              background: '#ffffff',
               border: '1px solid var(--border)',
               borderRadius: 'var(--radius-lg)',
-              padding: '28px 24px',
+              padding: '26px 22px',
               display: 'flex',
               flexDirection: 'column',
               position: 'relative',
@@ -827,27 +978,27 @@ export default function Landing() {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                marginBottom: '20px',
+                marginBottom: '18px',
               }}
             >
               <div
                 style={{
-                  width: '46px',
-                  height: '46px',
+                  width: '44px',
+                  height: '44px',
                   borderRadius: '12px',
-                  background: 'rgba(239, 68, 68, 0.15)',
+                  background: 'rgba(239, 68, 68, 0.1)',
                   color: 'var(--accent-red)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '22px',
+                  fontSize: '20px',
                 }}
               >
                 🛡️
               </div>
               <span
                 style={{
-                  fontSize: '24px',
+                  fontSize: '22px',
                   fontWeight: 900,
                   fontFamily: 'var(--font-display)',
                   color: 'rgba(239, 68, 68, 0.3)',
@@ -856,7 +1007,7 @@ export default function Landing() {
                 03
               </span>
             </div>
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '17px', fontWeight: 700, marginBottom: '10px' }}>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '17px', fontWeight: 700, marginBottom: '8px' }}>
               3. Verify Scams & Safety
             </h3>
             <p style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: 1.6, margin: 0 }}>
@@ -866,11 +1017,12 @@ export default function Landing() {
 
           {/* Step 4 */}
           <div
+            className="card"
             style={{
-              background: 'var(--bg-card)',
+              background: '#ffffff',
               border: '1px solid var(--border)',
               borderRadius: 'var(--radius-lg)',
-              padding: '28px 24px',
+              padding: '26px 22px',
               display: 'flex',
               flexDirection: 'column',
               position: 'relative',
@@ -881,36 +1033,36 @@ export default function Landing() {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                marginBottom: '20px',
+                marginBottom: '18px',
               }}
             >
               <div
                 style={{
-                  width: '46px',
-                  height: '46px',
+                  width: '44px',
+                  height: '44px',
                   borderRadius: '12px',
-                  background: 'rgba(52, 211, 153, 0.15)',
+                  background: 'rgba(16, 185, 129, 0.1)',
                   color: 'var(--accent-green)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '22px',
+                  fontSize: '20px',
                 }}
               >
                 🎯
               </div>
               <span
                 style={{
-                  fontSize: '24px',
+                  fontSize: '22px',
                   fontWeight: 900,
                   fontFamily: 'var(--font-display)',
-                  color: 'rgba(52, 211, 153, 0.3)',
+                  color: 'rgba(16, 185, 129, 0.3)',
                 }}
               >
                 04
               </span>
             </div>
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '17px', fontWeight: 700, marginBottom: '10px' }}>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '17px', fontWeight: 700, marginBottom: '8px' }}>
               4. Apply & Track Status
             </h3>
             <p style={{ color: 'var(--text-secondary)', fontSize: '13px', lineHeight: 1.6, margin: 0 }}>
@@ -924,23 +1076,24 @@ export default function Landing() {
       <section
         id="about"
         style={{
-          padding: '60px 24px 80px',
+          padding: '50px 20px 80px',
           maxWidth: '1000px',
           margin: '0 auto',
           position: 'relative',
-          zIndex: 1,
+          zIndex: 2,
+          width: '100%',
         }}
       >
         <div
           style={{
-            padding: '40px',
-            background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(99, 102, 241, 0.08))',
+            padding: 'clamp(24px, 5vw, 44px)',
+            background: 'linear-gradient(135deg, rgba(79, 70, 229, 0.05), rgba(6, 182, 212, 0.06))',
             border: '1px solid var(--border)',
             borderRadius: 'var(--radius-xl)',
             boxShadow: 'var(--shadow-card)',
             display: 'flex',
             flexDirection: 'column',
-            gap: '20px',
+            gap: '18px',
           }}
         >
           <span
@@ -948,8 +1101,8 @@ export default function Landing() {
               fontSize: '12px',
               fontWeight: 700,
               textTransform: 'uppercase',
-              color: 'var(--accent-primary)',
-              letterSpacing: '0.1em',
+              color: 'var(--brand)',
+              letterSpacing: '0.08em',
             }}
           >
             About JobLens
@@ -957,7 +1110,7 @@ export default function Landing() {
           <h2
             style={{
               fontFamily: 'var(--font-display)',
-              fontSize: '26px',
+              fontSize: 'clamp(22px, 3.5vw, 26px)',
               fontWeight: 800,
               margin: 0,
             }}
@@ -970,22 +1123,23 @@ export default function Landing() {
           <div
             style={{
               display: 'flex',
-              gap: '16px',
-              marginTop: '10px',
+              gap: '14px',
+              marginTop: '8px',
               flexWrap: 'wrap',
             }}
           >
             <button
               onClick={() => navigate('/login')}
               style={{
-                padding: '10px 22px',
-                background: 'var(--accent-primary)',
-                color: 'var(--bg-primary)',
+                padding: '11px 22px',
+                background: 'linear-gradient(135deg, #4f46e5, #172554)',
+                color: '#ffffff',
                 border: 'none',
                 borderRadius: 'var(--radius)',
                 fontWeight: 700,
                 fontSize: '13px',
                 cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(79, 70, 229, 0.25)',
               }}
             >
               Sign In to Portal →
@@ -993,8 +1147,8 @@ export default function Landing() {
             <button
               onClick={() => navigate('/signup')}
               style={{
-                padding: '10px 22px',
-                background: 'transparent',
+                padding: '11px 22px',
+                background: '#ffffff',
                 color: 'var(--text-primary)',
                 border: '1px solid var(--border)',
                 borderRadius: 'var(--radius)',
@@ -1014,8 +1168,8 @@ export default function Landing() {
         style={{
           marginTop: 'auto',
           borderTop: '1px solid var(--border)',
-          background: 'var(--bg-secondary)',
-          padding: '30px 48px',
+          background: '#ffffff',
+          padding: '24px clamp(16px, 4vw, 48px)',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -1023,12 +1177,13 @@ export default function Landing() {
           gap: '16px',
           fontSize: '13px',
           color: 'var(--text-muted)',
+          zIndex: 2,
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span>🎯</span>
           <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>JobLens</span>
-          <span>· AI-Powered Job Placement & Verification Portal</span>
+          <span>· Off-Campus Job Discovery & AI Verification Portal</span>
         </div>
 
         <div>

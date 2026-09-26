@@ -4,7 +4,6 @@ import { useAuth } from '../../context/AuthContext';
 import {
   LayoutDashboard,
   Briefcase,
-  FileCheck2,
   Bookmark,
   ShieldCheck,
   User,
@@ -17,10 +16,8 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
-  ShieldAlert,
   CheckCircle,
-  FileText,
-  BadgeCheck,
+  X,
 } from 'lucide-react';
 
 export const studentNav = [
@@ -44,7 +41,7 @@ export const coordinatorNav = [
   { path: '/coordinator/settings', icon: Settings, label: 'Settings' },
 ];
 
-export default function Sidebar({ collapsed, setCollapsed }) {
+export default function Sidebar({ collapsed, setCollapsed, isMobileDrawer = false, onCloseDrawer }) {
   const { user, profile, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -52,41 +49,57 @@ export default function Sidebar({ collapsed, setCollapsed }) {
   const isCoordinator = user?.role === 'coordinator';
   const navItems = isCoordinator ? coordinatorNav : studentNav;
 
-  const studentName = profile?.name || user?.name || (isCoordinator ? 'Placement Admin' : 'Demo Student');
+  const studentName = profile?.name || user?.name || (isCoordinator ? 'Coordinator Admin' : 'Demo Student');
   const studentBranch = profile?.branch ? `${profile.branch} • Batch ${profile.passedOutYear || 2026}` : 'B.Tech CSE • Batch 2026';
+
+  const handleNavClick = (path) => {
+    navigate(path);
+    if (isMobileDrawer && onCloseDrawer) {
+      onCloseDrawer();
+    }
+  };
+
+  const handleSignOut = () => {
+    logout();
+    if (isMobileDrawer && onCloseDrawer) {
+      onCloseDrawer();
+    }
+    navigate('/login');
+  };
 
   return (
     <aside
-      className={`sidebar ${collapsed ? 'collapsed' : ''}`}
+      className={`sidebar ${collapsed && !isMobileDrawer ? 'collapsed' : ''}`}
       style={{
-        width: collapsed ? '76px' : '260px',
-        minHeight: '100vh',
+        width: isMobileDrawer ? '100%' : collapsed ? '76px' : '260px',
+        minHeight: isMobileDrawer ? '100%' : '100vh',
+        height: isMobileDrawer ? '100%' : 'auto',
         background: '#ffffff',
-        borderRight: '1px solid var(--border)',
+        borderRight: isMobileDrawer ? 'none' : '1px solid var(--border)',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
         transition: 'width 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
-        position: 'sticky',
+        position: isMobileDrawer ? 'relative' : 'sticky',
         top: 0,
         zIndex: 100,
-        boxShadow: '1px 0 4px rgba(0,0,0,0.02)',
+        boxShadow: isMobileDrawer ? 'none' : '1px 0 6px rgba(15, 23, 42, 0.03)',
       }}
     >
-      <div>
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
         {/* Logo & Portal Brand */}
         <div
           style={{
-            padding: collapsed ? '20px 14px' : '20px 22px',
+            padding: collapsed && !isMobileDrawer ? '20px 14px' : '20px 22px',
             borderBottom: '1px solid var(--border)',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: collapsed ? 'center' : 'space-between',
+            justifyContent: collapsed && !isMobileDrawer ? 'center' : 'space-between',
           }}
         >
-          {!collapsed ? (
+          {(!collapsed || isMobileDrawer) ? (
             <div
-              onClick={() => navigate(isCoordinator ? '/coordinator/dashboard' : '/student/dashboard')}
+              onClick={() => handleNavClick(isCoordinator ? '/coordinator/dashboard' : '/student/dashboard')}
               style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}
             >
               <div
@@ -94,19 +107,30 @@ export default function Sidebar({ collapsed, setCollapsed }) {
                   width: '36px',
                   height: '36px',
                   borderRadius: '10px',
-                  background: 'linear-gradient(135deg, #2563eb, #4f46e5)',
+                  background: 'linear-gradient(135deg, #4f46e5, #172554)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   color: '#ffffff',
-                  boxShadow: '0 4px 12px rgba(37, 99, 235, 0.3)',
+                  boxShadow: '0 4px 12px rgba(79, 70, 229, 0.3)',
                 }}
               >
                 <ShieldCheck size={20} />
               </div>
               <div>
-                <div style={{ fontFamily: 'var(--font-display)', fontSize: '18px', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  JobPortal
+                <div
+                  style={{
+                    fontFamily: 'var(--font-display)',
+                    fontSize: '18px',
+                    fontWeight: 800,
+                    color: '#0f172a',
+                    letterSpacing: '-0.02em',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                  }}
+                >
+                  JobLens
                   <CheckCircle size={14} color="#10b981" fill="#10b981" style={{ color: '#fff' }} />
                 </div>
                 <div style={{ fontSize: '10px', fontWeight: 700, color: 'var(--brand)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
@@ -120,7 +144,7 @@ export default function Sidebar({ collapsed, setCollapsed }) {
                 width: '36px',
                 height: '36px',
                 borderRadius: '10px',
-                background: 'linear-gradient(135deg, #2563eb, #4f46e5)',
+                background: 'linear-gradient(135deg, #4f46e5, #172554)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -131,49 +155,83 @@ export default function Sidebar({ collapsed, setCollapsed }) {
             </div>
           )}
 
-          <button
-            type="button"
-            onClick={() => setCollapsed(!collapsed)}
-            style={{
-              background: '#f1f5f9',
-              border: '1px solid var(--border)',
-              borderRadius: '8px',
-              color: 'var(--text-secondary)',
-              padding: '5px',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transition: 'all 0.15s ease',
-            }}
-            title={collapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
-          >
-            {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
-          </button>
+          {isMobileDrawer ? (
+            <button
+              type="button"
+              onClick={onCloseDrawer}
+              style={{
+                background: '#f1f5f9',
+                border: '1px solid var(--border)',
+                borderRadius: '8px',
+                color: 'var(--text-secondary)',
+                padding: '6px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              aria-label="Close menu"
+            >
+              <X size={16} />
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setCollapsed(!collapsed)}
+              className="desktop-only"
+              style={{
+                background: '#f1f5f9',
+                border: '1px solid var(--border)',
+                borderRadius: '8px',
+                color: 'var(--text-secondary)',
+                padding: '5px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'all 0.15s ease',
+              }}
+              title={collapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
+            >
+              {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
+            </button>
+          )}
         </div>
 
         {/* Navigation List */}
-        <nav style={{ padding: '16px 12px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+        <nav
+          style={{
+            padding: '16px 12px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '4px',
+            overflowY: 'auto',
+          }}
+        >
           {navItems.map((item) => {
             const Icon = item.icon;
-            const active = location.pathname === item.path || (item.path !== '/student/dashboard' && item.path !== '/coordinator/dashboard' && location.pathname.startsWith(item.path));
+            const active =
+              location.pathname === item.path ||
+              (item.path !== '/student/dashboard' &&
+                item.path !== '/coordinator/dashboard' &&
+                location.pathname.startsWith(item.path));
 
             return (
               <button
                 key={item.path}
                 type="button"
-                onClick={() => navigate(item.path)}
-                title={collapsed ? item.label : ''}
+                onClick={() => handleNavClick(item.path)}
+                title={collapsed && !isMobileDrawer ? item.label : ''}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: '12px',
-                  padding: collapsed ? '11px 0' : '10px 14px',
-                  justifyContent: collapsed ? 'center' : 'flex-start',
+                  padding: collapsed && !isMobileDrawer ? '11px 0' : '10px 14px',
+                  justifyContent: collapsed && !isMobileDrawer ? 'center' : 'flex-start',
                   borderRadius: '10px',
-                  background: active ? 'rgba(37, 99, 235, 0.08)' : 'transparent',
+                  background: active ? 'rgba(79, 70, 229, 0.08)' : 'transparent',
                   color: active ? 'var(--brand)' : 'var(--text-secondary)',
-                  border: active ? '1px solid rgba(37, 99, 235, 0.2)' : '1px solid transparent',
+                  border: active ? '1px solid rgba(79, 70, 229, 0.2)' : '1px solid transparent',
                   fontSize: '13px',
                   fontWeight: active ? 700 : 500,
                   cursor: 'pointer',
@@ -195,9 +253,9 @@ export default function Sidebar({ collapsed, setCollapsed }) {
                   }
                 }}
               >
-                <Icon size={18} color={active ? '#2563eb' : 'currentColor'} />
-                {!collapsed && <span style={{ flex: 1, textAlign: 'left' }}>{item.label}</span>}
-                {!collapsed && item.badge && (
+                <Icon size={18} color={active ? '#4f46e5' : 'currentColor'} />
+                {(!collapsed || isMobileDrawer) && <span style={{ flex: 1, textAlign: 'left' }}>{item.label}</span>}
+                {(!collapsed || isMobileDrawer) && item.badge && (
                   <span
                     style={{
                       fontSize: '10px',
@@ -220,9 +278,9 @@ export default function Sidebar({ collapsed, setCollapsed }) {
 
       {/* Bottom Profile Section & Logout */}
       <div style={{ padding: '16px 12px', borderTop: '1px solid var(--border)' }}>
-        {!collapsed && (
+        {(!collapsed || isMobileDrawer) && (
           <div
-            onClick={() => navigate(isCoordinator ? '/coordinator/settings' : '/student/profile')}
+            onClick={() => handleNavClick(isCoordinator ? '/coordinator/settings' : '/student/profile')}
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -241,7 +299,9 @@ export default function Sidebar({ collapsed, setCollapsed }) {
                 width: '36px',
                 height: '36px',
                 borderRadius: '50%',
-                background: isCoordinator ? 'linear-gradient(135deg, #4f46e5, #7c3aed)' : 'linear-gradient(135deg, #0284c7, #2563eb)',
+                background: isCoordinator
+                  ? 'linear-gradient(135deg, #172554, #4f46e5)'
+                  : 'linear-gradient(135deg, #06b6d4, #4f46e5)',
                 color: '#ffffff',
                 display: 'flex',
                 alignItems: 'center',
@@ -255,11 +315,28 @@ export default function Sidebar({ collapsed, setCollapsed }) {
             </div>
 
             <div style={{ overflow: 'hidden' }}>
-              <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+              <div
+                style={{
+                  fontSize: '13px',
+                  fontWeight: 700,
+                  color: 'var(--text-primary)',
+                  textOverflow: 'ellipsis',
+                  overflow: 'hidden',
+                  whiteSpace: 'nowrap',
+                }}
+              >
                 {studentName}
               </div>
-              <div style={{ fontSize: '11px', color: 'var(--text-muted)', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
-                {isCoordinator ? 'Placement Cell Admin' : studentBranch}
+              <div
+                style={{
+                  fontSize: '11px',
+                  color: 'var(--text-muted)',
+                  textOverflow: 'ellipsis',
+                  overflow: 'hidden',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {isCoordinator ? 'Coordinator Admin' : studentBranch}
               </div>
             </div>
           </div>
@@ -267,13 +344,13 @@ export default function Sidebar({ collapsed, setCollapsed }) {
 
         <button
           type="button"
-          onClick={logout}
-          title={collapsed ? 'Sign Out' : ''}
+          onClick={handleSignOut}
+          title={collapsed && !isMobileDrawer ? 'Sign Out' : ''}
           style={{
             width: '100%',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: collapsed ? 'center' : 'flex-start',
+            justifyContent: collapsed && !isMobileDrawer ? 'center' : 'flex-start',
             gap: '10px',
             padding: '10px',
             borderRadius: '10px',
@@ -293,7 +370,7 @@ export default function Sidebar({ collapsed, setCollapsed }) {
           }}
         >
           <LogOut size={16} />
-          {!collapsed && <span>Sign Out</span>}
+          {(!collapsed || isMobileDrawer) && <span>Sign Out</span>}
         </button>
       </div>
     </aside>

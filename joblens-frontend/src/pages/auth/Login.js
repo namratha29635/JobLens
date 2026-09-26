@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import ThreeJsBackground from '../../components/ui/ThreeJsBackground';
 import toast from 'react-hot-toast';
 
 export default function Login() {
@@ -17,7 +18,7 @@ export default function Login() {
 
   useEffect(() => {
     if (location.state?.email) {
-      setForm(prev => ({ ...prev, email: location.state.email }));
+      setForm((prev) => ({ ...prev, email: location.state.email }));
     }
   }, [location.state]);
 
@@ -49,24 +50,30 @@ export default function Login() {
   };
 
   return (
-    <div style={{
-      minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
-      background: 'var(--bg-primary)',
-      backgroundImage: 'radial-gradient(ellipse at 20% 50%, rgba(0,212,255,0.05) 0%, transparent 60%), radial-gradient(ellipse at 80% 20%, rgba(124,58,237,0.05) 0%, transparent 60%)',
-      padding: '20px',
-    }}>
-      {/* Decorative lines */}
-      <div style={{ position: 'fixed', inset: 0, overflow: 'hidden', pointerEvents: 'none', opacity: 0.3 }}>
-        {[...Array(5)].map((_, i) => (
-          <div key={i} style={{
-            position: 'absolute', top: `${15 + i * 18}%`, left: '-5%', right: '-5%',
-            height: '1px', background: `linear-gradient(90deg, transparent, rgba(0,212,255,${0.1 + i * 0.02}), transparent)`,
-            transform: 'rotate(-8deg)',
-          }} />
-        ))}
-      </div>
+    <div
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: '#f5f7fb',
+        padding: '24px 16px',
+        position: 'relative',
+        overflowX: 'hidden',
+        width: '100%',
+      }}
+    >
+      <ThreeJsBackground />
 
-      <div style={{ width: '100%', maxWidth: '440px', animation: 'slideUp 0.4s ease' }}>
+      <div
+        style={{
+          width: '100%',
+          maxWidth: '440px',
+          animation: 'slideUp 0.35s ease',
+          position: 'relative',
+          zIndex: 2,
+        }}
+      >
         {/* Back to Home Link */}
         <div style={{ marginBottom: '16px' }}>
           <button
@@ -77,6 +84,7 @@ export default function Login() {
               border: 'none',
               color: 'var(--text-muted)',
               fontSize: '13px',
+              fontWeight: 600,
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
@@ -88,53 +96,74 @@ export default function Login() {
         </div>
 
         {/* Logo */}
-        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-          <div style={{
-            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-            width: '64px', height: '64px',
-            background: 'linear-gradient(135deg, rgba(0,212,255,0.15), rgba(124,58,237,0.15))',
-            border: '1px solid rgba(0,212,255,0.2)',
-            borderRadius: '20px', marginBottom: '16px', fontSize: '28px',
-          }}>🎯</div>
-          <h1 style={{
-            fontFamily: 'var(--font-display)', fontSize: '36px', fontWeight: 800,
-            background: 'linear-gradient(135deg, var(--accent-primary), #7c3aed)',
-            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-            marginBottom: '8px',
-          }}>JobLens</h1>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
-            Campus Placement Management System
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '58px',
+              height: '58px',
+              background: 'linear-gradient(135deg, #06b6d4, #4f46e5)',
+              borderRadius: '16px',
+              marginBottom: '14px',
+              fontSize: '26px',
+              boxShadow: '0 6px 18px rgba(79, 70, 229, 0.28)',
+              color: '#ffffff',
+            }}
+          >
+            🎯
+          </div>
+          <h1
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: '32px',
+              fontWeight: 800,
+              background: 'linear-gradient(135deg, #0f172a, #4f46e5)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              marginBottom: '6px',
+            }}
+          >
+            JobLens
+          </h1>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '13px', fontWeight: 500 }}>
+            Off-Campus Job Discovery & Verification Platform
           </p>
         </div>
 
         {/* Form Card */}
-        <div style={{
-          background: 'var(--bg-card)',
-          border: '1px solid var(--border)',
-          borderRadius: 'var(--radius-lg)',
-          padding: '36px',
-          boxShadow: '0 0 60px rgba(0,212,255,0.05)',
-        }}>
-          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '22px', marginBottom: '24px' }}>
+        <div
+          style={{
+            background: '#ffffff',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-lg)',
+            padding: 'clamp(24px, 5vw, 36px)',
+            boxShadow: 'var(--shadow-elevation)',
+          }}
+        >
+          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '20px', fontWeight: 700, marginBottom: '20px' }}>
             Sign In
           </h2>
 
           {errorMsg && (
-            <div style={{
-              background: 'rgba(239, 68, 68, 0.12)',
-              border: '1px solid rgba(239, 68, 68, 0.35)',
-              borderRadius: 'var(--radius)',
-              padding: '12px 14px',
-              marginBottom: '18px',
-              color: '#f87171',
-              fontSize: '13px',
-              display: 'flex',
-              alignItems: 'flex-start',
-              gap: '10px',
-            }}>
+            <div
+              style={{
+                background: 'rgba(239, 68, 68, 0.08)',
+                border: '1px solid rgba(239, 68, 68, 0.25)',
+                borderRadius: 'var(--radius)',
+                padding: '12px 14px',
+                marginBottom: '18px',
+                color: '#dc2626',
+                fontSize: '13px',
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: '10px',
+              }}
+            >
               <span style={{ fontSize: '16px', lineHeight: 1 }}>⚠️</span>
               <div style={{ flex: 1 }}>
-                <div style={{ fontWeight: 500 }}>{errorMsg}</div>
+                <div style={{ fontWeight: 600 }}>{errorMsg}</div>
                 {errorMsg.toLowerCase().includes('not exist') && (
                   <button
                     type="button"
@@ -144,7 +173,7 @@ export default function Login() {
                       background: 'none',
                       border: 'none',
                       padding: 0,
-                      color: 'var(--accent-primary)',
+                      color: 'var(--brand)',
                       fontSize: '12px',
                       fontWeight: 700,
                       cursor: 'pointer',
@@ -159,28 +188,31 @@ export default function Login() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div>
-              <label style={{ display: 'block', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 500 }}>
-                College Email
+              <label style={{ display: 'block', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 600 }}>
+                Email
               </label>
               <input
                 type="email"
-                placeholder="yourroll@college.edu"
+                placeholder="yourname@domain.com"
                 value={form.email}
-                onChange={e => setForm({ ...form, email: e.target.value })}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
                 style={{
-                  width: '100%', background: 'var(--bg-elevated)', border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius)', color: 'var(--text-primary)', padding: '12px 16px',
+                  width: '100%',
+                  background: '#f8fafc',
+                  border: '1px solid var(--border)',
+                  borderRadius: 'var(--radius)',
+                  color: 'var(--text-primary)',
+                  padding: '12px 16px',
                   fontSize: '14px',
                 }}
-                onFocus={e => e.target.style.borderColor = 'var(--accent-primary)'}
-                onBlur={e => e.target.style.borderColor = 'var(--border)'}
+                required
               />
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 500 }}>
+              <label style={{ display: 'block', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '6px', fontWeight: 600 }}>
                 Password
               </label>
               <div style={{ position: 'relative' }}>
@@ -188,20 +220,36 @@ export default function Login() {
                   type={showPass ? 'text' : 'password'}
                   placeholder="Enter your password"
                   value={form.password}
-                  onChange={e => setForm({ ...form, password: e.target.value })}
+                  onChange={(e) => setForm({ ...form, password: e.target.value })}
                   style={{
-                    width: '100%', background: 'var(--bg-elevated)', border: '1px solid var(--border)',
-                    borderRadius: 'var(--radius)', color: 'var(--text-primary)', padding: '12px 48px 12px 16px',
+                    width: '100%',
+                    background: '#f8fafc',
+                    border: '1px solid var(--border)',
+                    borderRadius: 'var(--radius)',
+                    color: 'var(--text-primary)',
+                    padding: '12px 48px 12px 16px',
                     fontSize: '14px',
                   }}
-                  onFocus={e => e.target.style.borderColor = 'var(--accent-primary)'}
-                  onBlur={e => e.target.style.borderColor = 'var(--border)'}
+                  required
                 />
-                <button type="button" onClick={() => setShowPass(!showPass)} style={{
-                  position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)',
-                  background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)',
-                  fontSize: '16px',
-                }}>{showPass ? '🙈' : '👁'}</button>
+                <button
+                  type="button"
+                  onClick={() => setShowPass(!showPass)}
+                  style={{
+                    position: 'absolute',
+                    right: '12px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    color: 'var(--text-secondary)',
+                    fontSize: '16px',
+                  }}
+                  aria-label="Toggle password visibility"
+                >
+                  {showPass ? '🙈' : '👁'}
+                </button>
               </div>
             </div>
 
@@ -209,37 +257,79 @@ export default function Login() {
               type="submit"
               disabled={loading}
               style={{
-                width: '100%', padding: '14px',
-                background: 'linear-gradient(135deg, var(--accent-primary), #0099cc)',
-                color: 'var(--bg-primary)', border: 'none',
-                borderRadius: 'var(--radius)', fontSize: '15px', fontWeight: 700,
-                cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.7 : 1,
+                width: '100%',
+                padding: '13px',
+                background: 'linear-gradient(135deg, #4f46e5, #172554)',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: 'var(--radius)',
+                fontSize: '15px',
+                fontWeight: 700,
+                cursor: loading ? 'not-allowed' : 'pointer',
+                opacity: loading ? 0.7 : 1,
                 fontFamily: 'var(--font-display)',
+                boxShadow: '0 4px 14px rgba(79, 70, 229, 0.25)',
                 transition: 'var(--transition)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                marginTop: '4px',
               }}
             >
               {loading ? (
                 <>
-                  <div style={{ width: 16, height: 16, border: '2px solid transparent', borderTop: '2px solid var(--bg-primary)', borderRadius: '50%', animation: 'spin 0.7s linear infinite' }} />
+                  <div
+                    style={{
+                      width: 16,
+                      height: 16,
+                      border: '2px solid transparent',
+                      borderTop: '2px solid #ffffff',
+                      borderRadius: '50%',
+                      animation: 'spin 0.7s linear infinite',
+                    }}
+                  />
                   Signing in...
                 </>
-              ) : 'Sign In →'}
+              ) : (
+                'Sign In →'
+              )}
             </button>
           </form>
 
-          <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '13px' }}>
+          <div
+            style={{
+              marginTop: '18px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              fontSize: '13px',
+            }}
+          >
             <button
               type="button"
               onClick={() => navigate('/forgot-password')}
-              style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '12px' }}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'var(--text-secondary)',
+                cursor: 'pointer',
+                fontSize: '12px',
+              }}
             >
               Forgot password?
             </button>
             <button
               type="button"
               onClick={() => navigate('/signup')}
-              style={{ background: 'none', border: 'none', color: 'var(--accent-primary)', cursor: 'pointer', fontWeight: 600, fontSize: '13px' }}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'var(--brand)',
+                cursor: 'pointer',
+                fontWeight: 700,
+                fontSize: '13px',
+              }}
             >
               Create Account →
             </button>
@@ -247,23 +337,42 @@ export default function Login() {
         </div>
 
         {/* Demo Credentials */}
-        <div style={{
-          marginTop: '20px',
-          padding: '16px',
-          background: 'var(--bg-card)',
-          borderRadius: 'var(--radius)',
-          border: '1px solid var(--border)',
-        }}>
-          <p style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '8px' }}>
+        <div
+          style={{
+            marginTop: '16px',
+            padding: '16px',
+            background: '#ffffff',
+            borderRadius: 'var(--radius)',
+            border: '1px solid var(--border)',
+            boxShadow: 'var(--shadow-card)',
+          }}
+        >
+          <p
+            style={{
+              fontSize: '11px',
+              color: 'var(--text-muted)',
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+              marginBottom: '8px',
+            }}
+          >
             Quick Demo Login (1-Click Fill)
           </p>
-          <div style={{ display: 'flex', gap: '8px' }}>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
             <button
               type="button"
               onClick={() => setForm({ email: 'coordinator@college.edu', password: 'Test@123' })}
               style={{
-                flex: 1, padding: '8px 10px', background: 'var(--bg-elevated)', border: '1px solid var(--border)',
-                borderRadius: '8px', color: 'var(--text-secondary)', fontSize: '12px', cursor: 'pointer', textAlign: 'left',
+                flex: '1 1 140px',
+                padding: '8px 10px',
+                background: 'var(--bg-elevated)',
+                border: '1px solid var(--border)',
+                borderRadius: '8px',
+                color: 'var(--text-secondary)',
+                fontSize: '12px',
+                cursor: 'pointer',
+                textAlign: 'left',
               }}
             >
               💼 <strong style={{ color: 'var(--text-primary)' }}>Coordinator</strong>
@@ -273,8 +382,15 @@ export default function Login() {
               type="button"
               onClick={() => setForm({ email: 'student@college.edu', password: 'Test@123' })}
               style={{
-                flex: 1, padding: '8px 10px', background: 'var(--bg-elevated)', border: '1px solid var(--border)',
-                borderRadius: '8px', color: 'var(--text-secondary)', fontSize: '12px', cursor: 'pointer', textAlign: 'left',
+                flex: '1 1 140px',
+                padding: '8px 10px',
+                background: 'var(--bg-elevated)',
+                border: '1px solid var(--border)',
+                borderRadius: '8px',
+                color: 'var(--text-secondary)',
+                fontSize: '12px',
+                cursor: 'pointer',
+                textAlign: 'left',
               }}
             >
               🎓 <strong style={{ color: 'var(--text-primary)' }}>Student</strong>
@@ -284,7 +400,7 @@ export default function Login() {
         </div>
 
         <p style={{ textAlign: 'center', marginTop: '16px', fontSize: '12px', color: 'var(--text-muted)' }}>
-          JobLens Campus Placement & Drive Management System
+          JobLens Off-Campus Job Discovery & Verification Platform
         </p>
       </div>
     </div>

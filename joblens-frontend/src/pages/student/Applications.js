@@ -64,7 +64,7 @@ export default function StudentApplications() {
             My Application Pipeline
           </h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginTop: '4px' }}>
-            Track the real-time status, test links, and interview schedules of your active campus placement applications.
+            Track the real-time status, test links, and interview schedules of your active job applications.
           </p>
         </div>
 

@@ -91,10 +91,10 @@ export default function CoordinatorJobPostings() {
         <div>
           <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '24px', fontWeight: 800, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '10px' }}>
             <Briefcase className="text-blue-600" size={26} />
-            Campus Placement Drives & Postings
+            Recruitment Drives & Job Postings
           </h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '13px', marginTop: '4px' }}>
-            Create, manage, and verify active on-campus & off-campus hiring drives published to student portals.
+            Create, manage, and verify active hiring drives and off-campus opportunities published to student portals.
           </p>
         </div>
 
@@ -231,7 +231,7 @@ export default function CoordinatorJobPostings() {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
               <div>
                 <h2 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
-                  Publish New Campus Hiring Drive
+                  Publish New Hiring Drive
                 </h2>
                 <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Posting will be authenticated and verified for student applications</div>
               </div>

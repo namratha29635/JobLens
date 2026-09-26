@@ -142,7 +142,7 @@ const COORD_NAV = [
     items: [
       {
         path: "/coordinator/oncampus",
-        label: "On-Campus Drives",
+        label: "Verified Drives",
         icon: "building",
       },
       {
@@ -177,7 +177,7 @@ const STUDENT_NAV = [
   {
     section: "Placements",
     items: [
-      { path: "/student/drives", label: "On-Campus Drives", icon: "building" },
+      { path: "/student/drives", label: "Verified Drives", icon: "building" },
       { path: "/student/offcampus", label: "Off-Campus Jobs", icon: "globe" },
     ],
   },
@@ -219,7 +219,7 @@ export const Sidebar = ({ role = "student" }) => {
         <div className="logo-mark">JL</div>
         <div>
           <div className="logo-text">JobLens</div>
-          <div className="logo-sub">CCPDMS v1.0</div>
+          <div className="logo-sub">Off-Campus Portal</div>
         </div>
       </div>
 

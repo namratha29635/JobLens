@@ -111,10 +111,10 @@ export default function StudentDrives() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px' }}>
         <div>
           <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '28px', fontWeight: 800 }}>
-            🏢 On-Campus Placement Drives
+            🏢 Verified Recruitment Drives
           </h1>
           <p style={{ color: 'var(--text-secondary)', marginTop: '4px', fontSize: '14px' }}>
-            Exclusive recruitment drives organized for your campus and branch.
+            Exclusive recruitment drives organized for your college and branch.
           </p>
         </div>
 
@@ -145,11 +145,11 @@ export default function StudentDrives() {
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span style={{ fontSize: '18px' }}>🏛</span>
               <span style={{ fontWeight: 700, fontSize: '14px', color: 'var(--text-primary)' }}>
-                Filter By Campus & Branch:
+                Filter By Institution & Branch:
               </span>
             </div>
             <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
-              Campus: <strong style={{ color: 'var(--accent-primary)' }}>{selectedCollege}</strong> · Branch: <strong style={{ color: 'var(--accent-primary)' }}>{selectedBranch}</strong>
+              Institution: <strong style={{ color: 'var(--accent-primary)' }}>{selectedCollege}</strong> · Branch: <strong style={{ color: 'var(--accent-primary)' }}>{selectedBranch}</strong>
             </span>
           </div>
 
@@ -244,14 +244,14 @@ export default function StudentDrives() {
       />
 
       {loading ? (
-        <LoadingPage text="Loading campus placement drives..." />
+        <LoadingPage text="Loading verified recruitment drives..." />
       ) : currentList.length === 0 ? (
         <EmptyState
           icon={tab === 'active' ? '🏢' : '📁'}
-          title={tab === 'active' ? 'No active on-campus drives found' : 'No past drives found'}
+          title={tab === 'active' ? 'No active recruitment drives found' : 'No past drives found'}
           description={
             selectedCollege !== 'All Colleges'
-              ? `No on-campus drives currently listed for ${selectedCollege}. Try selecting 'All Colleges' to view all available drives.`
+              ? `No recruitment drives currently listed for ${selectedCollege}. Try selecting 'All Colleges' to view all available drives.`
               : 'New placement opportunities will appear here when posted by coordinators.'
           }
         />
@@ -485,7 +485,7 @@ function DriveDetail({ drive }) {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
         {[
           ['Company', drive.companyName],
-          ['College Campus', drive.collegeName || 'All Colleges'],
+          ['College Institution', drive.collegeName || 'All Colleges'],
           ['Package (CTC)', drive.minPackage ? `${drive.minPackage}–${drive.maxPackage} LPA` : 'Not Specified'],
           ['CGPA Cut-off', drive.cgpaCutOff],
           ['Backlogs Allowed', drive.backlogsAllowed],

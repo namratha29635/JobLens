@@ -599,7 +599,7 @@ export default function JobVerifier() {
 
           {/* Safety Disclaimer Alert */}
           <Alert type="warning">
-            Placement Advisory: Always verify job offers through official campus placement coordinators. Legitimate companies never request security deposits, laptop fees, or bank OTPs during candidate recruitment.
+            Advisory: Always verify job offers through official recruitment coordinators. Legitimate companies never request security deposits, laptop fees, or bank OTPs during candidate recruitment.
           </Alert>
         </div>
       )}

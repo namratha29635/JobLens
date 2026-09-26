@@ -452,7 +452,7 @@ export default function FeedbackPage() {
                 value={form.driveType}
                 onChange={e => setForm({ ...form, driveType: e.target.value })}
               >
-                <option value="on-campus">🏢 On-Campus Placement</option>
+                <option value="on-campus">🏢 Direct Company Drive</option>
                 <option value="off-campus">🌐 Off-Campus / Career Portal</option>
                 <option value="internship">💼 Internship / PPO</option>
                 <option value="referral">🤝 Employee Referral</option>

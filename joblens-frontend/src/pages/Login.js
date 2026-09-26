@@ -144,7 +144,7 @@ export default function Login() {
               lineHeight: 1.6,
             }}
           >
-            Centralized Campus Placement &amp; Drive Management System
+            Centralized Off-Campus Job &amp; Drive Management System
           </p>
           <div
             style={{
@@ -155,7 +155,7 @@ export default function Login() {
             }}
           >
             {[
-              { icon: "🏢", label: "On-Campus Drives" },
+              { icon: "🏢", label: "Verified Drives" },
               { icon: "🌐", label: "Off-Campus Access" },
               { icon: "🤖", label: "AI-Powered Tools" },
               { icon: "🛡️", label: "Fraud Detection" },

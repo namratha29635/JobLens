@@ -1,22 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   ShieldCheck,
   ShieldAlert,
   Clock,
-  CheckCircle2,
-  AlertCircle,
   Building2,
   MapPin,
   Briefcase,
   DollarSign,
   Bookmark,
-  Calendar,
-  ExternalLink,
-  ChevronRight,
   TrendingUp,
   Sparkles,
-  Search,
-  Filter,
 } from 'lucide-react';
 
 // ── Button ───────────────────────────────────────────────────────────
@@ -46,31 +39,32 @@ export const Button = ({
     transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
     textDecoration: 'none',
     userSelect: 'none',
+    touchAction: 'manipulation',
     ...style,
   };
 
   const sizeStyles = {
-    sm: { padding: '6px 12px', fontSize: '12px' },
-    md: { padding: '10px 18px', fontSize: '13px' },
-    lg: { padding: '13px 24px', fontSize: '15px' },
+    sm: { padding: '6px 14px', fontSize: '12px', minHeight: '34px' },
+    md: { padding: '10px 18px', fontSize: '13px', minHeight: '40px' },
+    lg: { padding: '12px 24px', fontSize: '15px', minHeight: '46px' },
   };
 
   const variantStyles = {
     primary: {
-      background: 'linear-gradient(135deg, #2563eb, #1d4ed8)',
+      background: 'linear-gradient(135deg, #4f46e5, #172554)',
       color: '#ffffff',
-      boxShadow: '0 2px 8px rgba(37, 99, 235, 0.25)',
+      boxShadow: '0 4px 12px rgba(79, 70, 229, 0.25)',
     },
     secondary: {
       background: '#ffffff',
-      color: 'var(--text-primary)',
-      border: '1px solid var(--border)',
-      boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+      color: '#0f172a',
+      border: '1px solid #cbd5e1',
+      boxShadow: '0 1px 3px rgba(15, 23, 42, 0.05)',
     },
     success: {
       background: 'linear-gradient(135deg, #10b981, #059669)',
       color: '#ffffff',
-      boxShadow: '0 2px 8px rgba(16, 185, 129, 0.25)',
+      boxShadow: '0 4px 12px rgba(16, 185, 129, 0.25)',
     },
     danger: {
       background: '#fee2e2',
@@ -99,41 +93,52 @@ export const Button = ({
       className={className}
       {...props}
     >
-      {loading ? <Spinner size={16} color={variant === 'primary' ? '#ffffff' : 'var(--brand)'} /> : Icon ? <Icon size={16} /> : null}
+      {loading ? (
+        <Spinner size={16} color={variant === 'primary' ? '#ffffff' : 'var(--brand)'} />
+      ) : Icon ? (
+        <Icon size={16} />
+      ) : null}
       {children}
     </button>
   );
 };
 
 // ── Verification Badge ───────────────────────────────────────────────
-export const VerificationBadge = ({ status = 'Verified', size = 'md' }) => {
-  const isVerified = status === 'Verified' || status === 'VERIFIED';
+export const VerificationBadge = ({ status = 'Verified', level, size = 'md' }) => {
+  const isVerified =
+    status === 'Verified' ||
+    status === 'VERIFIED' ||
+    level === 'Level 3' ||
+    level === 'Level 2' ||
+    level === 'Level 1';
   const isPending = status === 'Pending' || status === 'PENDING' || status === 'Under Review';
-  const isRejected = status === 'Rejected' || status === 'NOT_VERIFIED' || status === 'Unverified';
 
-  const config = isVerified
-    ? {
-        bg: 'rgba(16, 185, 129, 0.1)',
-        color: '#059669',
-        border: 'rgba(16, 185, 129, 0.25)',
-        icon: ShieldCheck,
-        label: 'Verified Job',
-      }
-    : isPending
-    ? {
-        bg: 'rgba(245, 158, 11, 0.1)',
-        color: '#d97706',
-        border: 'rgba(245, 158, 11, 0.25)',
-        icon: Clock,
-        label: 'Under Review',
-      }
-    : {
-        bg: 'rgba(239, 68, 68, 0.1)',
-        color: '#dc2626',
-        border: 'rgba(239, 68, 68, 0.25)',
-        icon: ShieldAlert,
-        label: 'Unverified / Flagged',
-      };
+  let config;
+  if (isVerified) {
+    config = {
+      bg: 'rgba(16, 185, 129, 0.09)',
+      color: '#059669',
+      border: 'rgba(16, 185, 129, 0.25)',
+      icon: ShieldCheck,
+      label: level ? `${level} Verified` : 'Verified Job',
+    };
+  } else if (isPending) {
+    config = {
+      bg: 'rgba(245, 158, 11, 0.09)',
+      color: '#d97706',
+      border: 'rgba(245, 158, 11, 0.25)',
+      icon: Clock,
+      label: 'Under Review',
+    };
+  } else {
+    config = {
+      bg: 'rgba(239, 68, 68, 0.09)',
+      color: '#dc2626',
+      border: 'rgba(239, 68, 68, 0.25)',
+      icon: ShieldAlert,
+      label: 'Unverified / Flagged',
+    };
+  }
 
   const IconComp = config.icon;
 
@@ -163,13 +168,13 @@ export const VerificationBadge = ({ status = 'Verified', size = 'md' }) => {
 // ── Badge ────────────────────────────────────────────────────────────
 export const Badge = ({ children, variant = 'default', size = 'md' }) => {
   const colors = {
-    default: { bg: '#f1f5f9', color: '#475569', border: '#e2e8f0' },
-    primary: { bg: 'rgba(37, 99, 235, 0.08)', color: '#2563eb', border: 'rgba(37, 99, 235, 0.2)' },
+    default: { bg: '#f1f5f9', color: '#334155', border: '#e2e8f0' },
+    primary: { bg: 'rgba(79, 70, 229, 0.08)', color: '#4f46e5', border: 'rgba(79, 70, 229, 0.2)' },
+    cyan: { bg: 'rgba(6, 182, 212, 0.08)', color: '#0891b2', border: 'rgba(6, 182, 212, 0.2)' },
     success: { bg: 'rgba(16, 185, 129, 0.08)', color: '#059669', border: 'rgba(16, 185, 129, 0.2)' },
     warning: { bg: 'rgba(245, 158, 11, 0.08)', color: '#d97706', border: 'rgba(245, 158, 11, 0.2)' },
     danger: { bg: 'rgba(239, 68, 68, 0.08)', color: '#dc2626', border: 'rgba(239, 68, 68, 0.2)' },
-    purple: { bg: 'rgba(139, 92, 246, 0.08)', color: '#7c3aed', border: 'rgba(139, 92, 246, 0.2)' },
-    teal: { bg: 'rgba(13, 148, 136, 0.08)', color: '#0d9488', border: 'rgba(13, 148, 136, 0.2)' },
+    purple: { bg: 'rgba(124, 58, 237, 0.08)', color: '#7c3aed', border: 'rgba(124, 58, 237, 0.2)' },
   };
 
   const c = colors[variant] || colors.default;
@@ -196,7 +201,7 @@ export const Badge = ({ children, variant = 'default', size = 'md' }) => {
 };
 
 // ── Card ─────────────────────────────────────────────────────────────
-export const Card = ({ children, className = '', glow, style = {}, onClick, hoverEffect = false }) => (
+export const Card = ({ children, className = '', style = {}, onClick, hoverEffect = true }) => (
   <div
     onClick={onClick}
     style={{
@@ -206,7 +211,7 @@ export const Card = ({ children, className = '', glow, style = {}, onClick, hove
       padding: '24px',
       boxShadow: 'var(--shadow-card)',
       cursor: onClick ? 'pointer' : 'default',
-      transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+      transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
       ...style,
     }}
     className={`card ${hoverEffect ? 'hover-elevate' : ''} ${className}`}
@@ -216,22 +221,22 @@ export const Card = ({ children, className = '', glow, style = {}, onClick, hove
 );
 
 // ── StatCard ─────────────────────────────────────────────────────────
-export const StatCard = ({ label, value, icon: Icon, color = '#2563eb', trend, trendLabel }) => (
+export const StatCard = ({ label, value, icon: Icon, color = '#4f46e5', trend, trendLabel }) => (
   <div
     style={{
       background: '#ffffff',
       border: '1px solid var(--border)',
       borderRadius: '16px',
-      padding: '22px',
+      padding: '20px',
       boxShadow: 'var(--shadow-card)',
       display: 'flex',
       flexDirection: 'column',
-      gap: '14px',
-      transition: 'all 0.2s ease',
+      gap: '12px',
+      transition: 'all 0.25s ease',
     }}
     onMouseEnter={(e) => {
       e.currentTarget.style.transform = 'translateY(-3px)';
-      e.currentTarget.style.boxShadow = '0 10px 25px -5px rgba(0, 0, 0, 0.08)';
+      e.currentTarget.style.boxShadow = 'var(--shadow-elevation)';
     }}
     onMouseLeave={(e) => {
       e.currentTarget.style.transform = 'translateY(0)';
@@ -242,10 +247,10 @@ export const StatCard = ({ label, value, icon: Icon, color = '#2563eb', trend, t
       <span style={{ color: 'var(--text-secondary)', fontSize: '13px', fontWeight: 600 }}>{label}</span>
       <div
         style={{
-          width: '42px',
-          height: '42px',
+          width: '40px',
+          height: '40px',
           borderRadius: '12px',
-          background: `${color}12`,
+          background: `${color}14`,
           color: color,
           display: 'flex',
           alignItems: 'center',
@@ -257,15 +262,15 @@ export const StatCard = ({ label, value, icon: Icon, color = '#2563eb', trend, t
     </div>
 
     <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px' }}>
-      <span style={{ fontSize: '30px', fontFamily: 'var(--font-display)', fontWeight: 800, color: 'var(--text-primary)' }}>
+      <span style={{ fontSize: '28px', fontFamily: 'var(--font-display)', fontWeight: 800, color: 'var(--text-primary)' }}>
         {value}
       </span>
       {trend && (
         <span
           style={{
-            fontSize: '12px',
+            fontSize: '11px',
             fontWeight: 700,
-            color: trend.startsWith('+') ? '#059669' : '#475569',
+            color: trend.startsWith('+') ? '#059669' : '#334155',
             background: trend.startsWith('+') ? 'rgba(16, 185, 129, 0.1)' : '#f1f5f9',
             padding: '2px 8px',
             borderRadius: '999px',
@@ -274,7 +279,7 @@ export const StatCard = ({ label, value, icon: Icon, color = '#2563eb', trend, t
             gap: '2px',
           }}
         >
-          <TrendingUp size={12} />
+          <TrendingUp size={11} />
           {trend}
         </span>
       )}
@@ -303,15 +308,16 @@ export const JobCard = ({ job, onApply, onViewDetails, onClick, isSaved, onToggl
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        gap: '18px',
+        gap: '16px',
         transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
         position: 'relative',
         cursor: (onClick || onViewDetails) ? 'pointer' : 'default',
+        width: '100%',
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = 'translateY(-3px)';
         e.currentTarget.style.borderColor = 'var(--border-light)';
-        e.currentTarget.style.boxShadow = '0 12px 30px -5px rgba(0, 0, 0, 0.08)';
+        e.currentTarget.style.boxShadow = 'var(--shadow-elevation)';
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.transform = 'translateY(0)';
@@ -319,14 +325,14 @@ export const JobCard = ({ job, onApply, onViewDetails, onClick, isSaved, onToggl
         e.currentTarget.style.boxShadow = 'var(--shadow-card)';
       }}
     >
-      {/* Header with Company Logo, Title, Verification Badge */}
       <div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px', marginBottom: '14px' }}>
-          <div style={{ display: 'flex', gap: '14px', alignItems: 'center' }}>
+        {/* Header with Company Logo, Title, Bookmark */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px', marginBottom: '12px' }}>
+          <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
             <div
               style={{
-                width: '48px',
-                height: '48px',
+                width: '46px',
+                height: '46px',
                 borderRadius: '12px',
                 background: '#f8fafc',
                 border: '1px solid var(--border)',
@@ -336,17 +342,18 @@ export const JobCard = ({ job, onApply, onViewDetails, onClick, isSaved, onToggl
                 overflow: 'hidden',
                 padding: '6px',
                 flexShrink: 0,
+                transition: 'transform 0.2s ease',
               }}
             >
               {job.logo ? (
                 <img src={job.logo} alt={job.company} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
               ) : (
-                <Building2 size={24} color="#64748b" />
+                <Building2 size={22} color="#475569" />
               )}
             </div>
 
             <div>
-              <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)' }}>
                 {job.company}
               </div>
               <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)', marginTop: '2px', lineHeight: 1.3 }}>
@@ -362,9 +369,9 @@ export const JobCard = ({ job, onApply, onViewDetails, onClick, isSaved, onToggl
               onToggleSave && onToggleSave(job.id, e);
             }}
             style={{
-              background: isSaved ? 'rgba(37, 99, 235, 0.1)' : '#f8fafc',
-              border: `1px solid ${isSaved ? 'rgba(37, 99, 235, 0.3)' : 'var(--border)'}`,
-              color: isSaved ? '#2563eb' : '#94a3b8',
+              background: isSaved ? 'rgba(79, 70, 229, 0.1)' : '#f8fafc',
+              border: `1px solid ${isSaved ? 'rgba(79, 70, 229, 0.3)' : 'var(--border)'}`,
+              color: isSaved ? '#4f46e5' : '#94a3b8',
               borderRadius: '8px',
               padding: '7px',
               cursor: 'pointer',
@@ -375,28 +382,28 @@ export const JobCard = ({ job, onApply, onViewDetails, onClick, isSaved, onToggl
             }}
             title={isSaved ? 'Remove from Saved' : 'Save Job'}
           >
-            <Bookmark size={16} fill={isSaved ? '#2563eb' : 'none'} />
+            <Bookmark size={16} fill={isSaved ? '#4f46e5' : 'none'} />
           </button>
         </div>
 
-        {/* Meta Info Row: Location, Salary, Experience */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', margin: '14px 0', fontSize: '13px', color: 'var(--text-secondary)' }}>
+        {/* Meta Info Row */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', margin: '12px 0', fontSize: '13px', color: 'var(--text-secondary)' }}>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-            <MapPin size={14} color="#0284c7" />
+            <MapPin size={14} color="#06b6d4" />
             {job.location}
           </span>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontWeight: 600, color: 'var(--text-primary)' }}>
-            <DollarSign size={14} color="#16a34a" />
+            <DollarSign size={14} color="#10b981" />
             {job.salary || job.ctc}
           </span>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-            <Briefcase size={14} color="#8b5cf6" />
+            <Briefcase size={14} color="#4f46e5" />
             {job.type}
           </span>
         </div>
 
         {/* Skills Tag Cloud */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '16px' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '14px' }}>
           {job.skills?.slice(0, 4).map((s, i) => (
             <Badge key={i} variant="default" size="sm">
               {s}
@@ -411,8 +418,11 @@ export const JobCard = ({ job, onApply, onViewDetails, onClick, isSaved, onToggl
       </div>
 
       {/* Footer with Verification Status & Action Buttons */}
-      <div style={{ borderTop: '1px solid var(--border)', paddingTop: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
-        <VerificationBadge level={job.verificationLevel || (job.verified ? 'Level 3' : 'Pending')} size="sm" />
+      <div style={{ borderTop: '1px solid var(--border)', paddingTop: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
+        <VerificationBadge
+          level={job.verificationLevel || (job.verified ? 'Level 3' : 'Pending')}
+          size="sm"
+        />
 
         <div style={{ display: 'flex', gap: '8px' }}>
           <Button
@@ -451,17 +461,19 @@ export const Modal = ({ open, onClose, title, subtitle, children, width = '680px
         position: 'fixed',
         inset: 0,
         zIndex: 1000,
-        background: 'rgba(15, 23, 42, 0.6)',
-        backdropFilter: 'blur(4px)',
+        background: 'rgba(15, 23, 42, 0.65)',
+        backdropFilter: 'blur(5px)',
+        WebkitBackdropFilter: 'blur(5px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '20px',
+        padding: '16px',
         animation: 'fadeIn 0.2s ease',
       }}
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div
+        className="modal-dialog"
         style={{
           background: '#ffffff',
           border: '1px solid var(--border)',
@@ -470,7 +482,7 @@ export const Modal = ({ open, onClose, title, subtitle, children, width = '680px
           maxWidth: width,
           maxHeight: '90vh',
           overflowY: 'auto',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+          boxShadow: 'var(--shadow-floating)',
           animation: 'slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
       >
@@ -479,7 +491,7 @@ export const Modal = ({ open, onClose, title, subtitle, children, width = '680px
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '20px 24px',
+            padding: '18px 24px',
             borderBottom: '1px solid var(--border)',
             position: 'sticky',
             top: 0,
@@ -488,10 +500,10 @@ export const Modal = ({ open, onClose, title, subtitle, children, width = '680px
           }}
         >
           <div>
-            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '18px', fontWeight: 800, color: 'var(--text-primary)' }}>
+            <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '18px', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
               {title}
             </h3>
-            {subtitle && <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>{subtitle}</p>}
+            {subtitle && <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px', margin: 0 }}>{subtitle}</p>}
           </div>
 
           <button
@@ -519,8 +531,8 @@ export const Modal = ({ open, onClose, title, subtitle, children, width = '680px
 
 // ── Table ────────────────────────────────────────────────────────────
 export const Table = ({ headers, children, empty = 'No records found' }) => (
-  <div style={{ overflowX: 'auto', width: '100%' }}>
-    <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+  <div className="table-responsive">
+    <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '600px' }}>
       <thead>
         <tr style={{ background: '#f8fafc', borderBottom: '1px solid var(--border)' }}>
           {headers.map((h, i) => (
@@ -582,6 +594,7 @@ export const Tabs = ({ tabs, active, onChange }) => (
       padding: '4px',
       border: '1px solid var(--border)',
       overflowX: 'auto',
+      WebkitOverflowScrolling: 'touch',
     }}
   >
     {tabs.map((tab) => (
@@ -595,7 +608,7 @@ export const Tabs = ({ tabs, active, onChange }) => (
           fontWeight: active === tab.value ? 700 : 500,
           background: active === tab.value ? '#ffffff' : 'transparent',
           color: active === tab.value ? 'var(--brand)' : 'var(--text-secondary)',
-          boxShadow: active === tab.value ? '0 2px 6px rgba(0,0,0,0.06)' : 'none',
+          boxShadow: active === tab.value ? '0 2px 6px rgba(15,23,42,0.06)' : 'none',
           border: 'none',
           cursor: 'pointer',
           whiteSpace: 'nowrap',
@@ -627,13 +640,13 @@ export const Spinner = ({ size = 20, color = 'var(--brand)' }) => (
 
 // ── Empty State ──────────────────────────────────────────────────────
 export const EmptyState = ({ icon: Icon, title, description, action }) => (
-  <div style={{ textAlign: 'center', padding: '60px 20px', maxWidth: '440px', margin: '0 auto' }}>
+  <div style={{ textAlign: 'center', padding: '50px 20px', maxWidth: '440px', margin: '0 auto' }}>
     <div
       style={{
         width: '64px',
         height: '64px',
-        borderRadius: '20px',
-        background: 'rgba(37, 99, 235, 0.08)',
+        borderRadius: '18px',
+        background: 'rgba(79, 70, 229, 0.08)',
         color: 'var(--brand)',
         display: 'flex',
         alignItems: 'center',
@@ -641,7 +654,7 @@ export const EmptyState = ({ icon: Icon, title, description, action }) => (
         margin: '0 auto 16px auto',
       }}
     >
-      {Icon ? <Icon size={32} /> : <Briefcase size={32} />}
+      {Icon ? <Icon size={30} /> : <Briefcase size={30} />}
     </div>
     <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '18px', fontWeight: 800, marginBottom: '8px', color: 'var(--text-primary)' }}>
       {title}
