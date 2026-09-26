@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import ThreeJsBackground from '../components/ui/ThreeJsBackground';
 import JobLens3DVisual from '../components/ui/JobLens3DVisual';
+import ThreeDPaperComponent from '../components/ui/ThreeDPaperComponent';
 import { Menu, X } from 'lucide-react';
 
 export default function Landing() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [active3DView, setActive3DView] = useState('lens');
 
   const handleAuthRedirect = (defaultPath) => {
     if (user) {
@@ -489,7 +491,7 @@ export default function Landing() {
           </button>
         </div>
 
-        {/* ── JobLens Interactive 3D AI Verification Hologram & Scanner ─────────────── */}
+        {/* ── 3D Visual Centerpiece Showcase Switcher ─────────────── */}
         <div
           style={{
             maxWidth: '920px',
@@ -497,7 +499,74 @@ export default function Landing() {
             position: 'relative',
           }}
         >
-          <JobLens3DVisual />
+          {/* Subtle View Switcher Tabs */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: '8px',
+              marginBottom: '14px',
+            }}
+          >
+            <button
+              onClick={() => setActive3DView('lens')}
+              style={{
+                padding: '7px 16px',
+                borderRadius: '999px',
+                fontSize: '12px',
+                fontWeight: 600,
+                border: '1px solid',
+                borderColor: active3DView === 'lens' ? 'var(--brand)' : 'var(--border)',
+                background: active3DView === 'lens' ? 'var(--brand)' : '#ffffff',
+                color: active3DView === 'lens' ? '#ffffff' : 'var(--text-secondary)',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                boxShadow: active3DView === 'lens' ? '0 4px 12px rgba(79, 70, 229, 0.25)' : 'none',
+              }}
+            >
+              <span>🛡️</span> 3D AI Verification Hologram
+            </button>
+            <button
+              onClick={() => setActive3DView('paper')}
+              style={{
+                padding: '7px 16px',
+                borderRadius: '999px',
+                fontSize: '12px',
+                fontWeight: 600,
+                border: '1px solid',
+                borderColor: active3DView === 'paper' ? 'var(--brand)' : 'var(--border)',
+                background: active3DView === 'paper' ? 'var(--brand)' : '#ffffff',
+                color: active3DView === 'paper' ? '#ffffff' : 'var(--text-secondary)',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                boxShadow: active3DView === 'paper' ? '0 4px 12px rgba(79, 70, 229, 0.25)' : 'none',
+              }}
+            >
+              <span>📄</span> ThreeUI ThreeDPaper Visual
+            </button>
+          </div>
+
+          {active3DView === 'lens' ? (
+            <JobLens3DVisual />
+          ) : (
+            <div
+              style={{
+                borderRadius: '24px',
+                overflow: 'hidden',
+                height: '380px',
+                border: '1px solid rgba(79, 70, 229, 0.25)',
+                boxShadow: '0 20px 50px -15px rgba(15, 23, 42, 0.15)',
+              }}
+            >
+              <ThreeDPaperComponent variant="original" />
+            </div>
+          )}
         </div>
 
         {/* Live Metrics Strip */}

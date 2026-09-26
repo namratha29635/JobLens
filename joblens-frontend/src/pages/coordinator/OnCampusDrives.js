@@ -34,7 +34,7 @@ const DriveForm = ({ initial = {}, onSubmit, loading }) => {
             onChange={e => setForm({ ...form, companyName: e.target.value })} placeholder="e.g. TCS, Infosys" />
         </div>
         <div className="form-group">
-          <label className="form-label">College Campus</label>
+          <label className="form-label">College / Organization</label>
           <input className="form-input" value={form.collegeName}
             onChange={e => setForm({ ...form, collegeName: e.target.value })} placeholder="e.g. All Colleges / VNR VJIET / CBIT" />
         </div>
@@ -264,7 +264,7 @@ export default function OnCampusDrives() {
       </div>
 
       {/* Create Drive Modal */}
-      <Modal open={showForm} onClose={() => setShowForm(false)} title="Create On-Campus Drive" size="lg">
+      <Modal open={showForm} onClose={() => setShowForm(false)} title="Create Verified Drive" size="lg">
         <DriveForm onSubmit={createDrive} loading={formLoad} />
       </Modal>
 

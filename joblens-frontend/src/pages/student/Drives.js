@@ -62,7 +62,7 @@ export default function StudentDrives() {
       const res = await studentAPI.getOnCampusDrives(params);
       setDrives(res.data?.data || { activeDrives: [], pastDrives: [] });
     } catch {
-      toast.error('Failed to load on-campus drives');
+      toast.error('Failed to load verified hiring drives');
     } finally {
       setLoading(false);
     }
