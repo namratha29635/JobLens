@@ -25,13 +25,13 @@ export default function JobDetailsModal({ job, open = true, onClose, onApply, is
         {/* Left Column: Job Details, Requirements, Responsibilities */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
           {/* Header Banner */}
-          <div style={{ display: 'flex', gap: '16px', alignItems: 'center', background: '#f8fafc', padding: '16px', borderRadius: '14px', border: '1px solid var(--border)' }}>
+          <div style={{ display: 'flex', gap: '16px', alignItems: 'center', background: 'var(--bg-elevated)', padding: '16px', borderRadius: '14px', border: '1px solid var(--border)' }}>
             <div
               style={{
                 width: '56px',
                 height: '56px',
                 borderRadius: '12px',
-                background: '#ffffff',
+                background: 'var(--bg-card)',
                 border: '1px solid var(--border)',
                 display: 'flex',
                 alignItems: 'center',
@@ -43,7 +43,7 @@ export default function JobDetailsModal({ job, open = true, onClose, onApply, is
               {job.logo ? (
                 <img src={job.logo} alt={job.company} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
               ) : (
-                <Building2 size={28} color="#64748b" />
+                <Building2 size={28} color="var(--text-muted)" />
               )}
             </div>
 
@@ -65,22 +65,22 @@ export default function JobDetailsModal({ job, open = true, onClose, onApply, is
 
           {/* Key Metrics Grid */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
-            <div style={{ background: '#f8fafc', padding: '12px 14px', borderRadius: '10px', border: '1px solid var(--border)' }}>
+            <div style={{ background: 'var(--bg-elevated)', padding: '12px 14px', borderRadius: '10px', border: '1px solid var(--border)' }}>
               <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>Salary / CTC</span>
-              <div style={{ fontSize: '15px', fontWeight: 700, color: '#16a34a', marginTop: '2px' }}>{job.salary || job.ctc}</div>
+              <div style={{ fontSize: '15px', fontWeight: 700, color: 'var(--accent-green)', marginTop: '2px' }}>{job.salary || job.ctc}</div>
             </div>
 
-            <div style={{ background: '#f8fafc', padding: '12px 14px', borderRadius: '10px', border: '1px solid var(--border)' }}>
+            <div style={{ background: 'var(--bg-elevated)', padding: '12px 14px', borderRadius: '10px', border: '1px solid var(--border)' }}>
               <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>Employment Type</span>
               <div style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', marginTop: '2px' }}>{job.type}</div>
             </div>
 
-            <div style={{ background: '#f8fafc', padding: '12px 14px', borderRadius: '10px', border: '1px solid var(--border)' }}>
+            <div style={{ background: 'var(--bg-elevated)', padding: '12px 14px', borderRadius: '10px', border: '1px solid var(--border)' }}>
               <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>Location</span>
               <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginTop: '2px' }}>{job.location}</div>
             </div>
 
-            <div style={{ background: '#f8fafc', padding: '12px 14px', borderRadius: '10px', border: '1px solid var(--border)' }}>
+            <div style={{ background: 'var(--bg-elevated)', padding: '12px 14px', borderRadius: '10px', border: '1px solid var(--border)' }}>
               <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>Experience / Batch</span>
               <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginTop: '2px' }}>{job.experience || '2026 Batch'}</div>
             </div>
@@ -159,7 +159,7 @@ export default function JobDetailsModal({ job, open = true, onClose, onApply, is
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', position: 'sticky', top: '20px' }}>
           <div
             style={{
-              background: '#f8fafc',
+              background: 'var(--bg-elevated)',
               border: '1px solid var(--border)',
               borderRadius: '16px',
               padding: '20px',
@@ -195,7 +195,7 @@ export default function JobDetailsModal({ job, open = true, onClose, onApply, is
                 onClick={() => onToggleSave && onToggleSave(job.id)}
                 style={{ width: '100%' }}
               >
-                <Bookmark size={15} fill={isSaved ? '#2563eb' : 'none'} />
+                <Bookmark size={15} fill={isSaved ? 'var(--brand)' : 'none'} />
                 {isSaved ? 'Job Saved' : 'Save Job'}
               </Button>
             </div>
@@ -206,25 +206,25 @@ export default function JobDetailsModal({ job, open = true, onClose, onApply, is
                 JobVerifier™ Security Check
               </span>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: '#059669', fontWeight: 600 }}>
-                <CheckCircle2 size={16} color="#059669" />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: 'var(--accent-green)', fontWeight: 600 }}>
+                <CheckCircle2 size={16} color="var(--accent-green)" />
                 <span>Company Authenticity Verified</span>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: '#059669', fontWeight: 600 }}>
-                <CheckCircle2 size={16} color="#059669" />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: 'var(--accent-green)', fontWeight: 600 }}>
+                <CheckCircle2 size={16} color="var(--accent-green)" />
                 <span>Job Offer & Salary Details Verified</span>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: '#059669', fontWeight: 600 }}>
-                <CheckCircle2 size={16} color="#059669" />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: 'var(--accent-green)', fontWeight: 600 }}>
+                <CheckCircle2 size={16} color="var(--accent-green)" />
                 <span>Official Recruiter Verified</span>
               </div>
             </div>
 
             {/* Recruiter info box */}
             {job.recruiter && (
-              <div style={{ background: '#ffffff', border: '1px solid var(--border)', borderRadius: '10px', padding: '12px' }}>
+              <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '10px', padding: '12px' }}>
                 <div style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 700 }}>Hiring Lead</div>
                 <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', marginTop: '2px' }}>{job.recruiter.name}</div>
                 <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{job.recruiter.role}</div>

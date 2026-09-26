@@ -141,7 +141,7 @@ export default function CoordinatorDashboard() {
       {/* Main Content Grid: Verification Queue & Broadcast Card */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(420px, 1fr))', gap: '20px' }}>
         {/* Verification Action Queue */}
-        <div style={{ background: '#ffffff', border: '1px solid var(--border)', borderRadius: '16px', padding: '22px', boxShadow: 'var(--shadow-sm)' }}>
+        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '22px', boxShadow: 'var(--shadow-sm)' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#ffedd5', color: '#ea580c', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -163,7 +163,7 @@ export default function CoordinatorDashboard() {
                 onClick={() => navigate('/coordinator/verify')}
                 style={{
                   padding: '14px',
-                  background: '#f8fafc',
+                  background: 'var(--bg-elevated)',
                   border: '1px solid var(--border)',
                   borderRadius: '12px',
                   display: 'flex',
@@ -202,7 +202,7 @@ export default function CoordinatorDashboard() {
         </div>
 
         {/* Real-time Broadcast Card */}
-        <div style={{ background: '#ffffff', border: '1px solid var(--border)', borderRadius: '16px', padding: '22px', boxShadow: 'var(--shadow-sm)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '22px', boxShadow: 'var(--shadow-sm)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
               <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#ede9fe', color: '#7c3aed', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -216,7 +216,7 @@ export default function CoordinatorDashboard() {
               Send instant high-priority email notices, assessment links, and drive updates to entire batches or specific branches.
             </p>
 
-            <div style={{ background: '#f8fafc', borderRadius: '10px', padding: '12px', marginTop: '14px', border: '1px solid var(--border)' }}>
+            <div style={{ background: 'var(--bg-elevated)', borderRadius: '10px', padding: '12px', marginTop: '14px', border: '1px solid var(--border)' }}>
               <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '6px' }}>
                 Quick Preset Announcements
               </div>
@@ -228,12 +228,12 @@ export default function CoordinatorDashboard() {
                     style={{
                       fontSize: '11px',
                       fontWeight: 600,
-                      background: '#eff6ff',
+                      background: 'rgba(37, 99, 235, 0.1)',
                       color: 'var(--brand)',
                       padding: '4px 10px',
                       borderRadius: '6px',
                       cursor: 'pointer',
-                      border: '1px solid #bfdbfe',
+                      border: '1px solid rgba(37, 99, 235, 0.25)',
                     }}
                   >
                     {preset}
@@ -243,7 +243,7 @@ export default function CoordinatorDashboard() {
             </div>
           </div>
 
-          <div style={{ paddingTop: '16px', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'flex-end' }}>
+          <div style={{ paddingTop: '16px', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'flex-end' }}>
             <Button variant="primary" onClick={() => navigate('/coordinator/notify')}>
               Open Broadcast Studio →
             </Button>
@@ -252,7 +252,7 @@ export default function CoordinatorDashboard() {
       </div>
 
       {/* Placement Conversion by Branch Chart */}
-      <div style={{ background: '#ffffff', border: '1px solid var(--border)', borderRadius: '16px', padding: '22px', boxShadow: 'var(--shadow-sm)' }}>
+      <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '22px', boxShadow: 'var(--shadow-sm)' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
           <div>
             <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
@@ -272,11 +272,11 @@ export default function CoordinatorDashboard() {
             <XAxis dataKey="branch" stroke="#94a3b8" fontSize={12} tickLine={false} />
             <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} />
             <Tooltip
-              contentStyle={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.08)' }}
+              contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border)', color: 'var(--text-primary)', borderRadius: '8px', fontSize: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}
             />
             <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
-            <Bar dataKey="total" name="Registered Students" fill="#e2e8f0" radius={[6, 6, 0, 0]} />
-            <Bar dataKey="placed" name="Placed Students" fill="#2563eb" radius={[6, 6, 0, 0]} />
+            <Bar dataKey="total" name="Registered Students" fill="var(--border)" radius={[6, 6, 0, 0]} />
+            <Bar dataKey="placed" name="Placed Students" fill="var(--brand)" radius={[6, 6, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>

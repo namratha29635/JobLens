@@ -301,7 +301,7 @@ export default function JobVerifier() {
               padding: '6px 12px',
               borderRadius: '8px',
               border: '1px solid var(--border)',
-              background: '#ffffff',
+              background: 'var(--bg-card)',
               fontSize: '12px',
               fontWeight: 600,
               color: 'var(--brand)',
@@ -309,11 +309,11 @@ export default function JobVerifier() {
               transition: 'all 0.15s ease',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.background = '#eff6ff';
+              e.currentTarget.style.background = 'var(--bg-elevated)';
               e.currentTarget.style.borderColor = 'var(--brand)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.background = '#ffffff';
+              e.currentTarget.style.background = 'var(--bg-card)';
               e.currentTarget.style.borderColor = 'var(--border)';
             }}
           >
@@ -325,11 +325,11 @@ export default function JobVerifier() {
       {/* Main Verification Input Form Card */}
       <div
         style={{
-          background: '#ffffff',
+          background: 'var(--bg-card)',
           border: '1px solid var(--border)',
           borderRadius: '16px',
           padding: '24px',
-          boxShadow: 'var(--shadow-sm)',
+          boxShadow: 'var(--shadow-card)',
         }}
       >
         <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -354,7 +354,8 @@ export default function JobVerifier() {
                   padding: '11px 14px',
                   borderRadius: '10px',
                   border: '1px solid var(--border)',
-                  background: '#f8fafc',
+                  background: 'var(--bg-elevated)',
+                  color: 'var(--text-primary)',
                   fontSize: '13px',
                   outline: 'none',
                 }}
@@ -376,7 +377,8 @@ export default function JobVerifier() {
                   padding: '11px 14px',
                   borderRadius: '10px',
                   border: '1px solid var(--border)',
-                  background: '#f8fafc',
+                  background: 'var(--bg-elevated)',
+                  color: 'var(--text-primary)',
                   fontSize: '13px',
                   outline: 'none',
                 }}
@@ -399,7 +401,8 @@ export default function JobVerifier() {
                 padding: '12px 14px',
                 borderRadius: '10px',
                 border: '1px solid var(--border)',
-                background: '#f8fafc',
+                background: 'var(--bg-elevated)',
+                color: 'var(--text-primary)',
                 fontSize: '13px',
                 minHeight: '130px',
                 outline: 'none',
@@ -499,7 +502,7 @@ export default function JobVerifier() {
 
           {/* URL Safety Details */}
           {result.urlSafety && (
-            <div style={{ background: '#ffffff', border: '1px solid var(--border)', borderRadius: '14px', padding: '18px 22px', boxShadow: 'var(--shadow-sm)' }}>
+            <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '14px', padding: '18px 22px', boxShadow: 'var(--shadow-sm)' }}>
               <h4 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Globe size={16} color="var(--brand)" /> Corporate Domain & URL Safety Check
               </h4>
@@ -510,24 +513,24 @@ export default function JobVerifier() {
                   justifyContent: 'space-between',
                   padding: '12px 16px',
                   borderRadius: '10px',
-                  background: result.urlSafety.safe ? '#f0fdf4' : '#fef2f2',
-                  border: `1px solid ${result.urlSafety.safe ? '#bbf7d0' : '#fecaca'}`,
+                  background: result.urlSafety.safe ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                  border: `1px solid ${result.urlSafety.safe ? 'rgba(34, 197, 94, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <span style={{ fontSize: '20px' }}>{result.urlSafety.safe ? '🛡️' : '⚠️'}</span>
                   <div>
-                    <div style={{ fontWeight: 700, fontSize: '13px', color: result.urlSafety.safe ? '#166534' : '#991b1b' }}>
+                    <div style={{ fontWeight: 700, fontSize: '13px', color: result.urlSafety.safe ? '#22c55e' : '#ef4444' }}>
                       {result.urlSafety.safe ? 'Domain & URL verified safe' : 'Suspicious URL shortener or unverified domain'}
                     </div>
                     {result.urlSafety.threats?.length > 0 && (
-                      <div style={{ fontSize: '12px', color: '#991b1b', marginTop: '2px' }}>
+                      <div style={{ fontSize: '12px', color: '#ef4444', marginTop: '2px' }}>
                         Threat: {result.urlSafety.threats.join(', ')}
                       </div>
                     )}
                   </div>
                 </div>
-                <code style={{ fontSize: '12px', color: 'var(--text-primary)', background: '#ffffff', padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)' }}>
+                <code style={{ fontSize: '12px', color: 'var(--text-primary)', background: 'var(--bg-elevated)', padding: '4px 10px', borderRadius: '6px', border: '1px solid var(--border)' }}>
                   {result.urlSafety.domain}
                 </code>
               </div>
@@ -536,13 +539,13 @@ export default function JobVerifier() {
 
           {/* Red Flags Card */}
           {result.redFlags && result.redFlags.length > 0 && (
-            <div style={{ background: '#ffffff', border: '1px solid #fecaca', borderRadius: '14px', padding: '18px 22px', boxShadow: 'var(--shadow-sm)' }}>
-              <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#dc2626', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ background: 'var(--bg-card)', border: '1px solid rgba(239, 68, 68, 0.4)', borderRadius: '14px', padding: '18px 22px', boxShadow: 'var(--shadow-sm)' }}>
+              <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#ef4444', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <XCircle size={16} /> Red Flags Detected ({result.redFlags.length})
               </h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {result.redFlags.map((flag, i) => (
-                  <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', padding: '10px 14px', background: '#fef2f2', border: '1px solid #fee2e2', borderRadius: '8px', fontSize: '13px', color: '#991b1b' }}>
+                  <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', padding: '10px 14px', background: 'rgba(239, 68, 68, 0.08)', border: '1px solid rgba(239, 68, 68, 0.2)', borderRadius: '8px', fontSize: '13px', color: '#f87171' }}>
                     <span style={{ fontWeight: 800 }}>✗</span>
                     <span>{flag}</span>
                   </div>
@@ -553,13 +556,13 @@ export default function JobVerifier() {
 
           {/* Green Flags Card */}
           {result.greenFlags && result.greenFlags.length > 0 && (
-            <div style={{ background: '#ffffff', border: '1px solid #bbf7d0', borderRadius: '14px', padding: '18px 22px', boxShadow: 'var(--shadow-sm)' }}>
-              <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#16a34a', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ background: 'var(--bg-card)', border: '1px solid rgba(34, 197, 94, 0.4)', borderRadius: '14px', padding: '18px 22px', boxShadow: 'var(--shadow-sm)' }}>
+              <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#22c55e', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <CheckCircle2 size={16} /> Positive Authenticity Indicators ({result.greenFlags.length})
               </h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {result.greenFlags.map((flag, i) => (
-                  <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', padding: '10px 14px', background: '#f0fdf4', border: '1px solid #dcfce7', borderRadius: '8px', fontSize: '13px', color: '#166534' }}>
+                  <div key={i} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', padding: '10px 14px', background: 'rgba(34, 197, 94, 0.08)', border: '1px solid rgba(34, 197, 94, 0.2)', borderRadius: '8px', fontSize: '13px', color: '#4ade80' }}>
                     <span style={{ fontWeight: 800 }}>✓</span>
                     <span>{flag}</span>
                   </div>
@@ -570,7 +573,7 @@ export default function JobVerifier() {
 
           {/* Score Breakdown Progress Bars */}
           {result.scoreBreakdown && (
-            <div style={{ background: '#ffffff', border: '1px solid var(--border)', borderRadius: '14px', padding: '18px 22px', boxShadow: 'var(--shadow-sm)' }}>
+            <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '14px', padding: '18px 22px', boxShadow: 'var(--shadow-sm)' }}>
               <h4 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '16px' }}>
                 📊 Verification Score Breakdown
               </h4>
@@ -606,7 +609,7 @@ export default function JobVerifier() {
 
       {/* Recent Checks History Drawer/Card */}
       {showHistory && (
-        <div style={{ background: '#ffffff', border: '1px solid var(--border)', borderRadius: '16px', padding: '22px', boxShadow: 'var(--shadow-sm)' }}>
+        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px', padding: '22px', boxShadow: 'var(--shadow-sm)' }}>
           <h4 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <History size={16} color="var(--brand)" /> Recent Job Checks History
           </h4>

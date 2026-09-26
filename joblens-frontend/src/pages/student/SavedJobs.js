@@ -52,7 +52,7 @@ export default function SavedJobs() {
               key={job.id}
               onClick={() => setSelectedJob(job)}
               style={{
-                background: '#ffffff',
+                background: 'var(--bg-card)',
                 border: '1px solid var(--border)',
                 borderRadius: '16px',
                 padding: '22px',
@@ -193,7 +193,7 @@ export default function SavedJobs() {
       ) : (
         <div
           style={{
-            background: '#ffffff',
+            background: 'var(--bg-card)',
             borderRadius: '16px',
             border: '1px dashed var(--border)',
             padding: '54px 20px',

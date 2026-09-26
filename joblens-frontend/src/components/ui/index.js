@@ -56,10 +56,10 @@ export const Button = ({
       boxShadow: '0 4px 12px rgba(79, 70, 229, 0.25)',
     },
     secondary: {
-      background: '#ffffff',
-      color: '#0f172a',
-      border: '1px solid #cbd5e1',
-      boxShadow: '0 1px 3px rgba(15, 23, 42, 0.05)',
+      background: 'var(--bg-elevated)',
+      color: 'var(--text-primary)',
+      border: '1px solid var(--border)',
+      boxShadow: 'var(--shadow-subtle)',
     },
     success: {
       background: 'linear-gradient(135deg, #10b981, #059669)',
@@ -205,13 +205,14 @@ export const Card = ({ children, className = '', style = {}, onClick, hoverEffec
   <div
     onClick={onClick}
     style={{
-      background: '#ffffff',
+      background: 'var(--bg-card)',
       border: '1px solid var(--border)',
       borderRadius: 'var(--radius-lg)',
       padding: '24px',
       boxShadow: 'var(--shadow-card)',
       cursor: onClick ? 'pointer' : 'default',
       transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+      color: 'var(--text-primary)',
       ...style,
     }}
     className={`card ${hoverEffect ? 'hover-elevate' : ''} ${className}`}
@@ -224,7 +225,7 @@ export const Card = ({ children, className = '', style = {}, onClick, hoverEffec
 export const StatCard = ({ label, value, icon: Icon, color = '#4f46e5', trend, trendLabel }) => (
   <div
     style={{
-      background: '#ffffff',
+      background: 'var(--bg-card)',
       border: '1px solid var(--border)',
       borderRadius: '16px',
       padding: '20px',
@@ -250,7 +251,7 @@ export const StatCard = ({ label, value, icon: Icon, color = '#4f46e5', trend, t
           width: '40px',
           height: '40px',
           borderRadius: '12px',
-          background: `${color}14`,
+          background: `${color}18`,
           color: color,
           display: 'flex',
           alignItems: 'center',
@@ -270,8 +271,8 @@ export const StatCard = ({ label, value, icon: Icon, color = '#4f46e5', trend, t
           style={{
             fontSize: '11px',
             fontWeight: 700,
-            color: trend.startsWith('+') ? '#059669' : '#334155',
-            background: trend.startsWith('+') ? 'rgba(16, 185, 129, 0.1)' : '#f1f5f9',
+            color: trend.startsWith('+') ? '#10b981' : 'var(--text-secondary)',
+            background: trend.startsWith('+') ? 'rgba(16, 185, 129, 0.12)' : 'var(--bg-elevated)',
             padding: '2px 8px',
             borderRadius: '999px',
             display: 'inline-flex',
@@ -300,7 +301,7 @@ export const JobCard = ({ job, onApply, onViewDetails, onClick, isSaved, onToggl
     <div
       onClick={handleDetailsClick}
       style={{
-        background: '#ffffff',
+        background: 'var(--bg-card)',
         border: '1px solid var(--border)',
         borderRadius: '16px',
         padding: '22px',
@@ -316,7 +317,7 @@ export const JobCard = ({ job, onApply, onViewDetails, onClick, isSaved, onToggl
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = 'translateY(-3px)';
-        e.currentTarget.style.borderColor = 'var(--border-light)';
+        e.currentTarget.style.borderColor = 'var(--brand)';
         e.currentTarget.style.boxShadow = 'var(--shadow-elevation)';
       }}
       onMouseLeave={(e) => {
@@ -334,7 +335,7 @@ export const JobCard = ({ job, onApply, onViewDetails, onClick, isSaved, onToggl
                 width: '46px',
                 height: '46px',
                 borderRadius: '12px',
-                background: '#f8fafc',
+                background: 'var(--bg-elevated)',
                 border: '1px solid var(--border)',
                 display: 'flex',
                 alignItems: 'center',
@@ -348,7 +349,7 @@ export const JobCard = ({ job, onApply, onViewDetails, onClick, isSaved, onToggl
               {job.logo ? (
                 <img src={job.logo} alt={job.company} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
               ) : (
-                <Building2 size={22} color="#475569" />
+                <Building2 size={22} color="var(--text-muted)" />
               )}
             </div>
 
@@ -369,9 +370,9 @@ export const JobCard = ({ job, onApply, onViewDetails, onClick, isSaved, onToggl
               onToggleSave && onToggleSave(job.id, e);
             }}
             style={{
-              background: isSaved ? 'rgba(79, 70, 229, 0.1)' : '#f8fafc',
-              border: `1px solid ${isSaved ? 'rgba(79, 70, 229, 0.3)' : 'var(--border)'}`,
-              color: isSaved ? '#4f46e5' : '#94a3b8',
+              background: isSaved ? 'var(--brand-bg)' : 'var(--bg-elevated)',
+              border: `1px solid ${isSaved ? 'var(--border-accent)' : 'var(--border)'}`,
+              color: isSaved ? 'var(--brand)' : 'var(--text-muted)',
               borderRadius: '8px',
               padding: '7px',
               cursor: 'pointer',
@@ -382,7 +383,7 @@ export const JobCard = ({ job, onApply, onViewDetails, onClick, isSaved, onToggl
             }}
             title={isSaved ? 'Remove from Saved' : 'Save Job'}
           >
-            <Bookmark size={16} fill={isSaved ? '#4f46e5' : 'none'} />
+            <Bookmark size={16} fill={isSaved ? 'var(--brand)' : 'none'} />
           </button>
         </div>
 
@@ -392,12 +393,12 @@ export const JobCard = ({ job, onApply, onViewDetails, onClick, isSaved, onToggl
             <MapPin size={14} color="#06b6d4" />
             {job.location}
           </span>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontWeight: 600, color: 'var(--text-primary)' }}>
-            <DollarSign size={14} color="#10b981" />
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontWeight: 600, color: 'var(--accent-green)' }}>
+            <DollarSign size={14} color="var(--accent-green)" />
             {job.salary || job.ctc}
           </span>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
-            <Briefcase size={14} color="#4f46e5" />
+            <Briefcase size={14} color="var(--brand)" />
             {job.type}
           </span>
         </div>
@@ -462,8 +463,8 @@ export const Modal = ({ open, onClose, title, subtitle, children, width = '680px
         inset: 0,
         zIndex: 1000,
         background: 'rgba(15, 23, 42, 0.65)',
-        backdropFilter: 'blur(5px)',
-        WebkitBackdropFilter: 'blur(5px)',
+        backdropFilter: 'blur(6px)',
+        WebkitBackdropFilter: 'blur(6px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -475,7 +476,7 @@ export const Modal = ({ open, onClose, title, subtitle, children, width = '680px
       <div
         className="modal-dialog"
         style={{
-          background: '#ffffff',
+          background: 'var(--bg-card)',
           border: '1px solid var(--border)',
           borderRadius: '20px',
           width: '100%',
@@ -495,7 +496,7 @@ export const Modal = ({ open, onClose, title, subtitle, children, width = '680px
             borderBottom: '1px solid var(--border)',
             position: 'sticky',
             top: 0,
-            background: '#ffffff',
+            background: 'var(--bg-card)',
             zIndex: 10,
           }}
         >
@@ -509,10 +510,10 @@ export const Modal = ({ open, onClose, title, subtitle, children, width = '680px
           <button
             onClick={onClose}
             style={{
-              background: '#f1f5f9',
+              background: 'var(--bg-elevated)',
               border: '1px solid var(--border)',
               borderRadius: '8px',
-              color: 'var(--text-secondary)',
+              color: 'var(--text-primary)',
               padding: '6px 10px',
               cursor: 'pointer',
               fontSize: '14px',
@@ -534,7 +535,7 @@ export const Table = ({ headers, children, empty = 'No records found' }) => (
   <div className="table-responsive">
     <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '600px' }}>
       <thead>
-        <tr style={{ background: '#f8fafc', borderBottom: '1px solid var(--border)' }}>
+        <tr style={{ background: 'var(--bg-elevated)', borderBottom: '1px solid var(--border)' }}>
           {headers.map((h, i) => (
             <th
               key={i}
@@ -569,10 +570,10 @@ export const Tr = ({ children, onClick }) => (
       transition: 'background 0.15s ease',
     }}
     onMouseEnter={(e) => {
-      e.currentTarget.style.background = '#f8fafc';
+      e.currentTarget.style.background = 'var(--bg-hover)';
     }}
     onMouseLeave={(e) => {
-      e.currentTarget.style.background = '#ffffff';
+      e.currentTarget.style.background = 'transparent';
     }}
   >
     {children}
@@ -589,7 +590,7 @@ export const Tabs = ({ tabs, active, onChange }) => (
     style={{
       display: 'flex',
       gap: '6px',
-      background: '#f1f5f9',
+      background: 'var(--bg-elevated)',
       borderRadius: '12px',
       padding: '4px',
       border: '1px solid var(--border)',
@@ -606,9 +607,9 @@ export const Tabs = ({ tabs, active, onChange }) => (
           borderRadius: '8px',
           fontSize: '13px',
           fontWeight: active === tab.value ? 700 : 500,
-          background: active === tab.value ? '#ffffff' : 'transparent',
+          background: active === tab.value ? 'var(--bg-card)' : 'transparent',
           color: active === tab.value ? 'var(--brand)' : 'var(--text-secondary)',
-          boxShadow: active === tab.value ? '0 2px 6px rgba(15,23,42,0.06)' : 'none',
+          boxShadow: active === tab.value ? 'var(--shadow-subtle)' : 'none',
           border: 'none',
           cursor: 'pointer',
           whiteSpace: 'nowrap',
@@ -646,7 +647,7 @@ export const EmptyState = ({ icon: Icon, title, description, action }) => (
         width: '64px',
         height: '64px',
         borderRadius: '18px',
-        background: 'rgba(79, 70, 229, 0.08)',
+        background: 'var(--brand-bg)',
         color: 'var(--brand)',
         display: 'flex',
         alignItems: 'center',
@@ -677,11 +678,11 @@ export const LoadingPage = ({ text = 'Loading...' }) => (
 // ── Alert ────────────────────────────────────────────────────────────
 export const Alert = ({ type = 'info', message, title, children, style = {} }) => {
   const styles = {
-    info: { bg: '#eff6ff', border: '#bfdbfe', color: '#1e40af' },
-    success: { bg: '#f0fdf4', border: '#bbf7d0', color: '#166534' },
-    warning: { bg: '#fffbeb', border: '#fde68a', color: '#92400e' },
-    danger: { bg: '#fef2f2', border: '#fecaca', color: '#991b1b' },
-    error: { bg: '#fef2f2', border: '#fecaca', color: '#991b1b' },
+    info: { bg: 'rgba(59, 130, 246, 0.12)', border: 'rgba(59, 130, 246, 0.3)', color: '#38bdf8' },
+    success: { bg: 'rgba(16, 185, 129, 0.12)', border: 'rgba(16, 185, 129, 0.3)', color: '#10b981' },
+    warning: { bg: 'rgba(245, 158, 11, 0.12)', border: 'rgba(245, 158, 11, 0.3)', color: '#f59e0b' },
+    danger: { bg: 'rgba(239, 68, 68, 0.12)', border: 'rgba(239, 68, 68, 0.3)', color: '#ef4444' },
+    error: { bg: 'rgba(239, 68, 68, 0.12)', border: 'rgba(239, 68, 68, 0.3)', color: '#ef4444' },
   };
   const s = styles[type] || styles.info;
 

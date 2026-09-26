@@ -195,11 +195,11 @@ export default function BrowseJobs() {
       {!resumeUploaded && !skippedResume && (
         <div
           style={{
-            background: '#ffffff',
-            border: '2px dashed #93c5fd',
+            background: 'var(--bg-card)',
+            border: '2px dashed var(--brand)',
             borderRadius: '20px',
             padding: '40px 32px',
-            boxShadow: '0 10px 25px -5px rgba(37, 99, 235, 0.08)',
+            boxShadow: 'var(--shadow-card)',
             textAlign: 'center',
             position: 'relative',
             overflow: 'hidden',
@@ -211,19 +211,19 @@ export default function BrowseJobs() {
                 width: '64px',
                 height: '64px',
                 borderRadius: '16px',
-                background: 'linear-gradient(135deg, #eff6ff, #dbeafe)',
+                background: 'var(--brand-bg)',
                 color: 'var(--brand)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 margin: '0 auto 16px',
-                boxShadow: '0 4px 12px rgba(37, 99, 235, 0.15)',
+                boxShadow: '0 4px 12px rgba(79, 70, 229, 0.15)',
               }}
             >
               <UploadCloud size={32} />
             </div>
 
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(37, 99, 235, 0.1)', color: 'var(--brand)', padding: '4px 12px', borderRadius: '999px', fontSize: '12px', fontWeight: 700, marginBottom: '8px' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'var(--brand-bg)', color: 'var(--brand)', padding: '4px 12px', borderRadius: '999px', fontSize: '12px', fontWeight: 700, marginBottom: '8px' }}>
               <Sparkles size={14} /> Step 1: Upload Resume for AI Match
             </div>
 
@@ -236,7 +236,7 @@ export default function BrowseJobs() {
             </p>
 
             {parsingResume ? (
-              <div style={{ padding: '24px', background: '#f8fafc', borderRadius: '14px', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+              <div style={{ padding: '24px', background: 'var(--bg-elevated)', borderRadius: '14px', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
                 <Spinner size={32} color="var(--brand)" />
                 <div style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>
                   Parsing {resumeFileName}...
@@ -308,8 +308,8 @@ export default function BrowseJobs() {
       {resumeUploaded && (
         <div
           style={{
-            background: '#ffffff',
-            border: '1px solid #bfdbfe',
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border)',
             borderRadius: '16px',
             padding: '18px 24px',
             display: 'flex',
@@ -317,11 +317,11 @@ export default function BrowseJobs() {
             justifyContent: 'space-between',
             flexWrap: 'wrap',
             gap: '16px',
-            boxShadow: '0 4px 12px rgba(37, 99, 235, 0.06)',
+            boxShadow: 'var(--shadow-card)',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: '#eff6ff', color: 'var(--brand)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'var(--brand-bg)', color: 'var(--brand)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <FileText size={22} />
             </div>
             <div>
@@ -329,14 +329,14 @@ export default function BrowseJobs() {
                 <span style={{ fontSize: '14px', fontWeight: 800, color: 'var(--text-primary)' }}>
                   Active Resume: {resumeFileName}
                 </span>
-                <span style={{ fontSize: '11px', fontWeight: 700, background: '#dcfce7', color: '#16a34a', padding: '2px 8px', borderRadius: '999px', border: '1px solid #bbf7d0' }}>
+                <span style={{ fontSize: '11px', fontWeight: 700, background: 'rgba(16, 185, 129, 0.12)', color: 'var(--accent-green)', padding: '2px 8px', borderRadius: '999px', border: '1px solid rgba(16, 185, 129, 0.25)' }}>
                   ✓ AI Scored
                 </span>
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '6px' }}>
                 <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600 }}>Detected Skills:</span>
                 {parsedSkills.map((s) => (
-                  <span key={s} style={{ fontSize: '11px', fontWeight: 600, background: '#f1f5f9', color: 'var(--brand)', padding: '1px 7px', borderRadius: '6px' }}>
+                  <span key={s} style={{ fontSize: '11px', fontWeight: 600, background: 'var(--bg-elevated)', color: 'var(--brand)', padding: '1px 7px', borderRadius: '6px', border: '1px solid var(--border)' }}>
                     {s}
                   </span>
                 ))}
@@ -348,12 +348,12 @@ export default function BrowseJobs() {
             <label
               style={{
                 padding: '7px 14px',
-                background: '#f8fafc',
+                background: 'var(--bg-elevated)',
                 border: '1px solid var(--border)',
                 borderRadius: '8px',
                 fontSize: '12px',
                 fontWeight: 600,
-                color: 'var(--text-secondary)',
+                color: 'var(--text-primary)',
                 cursor: 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -379,11 +379,11 @@ export default function BrowseJobs() {
       {/* ── SEARCH & FILTER CONTROLS ── */}
       <div
         style={{
-          background: '#ffffff',
+          background: 'var(--bg-card)',
           border: '1px solid var(--border)',
           borderRadius: '16px',
           padding: '20px',
-          boxShadow: 'var(--shadow-sm)',
+          boxShadow: 'var(--shadow-card)',
         }}
       >
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '14px', marginBottom: '16px' }}>
@@ -409,7 +409,7 @@ export default function BrowseJobs() {
                 padding: '11px 16px 11px 42px',
                 borderRadius: '10px',
                 border: '1px solid var(--border)',
-                background: '#f8fafc',
+                background: 'var(--bg-elevated)',
                 fontSize: '14px',
                 color: 'var(--text-primary)',
                 outline: 'none',
@@ -444,7 +444,7 @@ export default function BrowseJobs() {
                 padding: '11px 14px',
                 borderRadius: '10px',
                 border: '1px solid var(--border)',
-                background: '#f8fafc',
+                background: 'var(--bg-elevated)',
                 fontSize: '13px',
                 color: 'var(--text-primary)',
                 fontWeight: 500,
@@ -467,7 +467,7 @@ export default function BrowseJobs() {
                 padding: '11px 14px',
                 borderRadius: '10px',
                 border: '1px solid var(--border)',
-                background: '#f8fafc',
+                background: 'var(--bg-elevated)',
                 fontSize: '13px',
                 color: 'var(--text-primary)',
                 fontWeight: 500,
@@ -491,7 +491,7 @@ export default function BrowseJobs() {
             justifyContent: 'space-between',
             gap: '12px',
             paddingTop: '12px',
-            borderTop: '1px solid #f1f5f9',
+            borderTop: '1px solid var(--border)',
           }}
         >
           {/* Quick Pill Filters */}
@@ -510,9 +510,9 @@ export default function BrowseJobs() {
                   fontSize: '12px',
                   fontWeight: 600,
                   cursor: 'pointer',
-                  background: selectedVerification === pill ? '#eff6ff' : '#f8fafc',
-                  color: selectedVerification === pill ? 'var(--brand)' : 'var(--text-secondary)',
-                  border: selectedVerification === pill ? '1px solid #93c5fd' : '1px solid var(--border)',
+                  background: selectedVerification === pill ? 'var(--brand)' : 'var(--bg-elevated)',
+                  color: selectedVerification === pill ? '#ffffff' : 'var(--text-secondary)',
+                  border: selectedVerification === pill ? '1px solid var(--brand)' : '1px solid var(--border)',
                   transition: 'all 0.15s ease',
                 }}
               >
@@ -530,9 +530,9 @@ export default function BrowseJobs() {
                   fontSize: '12px',
                   fontWeight: 700,
                   cursor: 'pointer',
-                  background: minMatchScore === 80 ? '#f0fdf4' : '#f8fafc',
-                  color: minMatchScore === 80 ? '#16a34a' : 'var(--text-secondary)',
-                  border: minMatchScore === 80 ? '1px solid #86efac' : '1px solid var(--border)',
+                  background: minMatchScore === 80 ? 'rgba(16, 185, 129, 0.15)' : 'var(--bg-elevated)',
+                  color: minMatchScore === 80 ? 'var(--accent-green)' : 'var(--text-secondary)',
+                  border: minMatchScore === 80 ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid var(--border)',
                 }}
               >
                 ⭐ 80%+ Match Only
@@ -564,7 +564,7 @@ export default function BrowseJobs() {
                   padding: '5px 10px',
                   borderRadius: '8px',
                   border: '1px solid var(--border)',
-                  background: '#ffffff',
+                  background: 'var(--bg-elevated)',
                   fontSize: '12px',
                   color: 'var(--text-primary)',
                   fontWeight: 600,
@@ -616,19 +616,19 @@ export default function BrowseJobs() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '20px' }}>
           {filteredJobs.map((job) => {
             const isMatchHigh = job.matchScore >= 85;
-            const matchColor = isMatchHigh ? '#16a34a' : job.matchScore >= 70 ? 'var(--brand)' : '#ea580c';
-            const matchBg = isMatchHigh ? '#f0fdf4' : job.matchScore >= 70 ? '#eff6ff' : '#fff7ed';
+            const matchColor = isMatchHigh ? '#10b981' : job.matchScore >= 70 ? 'var(--brand)' : '#f59e0b';
+            const matchBg = isMatchHigh ? 'rgba(16, 185, 129, 0.12)' : job.matchScore >= 70 ? 'var(--brand-bg)' : 'rgba(245, 158, 11, 0.12)';
 
             return (
               <div
                 key={job.id}
                 onClick={() => setSelectedJob(job)}
                 style={{
-                  background: '#ffffff',
-                  border: isMatchHigh ? '1px solid #bfdbfe' : '1px solid var(--border)',
+                  background: 'var(--bg-card)',
+                  border: isMatchHigh ? '1px solid var(--border-accent)' : '1px solid var(--border)',
                   borderRadius: '16px',
                   padding: '22px',
-                  boxShadow: isMatchHigh ? '0 8px 20px -4px rgba(37, 99, 235, 0.08)' : 'var(--shadow-card)',
+                  boxShadow: isMatchHigh ? '0 8px 20px -4px rgba(79, 70, 229, 0.12)' : 'var(--shadow-card)',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
@@ -639,13 +639,13 @@ export default function BrowseJobs() {
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.transform = 'translateY(-3px)';
-                  e.currentTarget.style.boxShadow = '0 12px 30px -5px rgba(0, 0, 0, 0.08)';
+                  e.currentTarget.style.boxShadow = 'var(--shadow-elevation)';
                   e.currentTarget.style.borderColor = 'var(--brand)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.borderColor = isMatchHigh ? '#bfdbfe' : 'var(--border)';
-                  e.currentTarget.style.boxShadow = isMatchHigh ? '0 8px 20px -4px rgba(37, 99, 235, 0.08)' : 'var(--shadow-card)';
+                  e.currentTarget.style.borderColor = isMatchHigh ? 'var(--border-accent)' : 'var(--border)';
+                  e.currentTarget.style.boxShadow = isMatchHigh ? '0 8px 20px -4px rgba(79, 70, 229, 0.12)' : 'var(--shadow-card)';
                 }}
               >
                 <div>
@@ -679,7 +679,7 @@ export default function BrowseJobs() {
                         width: '44px',
                         height: '44px',
                         borderRadius: '12px',
-                        background: '#f8fafc',
+                        background: 'var(--bg-elevated)',
                         border: '1px solid var(--border)',
                         display: 'flex',
                         alignItems: 'center',
@@ -691,7 +691,7 @@ export default function BrowseJobs() {
                       {job.logo ? (
                         <img src={job.logo} alt={job.company} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                       ) : (
-                        <Building2 size={22} color="#64748b" />
+                        <Building2 size={22} color="var(--text-muted)" />
                       )}
                     </div>
                     <div>
@@ -707,11 +707,11 @@ export default function BrowseJobs() {
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                       <MapPin size={13} color="#0284c7" /> {job.location}
                     </span>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontWeight: 700, color: '#16a34a' }}>
-                      <DollarSign size={13} color="#16a34a" /> {job.salary || job.ctc}
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontWeight: 700, color: 'var(--accent-green)' }}>
+                      <DollarSign size={13} color="var(--accent-green)" /> {job.salary || job.ctc}
                     </span>
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                      <Briefcase size={13} color="#8b5cf6" /> {job.type}
+                      <Briefcase size={13} color="var(--brand)" /> {job.type}
                     </span>
                   </div>
 
@@ -719,12 +719,12 @@ export default function BrowseJobs() {
                   {job.matchingSkills && job.matchingSkills.length > 0 && (
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginTop: '10px' }}>
                       {job.matchingSkills.map((s) => (
-                        <span key={s} style={{ fontSize: '11px', fontWeight: 600, background: '#f0fdf4', color: '#166534', padding: '2px 8px', borderRadius: '6px', border: '1px solid #bbf7d0', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                        <span key={s} style={{ fontSize: '11px', fontWeight: 600, background: 'rgba(16, 185, 129, 0.12)', color: 'var(--accent-green)', padding: '2px 8px', borderRadius: '6px', border: '1px solid rgba(16, 185, 129, 0.25)', display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
                           <Check size={10} /> {s}
                         </span>
                       ))}
                       {job.missingSkills && job.missingSkills.slice(0, 2).map((s) => (
-                        <span key={s} style={{ fontSize: '11px', fontWeight: 500, background: '#f8fafc', color: 'var(--text-muted)', padding: '2px 8px', borderRadius: '6px' }}>
+                        <span key={s} style={{ fontSize: '11px', fontWeight: 500, background: 'var(--bg-elevated)', color: 'var(--text-muted)', padding: '2px 8px', borderRadius: '6px', border: '1px solid var(--border)' }}>
                           {s}
                         </span>
                       ))}
@@ -762,7 +762,7 @@ export default function BrowseJobs() {
       ) : (
         <div
           style={{
-            background: '#ffffff',
+            background: 'var(--bg-card)',
             borderRadius: '16px',
             border: '1px dashed var(--border)',
             padding: '48px 24px',

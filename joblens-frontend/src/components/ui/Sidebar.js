@@ -74,7 +74,7 @@ export default function Sidebar({ collapsed, setCollapsed, isMobileDrawer = fals
         width: isMobileDrawer ? '100%' : collapsed ? '76px' : '260px',
         minHeight: isMobileDrawer ? '100%' : '100vh',
         height: isMobileDrawer ? '100%' : 'auto',
-        background: '#ffffff',
+        background: 'var(--bg-card)',
         borderRight: isMobileDrawer ? 'none' : '1px solid var(--border)',
         display: 'flex',
         flexDirection: 'column',
@@ -161,7 +161,7 @@ export default function Sidebar({ collapsed, setCollapsed, isMobileDrawer = fals
               type="button"
               onClick={onCloseDrawer}
               style={{
-                background: '#f1f5f9',
+                background: 'var(--bg-elevated)',
                 border: '1px solid var(--border)',
                 borderRadius: '8px',
                 color: 'var(--text-secondary)',
@@ -181,7 +181,7 @@ export default function Sidebar({ collapsed, setCollapsed, isMobileDrawer = fals
               onClick={() => setCollapsed(!collapsed)}
               className="desktop-only"
               style={{
-                background: '#f1f5f9',
+                background: 'var(--bg-elevated)',
                 border: '1px solid var(--border)',
                 borderRadius: '8px',
                 color: 'var(--text-secondary)',
@@ -230,9 +230,9 @@ export default function Sidebar({ collapsed, setCollapsed, isMobileDrawer = fals
                   padding: collapsed && !isMobileDrawer ? '11px 0' : '10px 14px',
                   justifyContent: collapsed && !isMobileDrawer ? 'center' : 'flex-start',
                   borderRadius: '10px',
-                  background: active ? 'rgba(79, 70, 229, 0.08)' : 'transparent',
+                  background: active ? 'var(--brand-bg)' : 'transparent',
                   color: active ? 'var(--brand)' : 'var(--text-secondary)',
-                  border: active ? '1px solid rgba(79, 70, 229, 0.2)' : '1px solid transparent',
+                  border: active ? '1px solid var(--border-accent)' : '1px solid transparent',
                   fontSize: '13px',
                   fontWeight: active ? 700 : 500,
                   cursor: 'pointer',
@@ -243,7 +243,7 @@ export default function Sidebar({ collapsed, setCollapsed, isMobileDrawer = fals
                 }}
                 onMouseEnter={(e) => {
                   if (!active) {
-                    e.currentTarget.style.background = '#f8fafc';
+                    e.currentTarget.style.background = 'var(--bg-hover)';
                     e.currentTarget.style.color = 'var(--text-primary)';
                   }
                 }}
@@ -287,7 +287,7 @@ export default function Sidebar({ collapsed, setCollapsed, isMobileDrawer = fals
               alignItems: 'center',
               gap: '10px',
               padding: '10px 12px',
-              background: '#f8fafc',
+              background: 'var(--bg-elevated)',
               borderRadius: '12px',
               border: '1px solid var(--border)',
               marginBottom: '10px',
@@ -364,7 +364,7 @@ export default function Sidebar({ collapsed, setCollapsed, isMobileDrawer = fals
             transition: 'all 0.15s ease',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.background = '#fee2e2';
+            e.currentTarget.style.background = 'rgba(239, 68, 68, 0.12)';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.background = 'transparent';

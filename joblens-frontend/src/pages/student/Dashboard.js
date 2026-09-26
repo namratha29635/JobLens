@@ -121,7 +121,7 @@ export default function StudentDashboard() {
       {/* Prominent Search & Quick Filter Bar */}
       <div
         style={{
-          background: '#ffffff',
+          background: 'var(--bg-card)',
           border: '1px solid var(--border)',
           borderRadius: '16px',
           padding: '16px 20px',
@@ -131,8 +131,8 @@ export default function StudentDashboard() {
           gap: '14px',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: '#f8fafc', padding: '10px 16px', borderRadius: '12px', border: '1px solid var(--border)' }}>
-          <Search size={18} color="#64748b" />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'var(--bg-elevated)', padding: '10px 16px', borderRadius: '12px', border: '1px solid var(--border)' }}>
+          <Search size={18} color="var(--text-muted)" />
           <input
             type="text"
             placeholder="Search jobs, companies, skills (e.g. SDE-1, Google, React, Python)..."
@@ -151,7 +151,7 @@ export default function StudentDashboard() {
             <button
               type="button"
               onClick={() => setSearchTerm('')}
-              style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '14px', fontWeight: 700 }}
+              style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '14px', fontWeight: 700 }}
             >
               ✕
             </button>
@@ -171,7 +171,7 @@ export default function StudentDashboard() {
               padding: '6px 12px',
               borderRadius: '8px',
               border: '1px solid var(--border)',
-              background: '#f8fafc',
+              background: 'var(--bg-elevated)',
               fontSize: '12px',
               color: 'var(--text-primary)',
               cursor: 'pointer',
@@ -191,7 +191,7 @@ export default function StudentDashboard() {
               padding: '6px 12px',
               borderRadius: '8px',
               border: '1px solid var(--border)',
-              background: '#f8fafc',
+              background: 'var(--bg-elevated)',
               fontSize: '12px',
               color: 'var(--text-primary)',
               cursor: 'pointer',
@@ -209,7 +209,7 @@ export default function StudentDashboard() {
               padding: '6px 12px',
               borderRadius: '8px',
               border: '1px solid var(--border)',
-              background: '#f8fafc',
+              background: 'var(--bg-elevated)',
               fontSize: '12px',
               color: 'var(--text-primary)',
               cursor: 'pointer',
@@ -309,7 +309,7 @@ export default function StudentDashboard() {
 
         {/* Jobs Grid */}
         {filteredJobs.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '60px 20px', background: '#ffffff', borderRadius: '16px', border: '1px solid var(--border)' }}>
+          <div style={{ textAlign: 'center', padding: '60px 20px', background: 'var(--bg-card)', borderRadius: '16px', border: '1px solid var(--border)' }}>
             <p style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)' }}>No jobs found matching your criteria</p>
             <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' }}>Try clearing your filters or searching with different keywords.</p>
           </div>

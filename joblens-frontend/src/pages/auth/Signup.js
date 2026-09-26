@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { authAPI } from '../../services/api';
 import ThreeJsBackground from '../../components/ui/ThreeJsBackground';
 import ThemeToggle from '../../components/ui/ThemeToggle';
 import toast from 'react-hot-toast';
@@ -22,7 +22,7 @@ export default function Signup() {
   });
   const [loading, setLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
-  const { register } = useAuth();
+  const [errorMsg, setErrorMsg] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -31,17 +31,22 @@ export default function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMsg('');
 
     if (!form.name || !form.name.trim()) {
+      setErrorMsg('Please enter your full name');
       return toast.error('Please enter your full name');
     }
     if (!form.email || !form.password) {
+      setErrorMsg('Email and password are required');
       return toast.error('Email and password are required');
     }
     if (form.password.length < 6) {
+      setErrorMsg('Password must be at least 6 characters');
       return toast.error('Password must be at least 6 characters');
     }
     if (form.password !== form.confirmPassword) {
+      setErrorMsg('Passwords do not match');
       return toast.error('Passwords do not match');
     }
 
@@ -61,16 +66,13 @@ export default function Signup() {
         payload.cgpa = Number(form.cgpa) || 8.0;
       }
 
-      const { user } = await register(payload);
-      toast.success('Account created successfully! Welcome to JobLens.', { duration: 4000, icon: '🎉' });
-
-      if (user.role === 'coordinator') {
-        navigate('/coordinator/dashboard');
-      } else {
-        navigate('/student/dashboard');
-      }
+      await authAPI.register(payload);
+      toast.success('Account created successfully! Please sign in with your credentials.', { duration: 4000, icon: '🎉' });
+      navigate('/login', { state: { email: form.email.trim(), registeredSuccess: true } });
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Registration failed. Please try again.');
+      const msg = err.response?.data?.message || err.message || 'Account creation failed. Please check your information.';
+      setErrorMsg(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -78,10 +80,10 @@ export default function Signup() {
 
   const inputStyle = {
     width: '100%',
-    background: '#f8fafc',
-    border: '1px solid #cbd5e1',
+    background: 'var(--bg-elevated)',
+    border: '1px solid var(--border)',
     borderRadius: '8px',
-    color: '#0f172a',
+    color: 'var(--text-primary)',
     padding: '11px 14px',
     fontSize: '13px',
     outline: 'none',
@@ -91,7 +93,7 @@ export default function Signup() {
   const labelStyle = {
     display: 'block',
     fontSize: '12px',
-    color: '#334155',
+    color: 'var(--text-secondary)',
     marginBottom: '5px',
     fontWeight: 600,
   };
@@ -103,8 +105,8 @@ export default function Signup() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'radial-gradient(circle at 20% 15%, rgba(99, 102, 241, 0.09) 0%, transparent 45%), radial-gradient(circle at 80% 85%, rgba(6, 182, 212, 0.08) 0%, transparent 45%), #f8fafc',
-        color: '#0f172a',
+        background: 'var(--bg-primary)',
+        color: 'var(--text-primary)',
         padding: '30px 16px',
         position: 'relative',
         overflowX: 'hidden',
@@ -130,7 +132,7 @@ export default function Signup() {
             style={{
               background: 'none',
               border: 'none',
-              color: '#475569',
+              color: 'var(--text-secondary)',
               fontSize: '13px',
               fontWeight: 600,
               cursor: 'pointer',
@@ -145,14 +147,14 @@ export default function Signup() {
         </div>
 
         {/* Logo Header */}
-        <div style={{ textAlign: 'center', marginBottom: '28px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
           <div
             style={{
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
-              width: '56px',
-              height: '56px',
+              width: '54px',
+              height: '54px',
               background: 'linear-gradient(135deg, #06b6d4, #4f46e5)',
               borderRadius: '16px',
               marginBottom: '12px',
@@ -169,12 +171,13 @@ export default function Signup() {
               fontSize: '30px',
               fontWeight: 800,
               marginBottom: '6px',
+              letterSpacing: '-0.02em',
             }}
           >
-            <span style={{ color: '#4f46e5', fontWeight: 900 }}>J</span>
-            <span style={{ color: '#0f172a' }}>obLens</span>
+            <span className="brand-letter-j">J</span>
+            <span className="brand-letters-rest">obLens</span>
           </h1>
-          <p style={{ color: '#64748b', fontSize: '13px', fontWeight: 500 }}>
+          <p style={{ color: 'var(--text-muted)', fontSize: '13px', fontWeight: 500 }}>
             Job Search and AI Verification
           </p>
         </div>
@@ -182,23 +185,66 @@ export default function Signup() {
         {/* Card */}
         <div
           style={{
-            background: '#ffffff',
-            border: '1px solid #e2e8f0',
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border)',
             borderRadius: '18px',
             padding: 'clamp(22px, 5vw, 32px)',
-            boxShadow: '0 20px 45px -10px rgba(15, 23, 42, 0.08), 0 1px 3px rgba(15, 23, 42, 0.04)',
-            color: '#0f172a',
+            boxShadow: 'var(--shadow-floating)',
+            color: 'var(--text-primary)',
           }}
         >
+          {/* Error Banner when Account Creation Fails */}
+          {errorMsg && (
+            <div
+              style={{
+                background: 'rgba(239, 68, 68, 0.08)',
+                border: '1px solid rgba(239, 68, 68, 0.3)',
+                borderRadius: '10px',
+                padding: '12px 14px',
+                marginBottom: '18px',
+                color: '#ef4444',
+                fontSize: '13px',
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: '10px',
+              }}
+            >
+              <span style={{ fontSize: '16px', lineHeight: 1 }}>⚠️</span>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontWeight: 600 }}>{errorMsg}</div>
+                {errorMsg.toLowerCase().includes('already exists') && (
+                  <button
+                    type="button"
+                    onClick={() => navigate('/login', { state: { email: form.email } })}
+                    style={{
+                      marginTop: '6px',
+                      background: 'none',
+                      border: 'none',
+                      padding: 0,
+                      color: 'var(--brand)',
+                      fontSize: '12px',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      textDecoration: 'underline',
+                      display: 'block',
+                    }}
+                  >
+                    Sign in with this email instead →
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Role selector tabs */}
           <div
             style={{
               display: 'flex',
-              background: '#f1f5f9',
+              background: 'var(--bg-elevated)',
               borderRadius: '8px',
               padding: '4px',
               marginBottom: '20px',
-              border: '1px solid #e2e8f0',
+              border: '1px solid var(--border)',
             }}
           >
             <button
@@ -210,7 +256,7 @@ export default function Signup() {
                 border: 'none',
                 borderRadius: '6px',
                 background: role === 'student' ? 'linear-gradient(135deg, #4f46e5, #172554)' : 'transparent',
-                color: role === 'student' ? '#ffffff' : '#64748b',
+                color: role === 'student' ? '#ffffff' : 'var(--text-secondary)',
                 fontWeight: 700,
                 fontSize: '13px',
                 cursor: 'pointer',
@@ -229,7 +275,7 @@ export default function Signup() {
                 border: 'none',
                 borderRadius: '6px',
                 background: role === 'coordinator' ? 'linear-gradient(135deg, #4f46e5, #172554)' : 'transparent',
-                color: role === 'coordinator' ? '#ffffff' : '#64748b',
+                color: role === 'coordinator' ? '#ffffff' : 'var(--text-secondary)',
                 fontWeight: 700,
                 fontSize: '13px',
                 cursor: 'pointer',
@@ -362,7 +408,7 @@ export default function Signup() {
                     background: 'none',
                     border: 'none',
                     cursor: 'pointer',
-                    color: '#64748b',
+                    color: 'var(--text-muted)',
                     fontSize: '16px',
                   }}
                   aria-label="Toggle password visibility"
@@ -431,7 +477,7 @@ export default function Signup() {
           </form>
 
           {/* Already have an account link */}
-          <div style={{ marginTop: '20px', textAlign: 'center', fontSize: '13px', color: '#64748b' }}>
+          <div style={{ marginTop: '20px', textAlign: 'center', fontSize: '13px', color: 'var(--text-muted)' }}>
             Already have an account?{' '}
             <button
               type="button"
@@ -439,7 +485,7 @@ export default function Signup() {
               style={{
                 background: 'none',
                 border: 'none',
-                color: '#4f46e5',
+                color: 'var(--brand)',
                 cursor: 'pointer',
                 fontWeight: 700,
                 fontSize: '13px',
@@ -451,7 +497,7 @@ export default function Signup() {
           </div>
         </div>
 
-        <p style={{ textAlign: 'center', marginTop: '16px', fontSize: '12px', color: '#64748b' }}>
+        <p style={{ textAlign: 'center', marginTop: '16px', fontSize: '12px', color: 'var(--text-muted)' }}>
           JobLens · Job Search and AI Verification
         </p>
       </div>

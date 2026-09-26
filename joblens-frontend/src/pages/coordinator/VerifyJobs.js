@@ -193,7 +193,7 @@ export default function CoordinatorVerifyJobs() {
       </div>
 
       {/* Filter and Search Bar */}
-      <div style={{ background: '#ffffff', border: '1px solid var(--border)', borderRadius: '14px', padding: '14px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
+      <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '14px', padding: '14px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
         <div style={{ position: 'relative', flex: 1, minWidth: '240px' }}>
           <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
           <input
@@ -223,7 +223,7 @@ export default function CoordinatorVerifyJobs() {
                 fontWeight: 600,
                 cursor: 'pointer',
                 border: 'none',
-                background: activeTab === tab.key ? 'var(--brand)' : '#f1f5f9',
+                background: activeTab === tab.key ? 'var(--brand)' : 'var(--bg-elevated)',
                 color: activeTab === tab.key ? '#ffffff' : 'var(--text-secondary)',
                 transition: 'all 0.15s ease',
               }}
@@ -235,11 +235,11 @@ export default function CoordinatorVerifyJobs() {
       </div>
 
       {/* Verification Table */}
-      <div style={{ background: '#ffffff', border: '1px solid var(--border)', borderRadius: '16px', overflow: 'hidden', boxShadow: 'var(--shadow-sm)' }}>
+      <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px', overflow: 'hidden', boxShadow: 'var(--shadow-sm)' }}>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
             <thead>
-              <tr style={{ background: '#f8fafc', borderBottom: '1px solid var(--border)', color: 'var(--text-secondary)', fontWeight: 700 }}>
+              <tr style={{ background: 'var(--bg-elevated)', borderBottom: '1px solid var(--border)', color: 'var(--text-secondary)', fontWeight: 700 }}>
                 <th style={{ padding: '14px 18px' }}>Company & Job Title</th>
                 <th style={{ padding: '14px 18px' }}>Package / CTC</th>
                 <th style={{ padding: '14px 18px' }}>AI Trust Score</th>
@@ -256,8 +256,8 @@ export default function CoordinatorVerifyJobs() {
                 return (
                   <tr
                     key={job.id}
-                    style={{ borderBottom: '1px solid #f1f5f9', transition: 'background 0.15s ease' }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = '#f8fafc')}
+                    style={{ borderBottom: '1px solid var(--border)', transition: 'background 0.15s ease' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--bg-hover)')}
                     onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                   >
                     <td style={{ padding: '14px 18px' }}>
@@ -318,12 +318,12 @@ export default function CoordinatorVerifyJobs() {
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
-              background: '#ffffff',
+              background: 'var(--bg-card)',
               borderRadius: '20px',
               maxWidth: '680px',
               width: '100%',
               padding: '28px',
-              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.4)',
               maxHeight: '90vh',
               overflowY: 'auto',
             }}

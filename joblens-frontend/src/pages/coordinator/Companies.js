@@ -78,7 +78,7 @@ export default function CoordinatorCompanies() {
       </div>
 
       {/* Search Bar */}
-      <div style={{ background: '#ffffff', border: '1px solid var(--border)', borderRadius: '14px', padding: '14px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px' }}>
+      <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '14px', padding: '14px 18px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px' }}>
         <div style={{ position: 'relative', flex: 1 }}>
           <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
           <input
@@ -100,7 +100,7 @@ export default function CoordinatorCompanies() {
           <div
             key={company.id}
             style={{
-              background: '#ffffff',
+              background: 'var(--bg-card)',
               border: '1px solid var(--border)',
               borderRadius: '16px',
               padding: '22px',
@@ -189,12 +189,12 @@ export default function CoordinatorCompanies() {
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
-              background: '#ffffff',
+              background: 'var(--bg-card)',
               borderRadius: '20px',
               maxWidth: '520px',
               width: '100%',
               padding: '28px',
-              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.4)',
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>

@@ -55,8 +55,8 @@
   --bg-primary: #090d16;
   --bg-secondary: #0f172a;
   --bg-card: #131c2e;
-  --bg-elevated: #1e293b;
-  --bg-hover: #1e293b;
+  --bg-elevated: #1a273e;
+  --bg-hover: #223350;
   --muted: #1e293b;
 
   --brand: #6366f1;
@@ -87,7 +87,7 @@
   -webkit-text-fill-color: #ffffff !important;
   font-weight: 800;
   display: inline-block;
-  text-shadow: 0 0 14px rgba(255, 255, 255, 0.5);
+  text-shadow: 0 0 14px rgba(255, 255, 255, 0.6);
   transition: all 0.25s ease;
 }
 
@@ -183,6 +183,9 @@ button:active {
 input, textarea, select {
   font-family: var(--font-body);
   outline: none;
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
   transition: var(--transition-fast);
 }
 
@@ -281,7 +284,8 @@ input:focus, textarea:focus, select:focus {
 
 /* CARDS */
 .card, .drive-card, .dashboard-status-card, .dashboard-graph-box {
-  background: var(--bg-surface);
+  background: var(--bg-card);
+  color: var(--text-primary);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
@@ -306,7 +310,8 @@ input:focus, textarea:focus, select:focus {
   border-radius: var(--radius-lg);
   padding: 22px 18px;
   text-align: center;
-  background: #ffffff;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
 }
 
 .dashboard-status-circle {
@@ -335,7 +340,8 @@ input:focus, textarea:focus, select:focus {
   margin-top: 16px;
   padding: 24px;
   border-radius: var(--radius-lg);
-  background: #ffffff;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
 }
 
 /* TABLE RESPONSIVENESS */
@@ -345,7 +351,7 @@ input:focus, textarea:focus, select:focus {
   -webkit-overflow-scrolling: touch;
   border-radius: var(--radius);
   border: 1px solid var(--border);
-  background: #ffffff;
+  background: var(--bg-card);
 }
 
 /* UTILITY DISPLAY CLASSES */
@@ -432,7 +438,7 @@ input:focus, textarea:focus, select:focus {
   left: 0;
   right: 0;
   height: 64px;
-  background: rgba(255, 255, 255, 0.94);
+  background: var(--bg-card);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-top: 1px solid var(--border);
@@ -490,7 +496,8 @@ input:focus, textarea:focus, select:focus {
   bottom: 0;
   width: 280px;
   max-width: 85vw;
-  background: #ffffff;
+  background: var(--bg-card);
+  color: var(--text-primary);
   z-index: 1001;
   display: flex;
   flex-direction: column;

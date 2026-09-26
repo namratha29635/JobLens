@@ -69,7 +69,7 @@ export default function StudentApplications() {
         </div>
 
         {/* View Switcher */}
-        <div style={{ display: 'flex', alignItems: 'center', background: '#ffffff', border: '1px solid var(--border)', borderRadius: '10px', padding: '3px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '10px', padding: '3px' }}>
           <button
             type="button"
             onClick={() => setViewMode('kanban')}
@@ -115,7 +115,7 @@ export default function StudentApplications() {
 
       {/* Summary KPI Pills */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '14px' }}>
-        <div style={{ background: '#ffffff', border: '1px solid var(--border)', borderRadius: '12px', padding: '14px 18px', display: 'flex', alignItems: 'center', gap: '14px' }}>
+        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '14px 18px', display: 'flex', alignItems: 'center', gap: '14px' }}>
           <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: '#eff6ff', color: 'var(--brand)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <FileText size={20} />
           </div>
@@ -125,7 +125,7 @@ export default function StudentApplications() {
           </div>
         </div>
 
-        <div style={{ background: '#ffffff', border: '1px solid var(--border)', borderRadius: '12px', padding: '14px 18px', display: 'flex', alignItems: 'center', gap: '14px' }}>
+        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '14px 18px', display: 'flex', alignItems: 'center', gap: '14px' }}>
           <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: '#ede9fe', color: '#7c3aed', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Clock3 size={20} />
           </div>
@@ -137,7 +137,7 @@ export default function StudentApplications() {
           </div>
         </div>
 
-        <div style={{ background: '#ffffff', border: '1px solid var(--border)', borderRadius: '12px', padding: '14px 18px', display: 'flex', alignItems: 'center', gap: '14px' }}>
+        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '14px 18px', display: 'flex', alignItems: 'center', gap: '14px' }}>
           <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: '#ffedd5', color: '#ea580c', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Calendar size={20} />
           </div>
@@ -149,7 +149,7 @@ export default function StudentApplications() {
           </div>
         </div>
 
-        <div style={{ background: '#ffffff', border: '1px solid var(--border)', borderRadius: '12px', padding: '14px 18px', display: 'flex', alignItems: 'center', gap: '14px' }}>
+        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px', padding: '14px 18px', display: 'flex', alignItems: 'center', gap: '14px' }}>
           <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: '#dcfce7', color: '#16a34a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Award size={20} />
           </div>
@@ -179,7 +179,7 @@ export default function StudentApplications() {
               <div
                 key={stage.id}
                 style={{
-                  background: '#ffffff',
+                  background: 'var(--bg-card)',
                   border: '1px solid var(--border)',
                   borderRadius: '16px',
                   padding: '16px',
@@ -190,7 +190,7 @@ export default function StudentApplications() {
                 }}
               >
                 {/* Column Header */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '12px', borderBottom: '1px solid #f1f5f9' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '12px', borderBottom: '1px solid var(--border)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: stage.color }} />
                     <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)' }}>{stage.label}</span>
@@ -207,7 +207,7 @@ export default function StudentApplications() {
                       key={app.id}
                       onClick={() => setSelectedApp(app)}
                       style={{
-                        background: '#f8fafc',
+                        background: 'var(--bg-elevated)',
                         border: '1px solid var(--border)',
                         borderRadius: '12px',
                         padding: '14px',
@@ -217,7 +217,7 @@ export default function StudentApplications() {
                       onMouseEnter={(e) => {
                         e.currentTarget.style.transform = 'translateY(-2px)';
                         e.currentTarget.style.borderColor = 'var(--brand)';
-                        e.currentTarget.style.boxShadow = '0 6px 16px rgba(0,0,0,0.06)';
+                        e.currentTarget.style.boxShadow = '0 6px 16px rgba(0,0,0,0.12)';
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.transform = 'translateY(0)';
@@ -235,7 +235,7 @@ export default function StudentApplications() {
                       </div>
 
                       <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '10px' }}>
-                        CTC: <span style={{ color: '#0f172a' }}>{app.package}</span>
+                        CTC: <span style={{ color: 'var(--text-primary)' }}>{app.package}</span>
                       </div>
 
                       {app.interviewSchedule && (
@@ -244,7 +244,7 @@ export default function StudentApplications() {
                         </div>
                       )}
 
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-muted)', paddingTop: '8px', borderTop: '1px solid #e2e8f0' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-muted)', paddingTop: '8px', borderTop: '1px solid var(--border)' }}>
                         <span>Applied {new Date(app.appliedDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                         <span style={{ color: 'var(--brand)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '2px' }}>
                           View <ChevronRight size={12} />
@@ -254,7 +254,7 @@ export default function StudentApplications() {
                   ))}
 
                   {stageApps.length === 0 && (
-                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px dashed #e2e8f0', borderRadius: '10px', padding: '24px 12px', color: 'var(--text-muted)', fontSize: '12px', textAlign: 'center' }}>
+                    <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px dashed var(--border)', borderRadius: '10px', padding: '24px 12px', color: 'var(--text-muted)', fontSize: '12px', textAlign: 'center' }}>
                       No applications currently in this stage
                     </div>
                   )}
@@ -265,11 +265,11 @@ export default function StudentApplications() {
         </div>
       ) : (
         /* List View */
-        <div style={{ background: '#ffffff', border: '1px solid var(--border)', borderRadius: '16px', overflow: 'hidden', boxShadow: 'var(--shadow-sm)' }}>
+        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px', overflow: 'hidden', boxShadow: 'var(--shadow-sm)' }}>
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
               <thead>
-                <tr style={{ background: '#f8fafc', borderBottom: '1px solid var(--border)', color: 'var(--text-secondary)', fontWeight: 700 }}>
+                <tr style={{ background: 'var(--bg-elevated)', borderBottom: '1px solid var(--border)', color: 'var(--text-secondary)', fontWeight: 700 }}>
                   <th style={{ padding: '14px 18px' }}>Company & Role</th>
                   <th style={{ padding: '14px 18px' }}>Package / CTC</th>
                   <th style={{ padding: '14px 18px' }}>Applied Date</th>
@@ -282,8 +282,8 @@ export default function StudentApplications() {
                 {applications.map((app) => (
                   <tr
                     key={app.id}
-                    style={{ borderBottom: '1px solid #f1f5f9', transition: 'background 0.15s ease' }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = '#f8fafc')}
+                    style={{ borderBottom: '1px solid var(--border)', transition: 'background 0.15s ease' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--bg-hover)')}
                     onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                   >
                     <td style={{ padding: '14px 18px' }}>
@@ -336,12 +336,12 @@ export default function StudentApplications() {
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
-              background: '#ffffff',
+              background: 'var(--bg-card)',
               borderRadius: '20px',
               maxWidth: '560px',
               width: '100%',
               padding: '28px',
-              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.4)',
               maxHeight: '90vh',
               overflowY: 'auto',
             }}
@@ -354,13 +354,13 @@ export default function StudentApplications() {
               </div>
               <button
                 onClick={() => setSelectedApp(null)}
-                style={{ background: '#f1f5f9', border: 'none', borderRadius: '50%', width: '32px', height: '32px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                style={{ background: 'var(--bg-elevated)', border: 'none', borderRadius: '50%', width: '32px', height: '32px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-primary)' }}
               >
                 ✕
               </button>
             </div>
 
-            <div style={{ background: '#f8fafc', borderRadius: '12px', padding: '16px', marginBottom: '20px', border: '1px solid var(--border)' }}>
+            <div style={{ background: 'var(--bg-elevated)', borderRadius: '12px', padding: '16px', marginBottom: '20px', border: '1px solid var(--border)' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
                 <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)' }}>Verification Status:</span>
                 <VerificationBadge level="Level 3" />
@@ -377,7 +377,7 @@ export default function StudentApplications() {
                 Hiring Timeline Progress
               </h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', position: 'relative', paddingLeft: '24px' }}>
-                <div style={{ position: 'absolute', left: '7px', top: '10px', bottom: '10px', width: '2px', background: '#e2e8f0' }} />
+                <div style={{ position: 'absolute', left: '7px', top: '10px', bottom: '10px', width: '2px', background: 'var(--border)' }} />
 
                 <div style={{ position: 'relative' }}>
                   <div style={{ position: 'absolute', left: '-24px', top: '2px', width: '16px', height: '16px', borderRadius: '50%', background: 'var(--accent-green)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
