@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Sparkles, CheckCircle2, ShieldAlert, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const FEATURES_DATA = [
   {
@@ -10,6 +11,13 @@ const FEATURES_DATA = [
     tag: 'Off-Campus Drives',
     color: '#4f46e5',
     bg: 'rgba(79, 70, 229, 0.08)',
+    details: [
+      'Automated batch & CGPA eligibility filtering',
+      'Direct 1-click application submission with resume dispatch',
+      'Round-by-round interview schedule broadcasting',
+      'Recruiter verification & corporate email validation',
+    ],
+    metric: '100% Verified Recruiter Profiles',
   },
   {
     id: 2,
@@ -19,6 +27,13 @@ const FEATURES_DATA = [
     tag: 'Match Score %',
     color: '#0891b2',
     bg: 'rgba(6, 182, 212, 0.08)',
+    details: [
+      'Deep semantic NLP skill & tech-stack extraction',
+      'Match percentage calculation against active job descriptions',
+      'Missing high-impact keywords recommendations',
+      'ATS compatibility heuristics & formatting checks',
+    ],
+    metric: '96% Fit Scoring Precision',
   },
   {
     id: 3,
@@ -28,6 +43,13 @@ const FEATURES_DATA = [
     tag: 'Scam Shield',
     color: '#ef4444',
     bg: 'rgba(239, 68, 68, 0.08)',
+    details: [
+      'Scans for upfront registration or training fee requests',
+      'Flags unverified public email providers (@gmail, @yahoo)',
+      'Pressure heuristic detection (urgent payment countdowns)',
+      'Level 1–3 verification badges issued for validated employers',
+    ],
+    metric: 'Zero Fake Job Postings Allowed',
   },
   {
     id: 4,
@@ -37,6 +59,13 @@ const FEATURES_DATA = [
     tag: 'Real-Time Stages',
     color: '#10b981',
     bg: 'rgba(16, 185, 129, 0.08)',
+    details: [
+      'Live visual stage timeline with current status indicators',
+      'Complete round-wise performance history & feedback logs',
+      'Offer letter and CTC package tracking',
+      'Single consolidated dashboard across all job applications',
+    ],
+    metric: 'Real-Time Status Synchronization',
   },
   {
     id: 5,
@@ -46,6 +75,13 @@ const FEATURES_DATA = [
     tag: 'Live Alerts',
     color: '#f59e0b',
     bg: 'rgba(245, 158, 11, 0.08)',
+    details: [
+      'Instant notifications for new eligible off-campus drives',
+      'Round interview schedule change alerts and reminders',
+      'Shortlist results & selection status notifications',
+      'Integrated in-app notification center with read/unread tracking',
+    ],
+    metric: '< 200ms Notification Dispatch',
   },
   {
     id: 6,
@@ -55,13 +91,23 @@ const FEATURES_DATA = [
     tag: 'Placement Reports',
     color: '#0f172a',
     bg: 'rgba(15, 23, 42, 0.08)',
+    details: [
+      'Branch-wise and batch-wise applicant segmentation',
+      'In-browser PDF resume review and status advancement',
+      'Exportable placement statistics and CTC distribution charts',
+      'Bulk candidate shortlisting and interview round setup',
+    ],
+    metric: 'End-to-End Coordinator Visibility',
   },
 ];
 
 export default function FeaturesCarousel() {
+  const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [itemsPerView, setItemsPerView] = useState(3);
+  const [selectedFeature, setSelectedFeature] = useState(null);
+
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
   const containerRef = useRef(null);
@@ -92,14 +138,14 @@ export default function FeaturesCarousel() {
     setCurrentIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
   }, [maxIndex]);
 
-  // Auto-move carousel every 3.2 seconds unless hovered or touched
+  // Auto-move carousel every 3.4 seconds unless hovered, touched, or modal is open
   useEffect(() => {
-    if (isPaused) return;
+    if (isPaused || selectedFeature) return;
     const interval = setInterval(() => {
       nextSlide();
-    }, 3200);
+    }, 3400);
     return () => clearInterval(interval);
-  }, [isPaused, nextSlide]);
+  }, [isPaused, selectedFeature, nextSlide]);
 
   // Touch gesture handlers for mobile
   const handleTouchStart = (e) => {
@@ -157,10 +203,10 @@ export default function FeaturesCarousel() {
               textTransform: 'uppercase',
               letterSpacing: '0.08em',
               color: 'var(--brand)',
-              background: 'rgba(79, 70, 229, 0.08)',
+              background: 'var(--brand-bg)',
               padding: '4px 12px',
               borderRadius: '999px',
-              border: '1px solid rgba(79, 70, 229, 0.2)',
+              border: '1px solid var(--border-accent)',
             }}
           >
             Interactive Feature Explorer
@@ -179,7 +225,7 @@ export default function FeaturesCarousel() {
               width: '38px',
               height: '38px',
               borderRadius: '50%',
-              background: '#ffffff',
+              background: 'var(--bg-card)',
               border: '1px solid var(--border)',
               display: 'flex',
               alignItems: 'center',
@@ -245,11 +291,12 @@ export default function FeaturesCarousel() {
             >
               <div
                 className="feature-carousel-card"
+                onClick={() => setSelectedFeature(item)}
                 style={{
                   height: '100%',
-                  minHeight: '280px',
+                  minHeight: '290px',
                   padding: '30px 26px',
-                  background: '#ffffff',
+                  background: 'var(--bg-card)',
                   border: '1px solid var(--border)',
                   borderRadius: 'var(--radius-lg)',
                   boxShadow: 'var(--shadow-card)',
@@ -259,6 +306,7 @@ export default function FeaturesCarousel() {
                   transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
                   position: 'relative',
                   overflow: 'hidden',
+                  cursor: 'pointer',
                 }}
               >
                 {/* Subtle top indicator bar */}
@@ -320,7 +368,7 @@ export default function FeaturesCarousel() {
                       fontFamily: 'var(--font-display)',
                       fontSize: '19px',
                       fontWeight: 700,
-                      color: 'var(--midnight)',
+                      color: 'var(--text-primary)',
                       marginBottom: '10px',
                       lineHeight: 1.3,
                     }}
@@ -330,7 +378,7 @@ export default function FeaturesCarousel() {
 
                   <p
                     style={{
-                      color: 'var(--slate)',
+                      color: 'var(--text-secondary)',
                       fontSize: '13.5px',
                       lineHeight: 1.65,
                       margin: 0,
@@ -407,6 +455,234 @@ export default function FeaturesCarousel() {
           />
         ))}
       </div>
+
+      {/* ─────────────────────────────────────────────────────────────────── */}
+      {/* HANASU & BOOKSWAP-STYLE INTERACTIVE DETAIL POPUP MODAL               */}
+      {/* ─────────────────────────────────────────────────────────────────── */}
+      {selectedFeature && (
+        <div
+          onClick={() => setSelectedFeature(null)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 1000,
+            background: 'rgba(0, 0, 0, 0.65)',
+            backdropFilter: 'blur(14px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px',
+            animation: 'fadeIn 0.2s ease-out',
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius-xl)',
+              boxShadow: 'var(--shadow-floating)',
+              maxWidth: '560px',
+              width: '100%',
+              overflow: 'hidden',
+              position: 'relative',
+              animation: 'scaleUp 0.28s cubic-bezier(0.16, 1, 0.3, 1)',
+            }}
+          >
+            {/* Modal Header */}
+            <div
+              style={{
+                padding: '24px 28px',
+                borderBottom: '1px solid var(--border)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                background: 'var(--bg-elevated)',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                <div
+                  style={{
+                    width: '46px',
+                    height: '46px',
+                    borderRadius: '12px',
+                    background: selectedFeature.bg,
+                    color: selectedFeature.color,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '24px',
+                  }}
+                >
+                  {selectedFeature.icon}
+                </div>
+                <div>
+                  <h3
+                    style={{
+                      fontFamily: 'var(--font-display)',
+                      fontSize: '20px',
+                      fontWeight: 800,
+                      color: 'var(--text-primary)',
+                      margin: 0,
+                    }}
+                  >
+                    {selectedFeature.title}
+                  </h3>
+                  <span
+                    style={{
+                      fontSize: '11px',
+                      fontWeight: 700,
+                      color: selectedFeature.color,
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.06em',
+                    }}
+                  >
+                    {selectedFeature.tag} · Module 0{selectedFeature.id}
+                  </span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setSelectedFeature(null)}
+                aria-label="Close modal"
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '50%',
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--border)',
+                  color: 'var(--text-muted)',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div style={{ padding: '28px' }}>
+              <p
+                style={{
+                  fontSize: '14.5px',
+                  color: 'var(--text-secondary)',
+                  lineHeight: 1.65,
+                  marginBottom: '20px',
+                }}
+              >
+                {selectedFeature.desc}
+              </p>
+
+              {/* Verified Metric Badge */}
+              <div
+                style={{
+                  padding: '12px 16px',
+                  borderRadius: 'var(--radius)',
+                  background: 'var(--brand-bg)',
+                  border: '1px solid var(--border-accent)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  marginBottom: '24px',
+                }}
+              >
+                <Sparkles size={18} style={{ color: 'var(--brand)', flexShrink: 0 }} />
+                <span
+                  style={{
+                    fontSize: '13px',
+                    fontWeight: 700,
+                    color: 'var(--brand)',
+                  }}
+                >
+                  {selectedFeature.metric}
+                </span>
+              </div>
+
+              {/* Capability Checklist */}
+              <div style={{ marginBottom: '28px' }}>
+                <h4
+                  style={{
+                    fontSize: '13px',
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    color: 'var(--text-muted)',
+                    letterSpacing: '0.08em',
+                    marginBottom: '12px',
+                  }}
+                >
+                  Core Platform Capabilities
+                </h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {selectedFeature.details.map((detail, i) => (
+                    <div
+                      key={i}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px',
+                        fontSize: '13.5px',
+                        color: 'var(--text-primary)',
+                      }}
+                    >
+                      <CheckCircle2 size={16} style={{ color: '#10b981', flexShrink: 0 }} />
+                      <span>{detail}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedFeature(null);
+                    navigate('/login');
+                  }}
+                  style={{
+                    flex: 1,
+                    padding: '13px 20px',
+                    background: 'linear-gradient(135deg, #4f46e5, #172554)',
+                    color: '#ffffff',
+                    border: 'none',
+                    borderRadius: 'var(--radius)',
+                    fontWeight: 700,
+                    fontSize: '14px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    boxShadow: '0 4px 14px rgba(79, 70, 229, 0.3)',
+                  }}
+                >
+                  <span>Access in Portal</span>
+                  <ArrowRight size={16} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedFeature(null)}
+                  style={{
+                    padding: '13px 22px',
+                    background: 'var(--bg-elevated)',
+                    color: 'var(--text-primary)',
+                    border: '1px solid var(--border)',
+                    borderRadius: 'var(--radius)',
+                    fontWeight: 600,
+                    fontSize: '14px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

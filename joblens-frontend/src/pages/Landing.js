@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import ThreeJsBackground from '../components/ui/ThreeJsBackground';
 import FeaturesCarousel from '../components/ui/FeaturesCarousel';
+import ThemeToggle from '../components/ui/ThemeToggle';
+import LiveActivityPopup from '../components/ui/LiveActivityPopup';
 import { Menu, X } from 'lucide-react';
 
 export default function Landing() {
@@ -35,7 +37,7 @@ export default function Landing() {
     <div
       style={{
         minHeight: '100vh',
-        background: '#f5f7fb',
+        background: 'var(--bg-primary)',
         color: 'var(--text-primary)',
         fontFamily: 'var(--font-body)',
         display: 'flex',
@@ -44,6 +46,7 @@ export default function Landing() {
         overflowX: 'hidden',
         width: '100%',
         maxWidth: '100vw',
+        transition: 'background 0.3s ease, color 0.3s ease',
       }}
     >
       {/* Interactive WebGL / Three.js Canvas Background */}
@@ -87,11 +90,12 @@ export default function Landing() {
           justifyContent: 'space-between',
           alignItems: 'center',
           padding: '14px clamp(16px, 4vw, 48px)',
-          background: 'rgba(255, 255, 255, 0.90)',
+          background: 'var(--bg-card)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
           borderBottom: '1px solid var(--border)',
           width: '100%',
+          transition: 'background 0.3s ease, border-color 0.3s ease',
         }}
       >
         {/* Brand Logo */}
@@ -189,8 +193,10 @@ export default function Landing() {
           </a>
         </nav>
 
-        {/* Auth CTA Buttons & Mobile Hamburger */}
+        {/* Auth CTA Buttons, Theme Toggle & Mobile Hamburger */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <ThemeToggle />
+
           {user ? (
             <button
               onClick={() => handleAuthRedirect('/')}
@@ -252,7 +258,7 @@ export default function Landing() {
             className="mobile-only"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             style={{
-              background: '#f1f5f9',
+              background: 'var(--bg-elevated)',
               border: '1px solid var(--border)',
               borderRadius: '8px',
               padding: '8px',
@@ -277,7 +283,7 @@ export default function Landing() {
             top: '68px',
             left: 0,
             right: 0,
-            background: '#ffffff',
+            background: 'var(--bg-card)',
             borderBottom: '1px solid var(--border)',
             boxShadow: 'var(--shadow-floating)',
             zIndex: 99,
@@ -316,6 +322,20 @@ export default function Landing() {
           >
             About
           </a>
+
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '10px 0 4px',
+              borderTop: '1px solid var(--border)',
+            }}
+          >
+            <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-secondary)' }}>Appearance</span>
+            <ThemeToggle />
+          </div>
+
           <div style={{ borderTop: '1px solid var(--border)', paddingTop: '14px', display: 'flex', gap: '10px' }}>
             <button
               onClick={() => { setMobileMenuOpen(false); navigate('/login'); }}
@@ -327,6 +347,7 @@ export default function Landing() {
                 border: '1px solid var(--border)',
                 fontWeight: 600,
                 fontSize: '13px',
+                color: 'var(--text-primary)',
                 cursor: 'pointer',
               }}
             >
@@ -498,10 +519,11 @@ export default function Landing() {
             maxWidth: '950px',
             margin: '0 auto',
             padding: '20px 24px',
-            background: '#ffffff',
+            background: 'var(--bg-card)',
             border: '1px solid var(--border)',
             borderRadius: 'var(--radius-lg)',
             boxShadow: 'var(--shadow-card)',
+            transition: 'background 0.3s ease, border-color 0.3s ease',
           }}
         >
           <div>
@@ -621,13 +643,14 @@ export default function Landing() {
           <div
             className="card"
             style={{
-              background: '#ffffff',
+              background: 'var(--bg-card)',
               border: '1px solid var(--border)',
               borderRadius: 'var(--radius-lg)',
               padding: '26px 22px',
               display: 'flex',
               flexDirection: 'column',
               position: 'relative',
+              transition: 'all 0.3s ease',
             }}
           >
             <div
@@ -676,13 +699,14 @@ export default function Landing() {
           <div
             className="card"
             style={{
-              background: '#ffffff',
+              background: 'var(--bg-card)',
               border: '1px solid var(--border)',
               borderRadius: 'var(--radius-lg)',
               padding: '26px 22px',
               display: 'flex',
               flexDirection: 'column',
               position: 'relative',
+              transition: 'all 0.3s ease',
             }}
           >
             <div
@@ -731,13 +755,14 @@ export default function Landing() {
           <div
             className="card"
             style={{
-              background: '#ffffff',
+              background: 'var(--bg-card)',
               border: '1px solid var(--border)',
               borderRadius: 'var(--radius-lg)',
               padding: '26px 22px',
               display: 'flex',
               flexDirection: 'column',
               position: 'relative',
+              transition: 'all 0.3s ease',
             }}
           >
             <div
@@ -786,13 +811,14 @@ export default function Landing() {
           <div
             className="card"
             style={{
-              background: '#ffffff',
+              background: 'var(--bg-card)',
               border: '1px solid var(--border)',
               borderRadius: 'var(--radius-lg)',
               padding: '26px 22px',
               display: 'flex',
               flexDirection: 'column',
               position: 'relative',
+              transition: 'all 0.3s ease',
             }}
           >
             <div
@@ -854,13 +880,14 @@ export default function Landing() {
         <div
           style={{
             padding: 'clamp(24px, 5vw, 44px)',
-            background: 'linear-gradient(135deg, rgba(79, 70, 229, 0.05), rgba(6, 182, 212, 0.06))',
+            background: 'var(--bg-card)',
             border: '1px solid var(--border)',
             borderRadius: 'var(--radius-xl)',
             boxShadow: 'var(--shadow-card)',
             display: 'flex',
             flexDirection: 'column',
             gap: '18px',
+            transition: 'all 0.3s ease',
           }}
         >
           <span
@@ -935,7 +962,7 @@ export default function Landing() {
         style={{
           marginTop: 'auto',
           borderTop: '1px solid var(--border)',
-          background: '#ffffff',
+          background: 'var(--bg-card)',
           padding: '24px clamp(16px, 4vw, 48px)',
           display: 'flex',
           justifyContent: 'space-between',
@@ -945,6 +972,7 @@ export default function Landing() {
           fontSize: '13px',
           color: 'var(--text-muted)',
           zIndex: 2,
+          transition: 'background 0.3s ease, border-color 0.3s ease',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -957,6 +985,9 @@ export default function Landing() {
           © {new Date().getFullYear()} JobLens. All rights reserved.
         </div>
       </footer>
+
+      {/* Real-time Verified Activity Notification Toast */}
+      <LiveActivityPopup />
     </div>
   );
 }

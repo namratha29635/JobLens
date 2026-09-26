@@ -133,6 +133,38 @@ export default function ThreeJsBackground({ className = '', style = {} }) {
     const nodes = new THREE.Points(nodeGeometry, nodeMaterial);
     scene.add(nodes);
 
+    // Dynamic Theme Adaptation
+    const updateThemeColors = () => {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        waveMaterial.color.setHex(0x0f172a);
+        waveMaterial.emissive.setHex(0x1e1b4b);
+        waveMaterial.specular.setHex(0x38bdf8);
+        waveMaterial.opacity = 0.65;
+        wireframeMaterial.color.setHex(0x818cf8);
+        wireframeMaterial.opacity = 0.28;
+        nodeMaterial.color.setHex(0x38bdf8);
+        dirLight1.intensity = 1.1;
+        dirLight2.intensity = 0.9;
+      } else {
+        waveMaterial.color.setHex(0xf1f5f9);
+        waveMaterial.emissive.setHex(0x1e1b4b);
+        waveMaterial.specular.setHex(0x06b6d4);
+        waveMaterial.opacity = 0.38;
+        wireframeMaterial.color.setHex(0x6366f1);
+        wireframeMaterial.opacity = 0.16;
+        nodeMaterial.color.setHex(0x0891b2);
+        dirLight1.intensity = 0.8;
+        dirLight2.intensity = 0.65;
+      }
+    };
+    updateThemeColors();
+
+    const themeObserver = new MutationObserver(() => {
+      updateThemeColors();
+    });
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
     // ──────────────────────────────────────────────────────────────────────────
     // 3. INTERACTIVE MOUSE RIPPLE & SCROLL REACTION
     // ──────────────────────────────────────────────────────────────────────────
@@ -240,6 +272,7 @@ export default function ThreeJsBackground({ className = '', style = {} }) {
 
     return () => {
       cancelAnimationFrame(animId);
+      themeObserver.disconnect();
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleResize);

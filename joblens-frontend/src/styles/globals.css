@@ -79,6 +79,32 @@
   --shadow-lg:  0 12px 32px rgba(15, 23, 42, 0.1);
 }
 
+[data-theme="dark"] {
+  --bg-base:       #090d16;
+  --bg-surface:    #111827;
+  --bg-elevated:   #1e293b;
+  --bg-card:       #131c2e;
+  --bg-hover:      #1e293b;
+  --muted:         #1e293b;
+  --border:        #1f293d;
+  --border-light:  #334155;
+  --border-accent: rgba(56, 189, 248, 0.4);
+
+  --text-primary:  #f8fafc;
+  --text-secondary:#cbd5e1;
+  --text-muted:    #94a3b8;
+
+  --brand:         #6366f1;
+  --brand-light:   #818cf8;
+  --brand-dark:    #4f46e5;
+  --brand-bg:      rgba(99, 102, 241, 0.15);
+  --brand-bg-hover:rgba(99, 102, 241, 0.25);
+
+  --shadow-sm:  0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md:  0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg:  0 12px 32px rgba(0, 0, 0, 0.5);
+}
+
 [data-theme="college"] {
   --bg-base:       #0f172a;
   --bg-surface:    #172554;
