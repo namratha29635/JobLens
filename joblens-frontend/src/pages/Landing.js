@@ -477,9 +477,9 @@ export default function Landing() {
               gap: '10px',
               padding: '13px 26px',
               borderRadius: 'var(--radius)',
-              background: '#ffffff',
+              background: 'var(--bg-card)',
               color: 'var(--text-primary)',
-              border: '1px solid var(--border-light)',
+              border: '1px solid var(--border)',
               fontWeight: 700,
               fontSize: '14px',
               cursor: 'pointer',
@@ -498,12 +498,13 @@ export default function Landing() {
               gap: '8px',
               padding: '13px 22px',
               borderRadius: 'var(--radius)',
-              background: 'rgba(6, 182, 212, 0.1)',
-              color: '#0891b2',
-              border: '1px solid rgba(6, 182, 212, 0.3)',
+              background: 'rgba(6, 182, 212, 0.12)',
+              color: 'var(--accent-primary)',
+              border: '1px solid var(--border-accent)',
               fontWeight: 700,
               fontSize: '14px',
               cursor: 'pointer',
+              transition: 'all 0.2s ease',
             }}
           >
             <span>✨</span> Create Student Account
@@ -942,13 +943,14 @@ export default function Landing() {
               onClick={() => navigate('/signup')}
               style={{
                 padding: '11px 22px',
-                background: '#ffffff',
+                background: 'var(--bg-card)',
                 color: 'var(--text-primary)',
                 border: '1px solid var(--border)',
                 borderRadius: 'var(--radius)',
                 fontWeight: 600,
                 fontSize: '13px',
                 cursor: 'pointer',
+                transition: 'all 0.2s ease',
               }}
             >
               Register as New Student

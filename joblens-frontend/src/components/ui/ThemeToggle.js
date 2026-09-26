@@ -21,30 +21,25 @@ export default function ThemeToggle({ className = '', style = {} }) {
       style={{
         display: 'inline-flex',
         alignItems: 'center',
-        gap: '6px',
-        padding: '7px 12px',
-        borderRadius: '999px',
+        justifyContent: 'center',
+        width: '36px',
+        height: '36px',
+        borderRadius: '50%',
         border: '1px solid var(--border)',
         background: 'var(--bg-card)',
         color: 'var(--text-primary)',
         cursor: 'pointer',
-        fontSize: '12px',
-        fontWeight: 600,
         boxShadow: 'var(--shadow-subtle)',
         transition: 'all 0.25s ease',
+        flexShrink: 0,
+        padding: 0,
         ...style,
       }}
     >
       {isDark ? (
-        <>
-          <Sun size={15} style={{ color: '#f59e0b' }} />
-          <span>Light</span>
-        </>
+        <Sun size={17} style={{ color: '#f59e0b' }} />
       ) : (
-        <>
-          <Moon size={15} style={{ color: '#6366f1' }} />
-          <span>Dark</span>
-        </>
+        <Moon size={17} style={{ color: '#6366f1' }} />
       )}
     </button>
   );
