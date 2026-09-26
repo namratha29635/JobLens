@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import ThreeJsBackground from '../components/ui/ThreeJsBackground';
-import ThreeDPaperVisual from '../components/ui/ThreeDPaperVisual';
+import JobLens3DVisual from '../components/ui/JobLens3DVisual';
 import { Menu, X } from 'lucide-react';
 
 export default function Landing() {
@@ -489,21 +489,15 @@ export default function Landing() {
           </button>
         </div>
 
-        {/* ── ThreeUI ThreeDPaper Interactive Visual Showcase ─────────────── */}
+        {/* ── JobLens Interactive 3D AI Verification Hologram & Scanner ─────────────── */}
         <div
           style={{
-            maxWidth: '850px',
+            maxWidth: '920px',
             margin: '0 auto 36px',
-            height: 'clamp(220px, 35vw, 320px)',
-            borderRadius: '22px',
-            border: '1px solid rgba(79, 70, 229, 0.2)',
-            boxShadow: '0 16px 36px -10px rgba(15, 23, 42, 0.12)',
-            overflow: 'hidden',
             position: 'relative',
-            background: 'linear-gradient(135deg, rgba(255,255,255,0.7), rgba(245,247,251,0.9))',
           }}
         >
-          <ThreeDPaperVisual variant="original" />
+          <JobLens3DVisual />
         </div>
 
         {/* Live Metrics Strip */}

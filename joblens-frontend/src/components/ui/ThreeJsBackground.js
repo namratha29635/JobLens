@@ -19,8 +19,8 @@ export default function ThreeJsBackground({ className = '', style = {} }) {
     const width = container.clientWidth || window.innerWidth;
     const height = container.clientHeight || window.innerHeight;
 
-    const camera = new THREE.PerspectiveCamera(55, width / height, 0.1, 1000);
-    camera.position.z = 80;
+    const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
+    camera.position.z = 70;
 
     let renderer;
     try {
@@ -30,66 +30,84 @@ export default function ThreeJsBackground({ className = '', style = {} }) {
         powerPreference: 'low-power',
       });
     } catch (e) {
-      // Fallback if WebGL fails
       return;
     }
 
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
     renderer.setClearColor(0x000000, 0);
     container.appendChild(renderer.domElement);
 
-    // Create subtle particles & geometry
-    const particleCount = 120;
-    const geometry = new THREE.BufferGeometry();
+    // Particle nodes + constellation lines
+    const particleCount = 75;
+    const maxDistance = 22;
     const positions = new Float32Array(particleCount * 3);
-    const scales = new Float32Array(particleCount);
+    const velocities = [];
 
     for (let i = 0; i < particleCount; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 160;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 120;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 60;
-      scales[i] = Math.random() * 2.5 + 1;
+      positions[i * 3] = (Math.random() - 0.5) * 120;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 90;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 40;
+
+      velocities.push({
+        x: (Math.random() - 0.5) * 0.08,
+        y: (Math.random() - 0.5) * 0.08,
+        z: (Math.random() - 0.5) * 0.05,
+      });
     }
 
-    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    geometry.setAttribute('scale', new THREE.BufferAttribute(scales, 1));
+    const particleGeometry = new THREE.BufferGeometry();
+    particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
-    // Particle Material with subtle cyan & muted indigo colors
-    const material = new THREE.PointsMaterial({
-      color: 0x4f46e5,
-      size: 2.2,
+    const particleMaterial = new THREE.PointsMaterial({
+      color: 0x6366f1,
+      size: 3.5,
       transparent: true,
-      opacity: 0.28,
-      blending: THREE.AdditiveBlending,
+      opacity: 0.55,
+      blending: THREE.NormalBlending,
     });
 
-    const particles = new THREE.Points(geometry, material);
+    const particles = new THREE.Points(particleGeometry, particleMaterial);
     scene.add(particles);
 
-    // Subtle connecting mesh lines (wireframe plane behind)
-    const planeGeo = new THREE.PlaneGeometry(160, 100, 16, 12);
-    const planeMat = new THREE.MeshBasicMaterial({
-      color: 0x06b6d4,
+    // Dynamic Line Connections Geometry
+    const maxLines = (particleCount * (particleCount - 1)) / 2;
+    const linePositions = new Float32Array(maxLines * 6);
+    const lineGeometry = new THREE.BufferGeometry();
+    lineGeometry.setAttribute('position', new THREE.BufferAttribute(linePositions, 3));
+
+    const lineMaterial = new THREE.LineBasicMaterial({
+      color: 0x38bdf8,
+      transparent: true,
+      opacity: 0.18,
+      blending: THREE.NormalBlending,
+    });
+
+    const linesMesh = new THREE.LineSegments(lineGeometry, lineMaterial);
+    scene.add(linesMesh);
+
+    // Gentle Wave Grid in the background
+    const gridGeo = new THREE.PlaneGeometry(160, 100, 20, 14);
+    const gridMat = new THREE.MeshBasicMaterial({
+      color: 0x4f46e5,
       wireframe: true,
       transparent: true,
-      opacity: 0.045,
+      opacity: 0.07,
     });
-    const plane = new THREE.Mesh(planeGeo, planeMat);
-    plane.rotation.x = -0.3;
-    plane.position.y = -15;
-    plane.position.z = -10;
-    scene.add(plane);
+    const gridMesh = new THREE.Mesh(gridGeo, gridMat);
+    gridMesh.position.z = -25;
+    gridMesh.rotation.x = -0.4;
+    scene.add(gridMesh);
 
-    // Mouse parallax tracking
+    // Mouse parallax
     let mouseX = 0;
     let mouseY = 0;
     let targetX = 0;
     let targetY = 0;
 
     const handleMouseMove = (event) => {
-      mouseX = (event.clientX / window.innerWidth - 0.5) * 2;
-      mouseY = (event.clientY / window.innerHeight - 0.5) * 2;
+      mouseX = (event.clientX / window.innerWidth - 0.5) * 1.5;
+      mouseY = (event.clientY / window.innerHeight - 0.5) * 1.5;
     };
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
@@ -107,69 +125,104 @@ export default function ThreeJsBackground({ className = '', style = {} }) {
     window.addEventListener('resize', handleResize);
 
     // Animation Loop
-    let animationFrameId;
+    let animId;
     let clock = new THREE.Clock();
 
     const animate = () => {
-      // Pause if tab is hidden
-      if (document.hidden) {
-        animationFrameId = requestAnimationFrame(animate);
-        return;
+      animId = requestAnimationFrame(animate);
+
+      if (document.hidden) return;
+
+      const elapsed = clock.getElapsedTime();
+      const posArray = particleGeometry.attributes.position.array;
+
+      // Update particle positions & wrap around boundaries
+      for (let i = 0; i < particleCount; i++) {
+        posArray[i * 3] += velocities[i].x;
+        posArray[i * 3 + 1] += velocities[i].y;
+        posArray[i * 3 + 2] += velocities[i].z;
+
+        if (posArray[i * 3] < -60 || posArray[i * 3] > 60) velocities[i].x = -velocities[i].x;
+        if (posArray[i * 3 + 1] < -45 || posArray[i * 3 + 1] > 45) velocities[i].y = -velocities[i].y;
+        if (posArray[i * 3 + 2] < -20 || posArray[i * 3 + 2] > 20) velocities[i].z = -velocities[i].z;
+      }
+      particleGeometry.attributes.position.needsUpdate = true;
+
+      // Update dynamic connecting constellation lines
+      let lineIndex = 0;
+      for (let i = 0; i < particleCount; i++) {
+        for (let j = i + 1; j < particleCount; j++) {
+          const dx = posArray[i * 3] - posArray[j * 3];
+          const dy = posArray[i * 3 + 1] - posArray[j * 3 + 1];
+          const dz = posArray[i * 3 + 2] - posArray[j * 3 + 2];
+          const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+          if (dist < maxDistance) {
+            linePositions[lineIndex++] = posArray[i * 3];
+            linePositions[lineIndex++] = posArray[i * 3 + 1];
+            linePositions[lineIndex++] = posArray[i * 3 + 2];
+
+            linePositions[lineIndex++] = posArray[j * 3];
+            linePositions[lineIndex++] = posArray[j * 3 + 1];
+            linePositions[lineIndex++] = posArray[j * 3 + 2];
+          }
+        }
       }
 
-      const elapsedTime = clock.getElapsedTime();
+      lineGeometry.setDrawRange(0, lineIndex / 3);
+      lineGeometry.attributes.position.needsUpdate = true;
 
-      // Smooth mouse lerp
-      targetX += (mouseX - targetX) * 0.04;
-      targetY += (mouseY - targetY) * 0.04;
+      // Gentle grid wave
+      gridMesh.rotation.z = Math.sin(elapsed * 0.1) * 0.05;
 
-      particles.rotation.y = elapsedTime * 0.02 + targetX * 0.15;
-      particles.rotation.x = targetY * 0.1;
+      // Smooth mouse parallax
+      targetX += (mouseX - targetX) * 0.05;
+      targetY += (mouseY - targetY) * 0.05;
 
-      // Subtle undulating mesh movement
-      plane.rotation.z = Math.sin(elapsedTime * 0.1) * 0.02;
-      plane.position.y = -15 + Math.cos(elapsedTime * 0.15) * 1.5;
+      camera.position.x = targetX * 12;
+      camera.position.y = -targetY * 8;
+      camera.lookAt(0, 0, 0);
 
       renderer.render(scene, camera);
-      animationFrameId = requestAnimationFrame(animate);
     };
 
     animate();
 
-    // Cleanup
     return () => {
-      cancelAnimationFrame(animationFrameId);
+      cancelAnimationFrame(animId);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('resize', handleResize);
 
-      if (container && renderer.domElement && container.contains(renderer.domElement)) {
-        container.removeChild(renderer.domElement);
-      }
+      particleGeometry.dispose();
+      particleMaterial.dispose();
+      lineGeometry.dispose();
+      lineMaterial.dispose();
+      gridGeo.dispose();
+      gridMat.dispose();
 
-      geometry.dispose();
-      material.dispose();
-      planeGeo.dispose();
-      planeMat.dispose();
-      renderer.dispose();
+      if (renderer) {
+        renderer.dispose();
+        if (renderer.domElement && renderer.domElement.parentNode) {
+          renderer.domElement.parentNode.removeChild(renderer.domElement);
+        }
+      }
     };
   }, []);
 
   return (
     <div
       ref={containerRef}
-      className={`threejs-background ${className}`}
+      className={`three-bg-canvas ${className}`}
       style={{
-        position: 'absolute',
+        position: 'fixed',
         top: 0,
         left: 0,
         width: '100%',
         height: '100%',
         pointerEvents: 'none',
-        overflow: 'hidden',
         zIndex: 0,
         ...style,
       }}
-      aria-hidden="true"
     />
   );
 }
