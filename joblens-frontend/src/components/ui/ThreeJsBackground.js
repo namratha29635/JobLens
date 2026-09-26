@@ -14,20 +14,22 @@ export default function ThreeJsBackground({ className = '', style = {} }) {
       return;
     }
 
-    // Setup scene
+    // ──────────────────────────────────────────────────────────────────────────
+    // 1. SCENE, CAMERA & LIGHTS
+    // ──────────────────────────────────────────────────────────────────────────
     const scene = new THREE.Scene();
     const width = container.clientWidth || window.innerWidth;
     const height = container.clientHeight || window.innerHeight;
 
-    const camera = new THREE.PerspectiveCamera(55, width / height, 0.1, 1000);
-    camera.position.set(0, 10, 65);
+    const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 1000);
+    camera.position.set(0, 18, 55);
 
     let renderer;
     try {
       renderer = new THREE.WebGLRenderer({
         alpha: true,
         antialias: true,
-        powerPreference: 'low-power',
+        powerPreference: 'high-performance',
       });
     } catch (e) {
       return;
@@ -38,121 +40,123 @@ export default function ThreeJsBackground({ className = '', style = {} }) {
     renderer.setClearColor(0x000000, 0);
     container.appendChild(renderer.domElement);
 
-    // ──────────────────────────────────────────────────────────────────────────
-    // 1. TOPOGRAPHICAL 3D MAP-LIKE TERRAIN STRUCTURE WITH LIGHT SQUARES
-    // ──────────────────────────────────────────────────────────────────────────
-    const gridCols = 38;
-    const gridRows = 28;
-    const gridGeo = new THREE.PlaneGeometry(280, 200, gridCols, gridRows);
+    // Subtle atmospheric dual lighting (Indigo + Cyan highlights on light surface)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
+    scene.add(ambientLight);
 
-    // Perturb vertices to create an undulating topographical landscape / map
-    const posAttr = gridGeo.attributes.position;
-    const baseZ = new Float32Array(posAttr.count);
+    const dirLight1 = new THREE.DirectionalLight(0x4f46e5, 0.8);
+    dirLight1.position.set(-30, 40, 20);
+    scene.add(dirLight1);
 
-    for (let i = 0; i < posAttr.count; i++) {
-      const x = posAttr.getX(i);
-      const y = posAttr.getY(i);
-      // Realistic digital contour height formula
-      const elevation =
-        Math.sin(x * 0.035) * Math.cos(y * 0.035) * 6 +
-        Math.sin(x * 0.08 + y * 0.06) * 2.5 +
-        Math.cos(x * 0.05 - y * 0.04) * 3;
-      posAttr.setZ(i, elevation);
-      baseZ[i] = elevation;
+    const dirLight2 = new THREE.DirectionalLight(0x06b6d4, 0.65);
+    dirLight2.position.set(30, -20, 30);
+    scene.add(dirLight2);
+
+    // ──────────────────────────────────────────────────────────────────────────
+    // 2. DYNAMIC 3D FLOWING WAVE SURFACE
+    // ──────────────────────────────────────────────────────────────────────────
+    const planeWidth = 240;
+    const planeHeight = 160;
+    const segmentsX = 46;
+    const segmentsY = 32;
+
+    const waveGeometry = new THREE.PlaneGeometry(planeWidth, planeHeight, segmentsX, segmentsY);
+    waveGeometry.rotateX(-Math.PI / 2.3);
+
+    const count = waveGeometry.attributes.position.count;
+    const originalPositions = new Float32Array(count * 3);
+    const posAttr = waveGeometry.attributes.position;
+
+    for (let i = 0; i < count; i++) {
+      originalPositions[i * 3] = posAttr.getX(i);
+      originalPositions[i * 3 + 1] = posAttr.getY(i);
+      originalPositions[i * 3 + 2] = posAttr.getZ(i);
     }
-    gridGeo.computeVertexNormals();
 
-    // Layer A: Light semi-translucent square face tiles (the "light squares")
-    const faceMaterial = new THREE.MeshBasicMaterial({
-      color: 0x6366f1,
+    // Material 1: Soft shaded wave ribbon surface
+    const waveMaterial = new THREE.MeshPhongMaterial({
+      color: 0xf1f5f9,
+      emissive: 0x1e1b4b,
+      emissiveIntensity: 0.05,
+      specular: 0x06b6d4,
+      shininess: 30,
       transparent: true,
-      opacity: 0.035,
+      opacity: 0.38,
       side: THREE.DoubleSide,
+      flatShading: true,
     });
-    const mapFacesMesh = new THREE.Mesh(gridGeo, faceMaterial);
-    mapFacesMesh.rotation.x = -1.18;
-    mapFacesMesh.position.set(0, -18, -15);
-    scene.add(mapFacesMesh);
 
-    // Layer B: Crisp luminous wireframe grid lines
-    const wireMat = new THREE.MeshBasicMaterial({
-      color: 0x4f46e5,
+    const waveMesh = new THREE.Mesh(waveGeometry, waveMaterial);
+    waveMesh.position.set(0, -14, -10);
+    scene.add(waveMesh);
+
+    // Material 2: Luminous wireframe geometric grid on top of the waves
+    const wireframeMaterial = new THREE.MeshBasicMaterial({
+      color: 0x6366f1,
       wireframe: true,
       transparent: true,
       opacity: 0.16,
     });
-    const mapWireMesh = new THREE.Mesh(gridGeo, wireMat);
-    mapWireMesh.rotation.x = -1.18;
-    mapWireMesh.position.set(0, -18, -15);
-    scene.add(mapWireMesh);
 
-    // Layer C: Subtle glowing nodes at map grid junctions
-    const gridPointsMat = new THREE.PointsMaterial({
-      color: 0x06b6d4,
-      size: 2.4,
-      transparent: true,
-      opacity: 0.35,
-    });
-    const gridPoints = new THREE.Points(gridGeo, gridPointsMat);
-    gridPoints.rotation.x = -1.18;
-    gridPoints.position.set(0, -18, -15);
-    scene.add(gridPoints);
+    const wireframeMesh = new THREE.Mesh(waveGeometry, wireframeMaterial);
+    wireframeMesh.position.set(0, -13.9, -10);
+    scene.add(wireframeMesh);
 
-    // ──────────────────────────────────────────────────────────────────────────
-    // 2. FLOATING DATA NODES & DELICATE CONSTELLATION PULSES
-    // ──────────────────────────────────────────────────────────────────────────
-    const nodeCount = 50;
+    // Material 3: Luminous constellation nodes floating on the wave peaks
+    const nodeGeometry = new THREE.BufferGeometry();
+    const nodeCount = 65;
     const nodePositions = new Float32Array(nodeCount * 3);
     const nodeVelocities = [];
 
     for (let i = 0; i < nodeCount; i++) {
-      nodePositions[i * 3] = (Math.random() - 0.5) * 140;
-      nodePositions[i * 3 + 1] = (Math.random() - 0.5) * 90;
-      nodePositions[i * 3 + 2] = (Math.random() - 0.5) * 30;
+      nodePositions[i * 3] = (Math.random() - 0.5) * 160;
+      nodePositions[i * 3 + 1] = Math.random() * 25 - 5;
+      nodePositions[i * 3 + 2] = (Math.random() - 0.5) * 60;
 
       nodeVelocities.push({
-        x: (Math.random() - 0.5) * 0.05,
-        y: (Math.random() - 0.5) * 0.05,
+        x: (Math.random() - 0.5) * 0.04,
+        y: (Math.random() - 0.5) * 0.03,
         z: (Math.random() - 0.5) * 0.03,
       });
     }
 
-    const nodeGeo = new THREE.BufferGeometry();
-    nodeGeo.setAttribute('position', new THREE.BufferAttribute(nodePositions, 3));
+    nodeGeometry.setAttribute('position', new THREE.BufferAttribute(nodePositions, 3));
 
-    const nodeMat = new THREE.PointsMaterial({
-      color: 0x38bdf8,
-      size: 3.0,
+    const nodeMaterial = new THREE.PointsMaterial({
+      color: 0x0891b2,
+      size: 3.2,
       transparent: true,
-      opacity: 0.45,
+      opacity: 0.4,
+      blending: THREE.NormalBlending,
     });
-    const nodesMesh = new THREE.Points(nodeGeo, nodeMat);
-    scene.add(nodesMesh);
+
+    const nodes = new THREE.Points(nodeGeometry, nodeMaterial);
+    scene.add(nodes);
 
     // ──────────────────────────────────────────────────────────────────────────
-    // 3. SCROLL & MOUSE INTERACTION
+    // 3. INTERACTIVE MOUSE RIPPLE & SCROLL REACTION
     // ──────────────────────────────────────────────────────────────────────────
     let mouseX = 0;
     let mouseY = 0;
-    let targetX = 0;
-    let targetY = 0;
-    let currentScroll = 0;
-    let targetScroll = 0;
+    let targetMouseX = 0;
+    let targetMouseY = 0;
+    let scrollYProgress = 0;
+    let targetScrollProgress = 0;
 
-    const handleMouseMove = (event) => {
-      mouseX = (event.clientX / window.innerWidth - 0.5) * 1.2;
-      mouseY = (event.clientY / window.innerHeight - 0.5) * 1.2;
+    const handleMouseMove = (e) => {
+      targetMouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+      targetMouseY = (e.clientY / window.innerHeight - 0.5) * 2;
     };
 
     const handleScroll = () => {
       const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-      targetScroll = Math.min(Math.max(window.scrollY / maxScroll, 0), 1);
+      targetScrollProgress = Math.min(Math.max(window.scrollY / maxScroll, 0), 1);
     };
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
     window.addEventListener('scroll', handleScroll, { passive: true });
 
-    // Handle Resize
+    // Handle Window Resize
     const handleResize = () => {
       if (!container) return;
       const w = container.clientWidth || window.innerWidth;
@@ -175,57 +179,59 @@ export default function ThreeJsBackground({ className = '', style = {} }) {
 
       if (document.hidden) return;
 
-      const elapsed = clock.getElapsedTime();
+      const time = clock.getElapsedTime();
 
-      // Smooth scroll interpolation
-      currentScroll += (targetScroll - currentScroll) * 0.06;
+      // Smooth mouse and scroll interpolation
+      mouseX += (targetMouseX - mouseX) * 0.04;
+      mouseY += (targetMouseY - mouseY) * 0.04;
+      scrollYProgress += (targetScrollProgress - scrollYProgress) * 0.05;
 
-      // Dynamic wave on map structure vertices
-      const posArray = gridGeo.attributes.position.array;
-      for (let i = 0; i < posAttr.count; i++) {
-        const x = posAttr.getX(i);
-        const y = posAttr.getY(i);
-        const dynamicWave =
-          Math.sin(elapsed * 0.6 + x * 0.04) * 1.2 +
-          Math.cos(elapsed * 0.4 + y * 0.04) * 1.0;
-        posArray[i * 3 + 2] = baseZ[i] + dynamicWave;
+      // Update Wave Vertices in Real Time
+      const posArray = waveGeometry.attributes.position.array;
+
+      for (let i = 0; i < count; i++) {
+        const u = originalPositions[i * 3];
+        const v = originalPositions[i * 3 + 1];
+
+        // Complex undulating multi-octave wave
+        const wave1 = Math.sin(u * 0.04 + time * 0.7) * Math.cos(v * 0.04 + time * 0.5) * 4.2;
+        const wave2 = Math.sin(u * 0.08 - time * 0.4 + v * 0.06) * 2.1;
+        const wave3 = Math.cos(u * 0.03 + v * 0.05 - time * 0.3) * 1.8;
+
+        // Interactive mouse ripple effect
+        const dx = u - mouseX * 45;
+        const dy = v - mouseY * 35;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const mouseRipple = Math.sin(dist * 0.15 - time * 2) * Math.max(0, 1 - dist / 60) * 2.8;
+
+        posArray[i * 3 + 2] = originalPositions[i * 3 + 2] + wave1 + wave2 + wave3 + mouseRipple;
       }
-      gridGeo.attributes.position.needsUpdate = true;
 
-      // Move & wrap floating node particles
-      const nodePosArray = nodeGeo.attributes.position.array;
+      waveGeometry.attributes.position.needsUpdate = true;
+      waveGeometry.computeVertexNormals();
+
+      // Move floating nodes
+      const nPos = nodeGeometry.attributes.position.array;
       for (let i = 0; i < nodeCount; i++) {
-        nodePosArray[i * 3] += nodeVelocities[i].x;
-        nodePosArray[i * 3 + 1] += nodeVelocities[i].y;
-        nodePosArray[i * 3 + 2] += nodeVelocities[i].z;
+        nPos[i * 3] += nodeVelocities[i].x;
+        nPos[i * 3 + 1] += nodeVelocities[i].y;
+        nPos[i * 3 + 2] += nodeVelocities[i].z;
 
-        if (nodePosArray[i * 3] < -70 || nodePosArray[i * 3] > 70) nodeVelocities[i].x = -nodeVelocities[i].x;
-        if (nodePosArray[i * 3 + 1] < -45 || nodePosArray[i * 3 + 1] > 45) nodeVelocities[i].y = -nodeVelocities[i].y;
-        if (nodePosArray[i * 3 + 2] < -15 || nodePosArray[i * 3 + 2] > 15) nodeVelocities[i].z = -nodeVelocities[i].z;
+        if (nPos[i * 3] < -80 || nPos[i * 3] > 80) nodeVelocities[i].x = -nodeVelocities[i].x;
+        if (nPos[i * 3 + 1] < -10 || nPos[i * 3 + 1] > 25) nodeVelocities[i].y = -nodeVelocities[i].y;
+        if (nPos[i * 3 + 2] < -30 || nPos[i * 3 + 2] > 30) nodeVelocities[i].z = -nodeVelocities[i].z;
       }
-      nodeGeo.attributes.position.needsUpdate = true;
+      nodeGeometry.attributes.position.needsUpdate = true;
 
-      // Scroll response: as the user scrolls through the page (Hero -> Features -> etc.)
-      // the map-like structure in the background translates and tilts smoothly
-      const scrollYOffset = currentScroll * 22;
-      const scrollRotZ = currentScroll * 0.12;
+      // Scroll Parallax: Camera glides through space smoothly
+      camera.position.x = mouseX * 8;
+      camera.position.y = 18 - mouseY * 6 - scrollYProgress * 10;
+      camera.position.z = 55 - scrollYProgress * 12;
+      camera.lookAt(0, -6 + scrollYProgress * 6, -10);
 
-      mapFacesMesh.position.y = -18 + scrollYOffset;
-      mapFacesMesh.rotation.z = scrollRotZ;
-
-      mapWireMesh.position.y = -18 + scrollYOffset;
-      mapWireMesh.rotation.z = scrollRotZ;
-
-      gridPoints.position.y = -18 + scrollYOffset;
-      gridPoints.rotation.z = scrollRotZ;
-
-      // Smooth mouse parallax
-      targetX += (mouseX - targetX) * 0.05;
-      targetY += (mouseY - targetY) * 0.05;
-
-      camera.position.x = targetX * 10;
-      camera.position.y = 10 - targetY * 6;
-      camera.lookAt(0, 0, -10);
+      // Gentle wave mesh tilt
+      waveMesh.rotation.z = Math.sin(time * 0.1) * 0.03 + scrollYProgress * 0.08;
+      wireframeMesh.rotation.z = waveMesh.rotation.z;
 
       renderer.render(scene, camera);
     };
@@ -238,12 +244,11 @@ export default function ThreeJsBackground({ className = '', style = {} }) {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleResize);
 
-      gridGeo.dispose();
-      faceMaterial.dispose();
-      wireMat.dispose();
-      gridPointsMat.dispose();
-      nodeGeo.dispose();
-      nodeMat.dispose();
+      waveGeometry.dispose();
+      waveMaterial.dispose();
+      wireframeMaterial.dispose();
+      nodeGeometry.dispose();
+      nodeMaterial.dispose();
 
       if (renderer) {
         renderer.dispose();
