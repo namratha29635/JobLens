@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import * as ThreeUI from '@designcodeio/threeui';
+import { WovenCloth } from '@designcodeio/threeui';
 
-// Safely resolve ThreeDPaper from @designcodeio/threeui across all environments
-const ThreeDPaperComponent = ThreeUI.ThreeDPaper || ThreeUI.WovenCloth;
+// WovenCloth is the ThreeUI 3D procedural cloth/paper component
+const ThreeDPaperComponent = WovenCloth;
 
 class ErrorBoundary extends Component {
   constructor(props) {

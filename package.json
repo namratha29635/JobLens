@@ -4,7 +4,7 @@
   "description": "JobLens & JobVerifier Platform",
   "main": "CCPDMS_FINAL/server.js",
   "scripts": {
-    "build": "cd joblens-frontend && npm install && npm run build",
+    "build": "cd joblens-frontend && npm install && npm run build && cd .. && node -e \"require('fs').cpSync('joblens-frontend/build', 'build', {recursive: true})\",
     "start": "cd CCPDMS_FINAL && npm start",
     "server": "cd CCPDMS_FINAL && npm start",
     "client": "cd joblens-frontend && npm start",
