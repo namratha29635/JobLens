@@ -1,13 +1,26 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-const ThemeContext = createContext(null);
+const ThemeContext = createContext({
+  theme: 'light',
+  setTheme: () => {},
+});
 
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState(() => localStorage.getItem('joblens_theme') || 'light');
+  const [theme, setTheme] = useState(() => {
+    try {
+      return localStorage.getItem('joblens_theme') || 'light';
+    } catch (e) {
+      return 'light';
+    }
+  });
+
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('joblens_theme', theme);
+    try {
+      document.documentElement.setAttribute('data-theme', theme);
+      localStorage.setItem('joblens_theme', theme);
+    } catch (e) {}
   }, [theme]);
+
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>
       {children}
@@ -15,4 +28,7 @@ export const ThemeProvider = ({ children }) => {
   );
 };
 
-export const useTheme = () => useContext(ThemeContext);
+export const useTheme = () => {
+  const context = useContext(ThemeContext);
+  return context || { theme: 'light', setTheme: () => {} };
+};

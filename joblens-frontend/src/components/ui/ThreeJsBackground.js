@@ -265,30 +265,34 @@ export default function ThreeJsBackground({ className = '', style = {} }) {
       waveMesh.rotation.z = Math.sin(time * 0.1) * 0.03 + scrollYProgress * 0.08;
       wireframeMesh.rotation.z = waveMesh.rotation.z;
 
-      renderer.render(scene, camera);
+      try {
+        renderer.render(scene, camera);
+      } catch (e) {}
     };
 
     animate();
 
     return () => {
-      cancelAnimationFrame(animId);
-      themeObserver.disconnect();
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleResize);
+      try {
+        cancelAnimationFrame(animId);
+        if (themeObserver) themeObserver.disconnect();
+        window.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('scroll', handleScroll);
+        window.removeEventListener('resize', handleResize);
 
-      waveGeometry.dispose();
-      waveMaterial.dispose();
-      wireframeMaterial.dispose();
-      nodeGeometry.dispose();
-      nodeMaterial.dispose();
+        if (waveGeometry) waveGeometry.dispose();
+        if (waveMaterial) waveMaterial.dispose();
+        if (wireframeMaterial) wireframeMaterial.dispose();
+        if (nodeGeometry) nodeGeometry.dispose();
+        if (nodeMaterial) nodeMaterial.dispose();
 
-      if (renderer) {
-        renderer.dispose();
-        if (renderer.domElement && renderer.domElement.parentNode) {
-          renderer.domElement.parentNode.removeChild(renderer.domElement);
+        if (renderer) {
+          renderer.dispose();
+          if (renderer.domElement && renderer.domElement.parentNode) {
+            renderer.domElement.parentNode.removeChild(renderer.domElement);
+          }
         }
-      }
+      } catch (e) {}
     };
   }, []);
 
