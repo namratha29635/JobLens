@@ -1,9 +1,21 @@
 import axios from "axios";
 
+export const getApiBaseUrl = () => {
+  if (process.env.REACT_APP_API_URL) {
+    const cleaned = process.env.REACT_APP_API_URL.replace(/\/+$/, "");
+    return cleaned.endsWith("/api") ? cleaned : `${cleaned}/api`;
+  }
+  if (typeof window !== "undefined" && window.location) {
+    const { hostname } = window.location;
+    if (hostname === "localhost" || hostname === "127.0.0.1") {
+      return "/api";
+    }
+  }
+  return "https://joblens-1-b9z5.onrender.com/api";
+};
+
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL
-    ? `${process.env.REACT_APP_API_URL.replace(/\/+$/, "")}/api`
-    : "/api",
+  baseURL: getApiBaseUrl(),
   timeout: 30000,
 });
 
@@ -184,17 +196,24 @@ export const feedbackAPI = {
 };
 
 // RESUME URL & OPENER HELPER
+export const getBackendBase = () => {
+  if (process.env.REACT_APP_API_URL) {
+    return process.env.REACT_APP_API_URL.replace(/\/api\/?$/, "");
+  }
+  if (typeof window !== "undefined" && window.location) {
+    const { hostname, port } = window.location;
+    if (hostname === "localhost" || hostname === "127.0.0.1") {
+      return port === "3000" ? "http://localhost:5000" : window.location.origin;
+    }
+  }
+  return "https://joblens-1-b9z5.onrender.com";
+};
+
 export const getResumeUrl = (url) => {
   if (!url) return "";
   if (url.startsWith("http://") || url.startsWith("https://")) return url;
 
-  // Determine backend base URL
-  const backendBase = process.env.REACT_APP_API_URL
-    ? process.env.REACT_APP_API_URL.replace(/\/api\/?$/, "")
-    : window.location.port === "3000"
-    ? "http://localhost:5000"
-    : window.location.origin;
-
+  const backendBase = getBackendBase();
   const cleanUrl = url.startsWith("/") ? url : `/${url}`;
   return `${backendBase}${cleanUrl}`;
 };

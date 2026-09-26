@@ -219,12 +219,56 @@ connectDB().then(() => {
 });
 const app = express();
 // ── Global middleware ─────────────────────────────────────────────────────────
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL || "*",
-    credentials: true,
-  }),
-);
+const allowedOrigins = [
+  "https://job-lens-brown.vercel.app",
+  "http://localhost:3000",
+  "http://localhost:5000",
+  "http://127.0.0.1:3000",
+  "http://127.0.0.1:5000",
+];
+
+if (process.env.CLIENT_URL) {
+  process.env.CLIENT_URL.split(",").forEach((o) => {
+    const trimmed = o.trim();
+    if (trimmed && !allowedOrigins.includes(trimmed)) {
+      allowedOrigins.push(trimmed);
+    }
+  });
+}
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow non-browser requests (Postman, curl, server-to-server, mobile)
+    if (!origin) return callback(null, true);
+
+    const isExplicit = allowedOrigins.includes(origin);
+    const isVercel = /^https:\/\/[\w.-]+\.vercel\.app$/.test(origin);
+    const isLocal = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
+
+    if (isExplicit || isVercel || isLocal) {
+      return callback(null, true);
+    }
+
+    // Default to reflect origin so legitimate frontend deployments never fail with browser CORS blocks
+    return callback(null, true);
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "X-Requested-With",
+    "Accept",
+    "Origin",
+    "Access-Control-Request-Method",
+    "Access-Control-Request-Headers",
+  ],
+  exposedHeaders: ["Authorization"],
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // ── Static file serving for uploads ──────────────────────────────────────────

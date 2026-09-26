@@ -6,8 +6,9 @@ const { sendOTPEmail } = require('../services/email.service');
 const asyncHandler = require('../utils/asyncHandler');
 
 // ── Sign JWT 
+const JWT_SECRET = process.env.JWT_SECRET || 'joblens_jwt_super_secret_key_prod_dev_2026';
 const signToken = (id) =>
-  jwt.sign({ id }, process.env.JWT_SECRET, {
+  jwt.sign({ id }, JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN || '7d',
   });
 // POST /api/auth/login

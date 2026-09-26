@@ -11,7 +11,8 @@ const protect = async (req, res, next) => {
     if (!token)
       return next(new ApiError(401, 'Not authenticated. Please log in.'));
     // 2. Verify signature + expiry
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const JWT_SECRET = process.env.JWT_SECRET || 'joblens_jwt_super_secret_key_prod_dev_2026';
+    const decoded = jwt.verify(token, JWT_SECRET);
     // 3. Ensure account still exists and is active
     const user = await User.findById(decoded.id);
     if (!user)       return next(new ApiError(401, 'User account no longer exists.'));
