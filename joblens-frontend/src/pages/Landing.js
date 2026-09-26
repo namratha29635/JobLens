@@ -130,15 +130,13 @@ export default function Landing() {
                 fontFamily: 'var(--font-display)',
                 fontSize: '22px',
                 fontWeight: 800,
-                background: 'linear-gradient(135deg, #0f172a, #4f46e5)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
                 letterSpacing: '-0.02em',
                 display: 'block',
                 lineHeight: 1.1,
               }}
             >
-              JobLens
+              <span className="brand-letter-j">J</span>
+              <span className="brand-letters-rest">obLens</span>
             </span>
             <span
               style={{
@@ -150,7 +148,7 @@ export default function Landing() {
                 fontWeight: 700,
               }}
             >
-              Off-Campus Job & AI Verification
+              Job Search and AI Verification
             </span>
           </div>
         </div>
@@ -979,8 +977,11 @@ export default function Landing() {
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span>🎯</span>
-          <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>JobLens</span>
-          <span>· Off-Campus Job Discovery & AI Verification Portal</span>
+          <span style={{ fontWeight: 800, fontFamily: 'var(--font-display)', fontSize: '15px' }}>
+            <span className="brand-letter-j" style={{ fontSize: '15px' }}>J</span>
+            <span className="brand-letters-rest" style={{ fontSize: '15px' }}>obLens</span>
+          </span>
+          <span>· Job Search and AI Verification</span>
         </div>
 
         <div>

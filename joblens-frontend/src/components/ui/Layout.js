@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Sidebar from './Sidebar';
 import NotificationBell from './NotificationBell';
+import ThemeToggle from './ThemeToggle';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
@@ -32,7 +33,7 @@ export default function Layout({ children }) {
     if (path.includes('/profile')) return 'Student Profile & Resume';
     if (path.includes('/verifier')) return 'Job Scam & Risk Verifier';
     if (path.includes('/ai')) return 'AI Resume Matcher & Tools';
-    return 'JobLens Off-Campus Portal';
+    return 'JobLens · Job Search and AI Verification';
   };
 
   const isCoordinator = user?.role === 'coordinator';
@@ -89,7 +90,7 @@ export default function Layout({ children }) {
             justifyContent: 'space-between',
             padding: '12px 20px',
             borderBottom: '1px solid var(--border)',
-            background: 'rgba(255, 255, 255, 0.88)',
+            background: 'var(--bg-card)',
             backdropFilter: 'blur(16px)',
             WebkitBackdropFilter: 'blur(16px)',
             position: 'sticky',
@@ -105,7 +106,7 @@ export default function Layout({ children }) {
               className="mobile-only"
               onClick={() => setMobileDrawerOpen(true)}
               style={{
-                background: '#f1f5f9',
+                background: 'var(--bg-elevated)',
                 border: '1px solid var(--border)',
                 borderRadius: '8px',
                 padding: '7px',
@@ -179,6 +180,8 @@ export default function Layout({ children }) {
                 <span className="desktop-only">Broadcast Alert</span>
               </button>
             )}
+
+            <ThemeToggle />
 
             {/* User Capsule */}
             <div

@@ -123,14 +123,15 @@ export default function Sidebar({ collapsed, setCollapsed, isMobileDrawer = fals
                     fontFamily: 'var(--font-display)',
                     fontSize: '18px',
                     fontWeight: 800,
-                    color: '#0f172a',
+                    color: 'var(--text-primary)',
                     letterSpacing: '-0.02em',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '5px',
                   }}
                 >
-                  JobLens
+                  <span className="brand-letter-j">J</span>
+                  <span className="brand-letters-rest">obLens</span>
                   <CheckCircle size={14} color="#10b981" fill="#10b981" style={{ color: '#fff' }} />
                 </div>
                 <div style={{ fontSize: '10px', fontWeight: 700, color: 'var(--brand)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>

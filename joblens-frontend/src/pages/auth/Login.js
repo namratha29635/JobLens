@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import ThreeJsBackground from '../../components/ui/ThreeJsBackground';
+import ThemeToggle from '../../components/ui/ThemeToggle';
 import toast from 'react-hot-toast';
 
 export default function Login() {
@@ -56,7 +57,8 @@ export default function Login() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: '#f5f7fb',
+        background: 'var(--bg-primary)',
+        color: 'var(--text-primary)',
         padding: '24px 16px',
         position: 'relative',
         overflowX: 'hidden',
@@ -74,8 +76,8 @@ export default function Login() {
           zIndex: 2,
         }}
       >
-        {/* Back to Home Link */}
-        <div style={{ marginBottom: '16px' }}>
+        {/* Top Navigation Bar */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
           <button
             type="button"
             onClick={() => navigate('/')}
@@ -93,6 +95,7 @@ export default function Login() {
           >
             ← Back to Home
           </button>
+          <ThemeToggle />
         </div>
 
         {/* Logo */}
@@ -119,23 +122,21 @@ export default function Login() {
               fontFamily: 'var(--font-display)',
               fontSize: '32px',
               fontWeight: 800,
-              background: 'linear-gradient(135deg, #0f172a, #4f46e5)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
               marginBottom: '6px',
             }}
           >
-            JobLens
+            <span className="brand-letter-j">J</span>
+            <span className="brand-letters-rest">obLens</span>
           </h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '13px', fontWeight: 500 }}>
-            Off-Campus Job Discovery & Verification Platform
+            Job Search and AI Verification
           </p>
         </div>
 
         {/* Form Card */}
         <div
           style={{
-            background: '#ffffff',
+            background: 'var(--bg-card)',
             border: '1px solid var(--border)',
             borderRadius: 'var(--radius-lg)',
             padding: 'clamp(24px, 5vw, 36px)',
@@ -200,7 +201,7 @@ export default function Login() {
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 style={{
                   width: '100%',
-                  background: '#f8fafc',
+                  background: 'var(--bg-elevated)',
                   border: '1px solid var(--border)',
                   borderRadius: 'var(--radius)',
                   color: 'var(--text-primary)',
@@ -223,7 +224,7 @@ export default function Login() {
                   onChange={(e) => setForm({ ...form, password: e.target.value })}
                   style={{
                     width: '100%',
-                    background: '#f8fafc',
+                    background: 'var(--bg-elevated)',
                     border: '1px solid var(--border)',
                     borderRadius: 'var(--radius)',
                     color: 'var(--text-primary)',
@@ -341,7 +342,7 @@ export default function Login() {
           style={{
             marginTop: '16px',
             padding: '16px',
-            background: '#ffffff',
+            background: 'var(--bg-card)',
             borderRadius: 'var(--radius)',
             border: '1px solid var(--border)',
             boxShadow: 'var(--shadow-card)',
@@ -400,7 +401,7 @@ export default function Login() {
         </div>
 
         <p style={{ textAlign: 'center', marginTop: '16px', fontSize: '12px', color: 'var(--text-muted)' }}>
-          JobLens Off-Campus Job Discovery & Verification Platform
+          JobLens · Job Search and AI Verification
         </p>
       </div>
     </div>

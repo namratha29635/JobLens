@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import ThreeJsBackground from '../../components/ui/ThreeJsBackground';
+import ThemeToggle from '../../components/ui/ThemeToggle';
 import toast from 'react-hot-toast';
 
 const BRANCHES = ['CSE', 'IT', 'ECE', 'EEE', 'AIDS', 'AIML', 'DS', 'MECH', 'CIVIL'];
@@ -77,7 +78,7 @@ export default function Signup() {
 
   const inputStyle = {
     width: '100%',
-    background: '#f8fafc',
+    background: 'var(--bg-elevated)',
     border: '1px solid var(--border)',
     borderRadius: 'var(--radius)',
     color: 'var(--text-primary)',
@@ -102,7 +103,8 @@ export default function Signup() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: '#f5f7fb',
+        background: 'var(--bg-primary)',
+        color: 'var(--text-primary)',
         padding: '30px 16px',
         position: 'relative',
         overflowX: 'hidden',
@@ -120,8 +122,8 @@ export default function Signup() {
           zIndex: 2,
         }}
       >
-        {/* Back to Home Link */}
-        <div style={{ marginBottom: '14px' }}>
+        {/* Top Navigation Bar */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
           <button
             type="button"
             onClick={() => navigate('/')}
@@ -139,6 +141,7 @@ export default function Signup() {
           >
             ← Back to Home
           </button>
+          <ThemeToggle />
         </div>
 
         {/* Logo Header */}
@@ -165,23 +168,21 @@ export default function Signup() {
               fontFamily: 'var(--font-display)',
               fontSize: '30px',
               fontWeight: 800,
-              background: 'linear-gradient(135deg, #0f172a, #4f46e5)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
               marginBottom: '6px',
             }}
           >
-            JobLens
+            <span className="brand-letter-j">J</span>
+            <span className="brand-letters-rest">obLens</span>
           </h1>
           <p style={{ color: 'var(--text-secondary)', fontSize: '13px', fontWeight: 500 }}>
-            Create your account to get started
+            Job Search and AI Verification
           </p>
         </div>
 
         {/* Card */}
         <div
           style={{
-            background: '#ffffff',
+            background: 'var(--bg-card)',
             border: '1px solid var(--border)',
             borderRadius: 'var(--radius-lg)',
             padding: 'clamp(22px, 5vw, 32px)',
@@ -192,7 +193,7 @@ export default function Signup() {
           <div
             style={{
               display: 'flex',
-              background: '#f1f5f9',
+              background: 'var(--bg-elevated)',
               borderRadius: 'var(--radius)',
               padding: '4px',
               marginBottom: '20px',
@@ -450,7 +451,7 @@ export default function Signup() {
         </div>
 
         <p style={{ textAlign: 'center', marginTop: '16px', fontSize: '12px', color: 'var(--text-muted)' }}>
-          JobLens Off-Campus Job Discovery & Verification Platform
+          JobLens · Job Search and AI Verification
         </p>
       </div>
     </div>

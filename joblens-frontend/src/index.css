@@ -81,6 +81,40 @@
   --shadow-floating: 0 20px 35px -10px rgba(0, 0, 0, 0.7);
 }
 
+/* ── JobLens Brand Title Typography ── */
+.brand-letter-j {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  font-weight: 800;
+  display: inline-block;
+  text-shadow: 0 0 14px rgba(255, 255, 255, 0.5);
+  transition: all 0.25s ease;
+}
+
+[data-theme="light"] .brand-letter-j {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background: linear-gradient(135deg, #0f172a, #312e81);
+  padding: 0 5px;
+  border-radius: 6px;
+  line-height: 1.15;
+  text-shadow: none;
+  margin-right: 1px;
+}
+
+.brand-letters-rest {
+  background: linear-gradient(135deg, #f8fafc 40%, #818cf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: all 0.25s ease;
+}
+
+[data-theme="light"] .brand-letters-rest {
+  background: linear-gradient(135deg, #0f172a 40%, #4f46e5 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 * {
   margin: 0;
   padding: 0;
