@@ -1,0 +1,20 @@
+{
+  "name": "joblens-monorepo",
+  "version": "1.0.0",
+  "description": "JobLens & JobVerifier Platform",
+  "main": "CCPDMS_FINAL/server.js",
+  "scripts": {
+    "build": "cd joblens-frontend && npm install && npm run build",
+    "start": "cd CCPDMS_FINAL && npm start",
+    "server": "cd CCPDMS_FINAL && npm start",
+    "client": "cd joblens-frontend && npm start",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "keywords": [
+    "joblens",
+    "jobverifier",
+    "placement-portal"
+  ],
+  "author": "",
+  "license": "ISC"
+}
