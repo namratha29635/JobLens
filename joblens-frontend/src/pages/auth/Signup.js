@@ -80,20 +80,21 @@ export default function Signup() {
 
   const inputStyle = {
     width: '100%',
-    background: 'var(--bg-elevated)',
-    border: '1px solid var(--border)',
+    background: '#ffffff',
+    border: '1.5px solid #cbd5e1',
     borderRadius: '8px',
-    color: 'var(--text-primary)',
+    color: '#0f172a',
     padding: '11px 14px',
     fontSize: '13px',
     outline: 'none',
+    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.04)',
     transition: 'border-color 0.2s',
   };
 
   const labelStyle = {
     display: 'block',
     fontSize: '12px',
-    color: 'var(--text-secondary)',
+    color: '#1e293b',
     marginBottom: '5px',
     fontWeight: 600,
   };
@@ -105,14 +106,15 @@ export default function Signup() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'var(--bg-primary)',
-        color: 'var(--text-primary)',
+        background: 'linear-gradient(135deg, #eef2ff 0%, #f0fdf4 50%, #f8fafc 100%)',
+        color: '#0f172a',
         padding: '30px 16px',
         position: 'relative',
         overflowX: 'hidden',
         width: '100%',
       }}
     >
+      {/* 3D Animation running beneath */}
       <ThreeJsBackground />
 
       <div
@@ -130,15 +132,18 @@ export default function Signup() {
             type="button"
             onClick={() => navigate('/')}
             style={{
-              background: 'none',
-              border: 'none',
-              color: 'var(--text-secondary)',
+              background: '#ffffff',
+              border: '1px solid #cbd5e1',
+              padding: '6px 14px',
+              borderRadius: '8px',
+              color: '#334155',
               fontSize: '13px',
               fontWeight: 600,
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
+              boxShadow: '0 2px 6px rgba(0, 0, 0, 0.04)',
             }}
           >
             ← Back to Home
@@ -147,7 +152,7 @@ export default function Signup() {
         </div>
 
         {/* Logo Header */}
-        <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '22px' }}>
           <div
             style={{
               display: 'inline-flex',
@@ -159,7 +164,7 @@ export default function Signup() {
               borderRadius: '16px',
               marginBottom: '12px',
               fontSize: '24px',
-              boxShadow: '0 6px 18px rgba(79, 70, 229, 0.28)',
+              boxShadow: '0 8px 20px rgba(79, 70, 229, 0.28)',
               color: '#ffffff',
             }}
           >
@@ -170,39 +175,40 @@ export default function Signup() {
               fontFamily: 'var(--font-display)',
               fontSize: '30px',
               fontWeight: 800,
-              marginBottom: '6px',
+              marginBottom: '4px',
               letterSpacing: '-0.02em',
+              color: '#0f172a',
             }}
           >
-            <span className="brand-letter-j">J</span>
-            <span className="brand-letters-rest">obLens</span>
+            <span style={{ color: '#4f46e5' }}>J</span>
+            <span style={{ color: '#0f172a' }}>obLens</span>
           </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '13px', fontWeight: 500 }}>
+          <p style={{ color: '#475569', fontSize: '13px', fontWeight: 600 }}>
             Job Search and AI Verification
           </p>
         </div>
 
-        {/* Card */}
+        {/* Card (Crisp White Card) */}
         <div
           style={{
-            background: 'var(--bg-card)',
-            border: '1px solid var(--border)',
-            borderRadius: '18px',
+            background: '#ffffff',
+            border: '1px solid #e2e8f0',
+            borderRadius: '20px',
             padding: 'clamp(22px, 5vw, 32px)',
-            boxShadow: 'var(--shadow-floating)',
-            color: 'var(--text-primary)',
+            boxShadow: '0 20px 45px -10px rgba(79, 70, 229, 0.1), 0 4px 12px rgba(0, 0, 0, 0.04)',
+            color: '#0f172a',
           }}
         >
           {/* Error Banner when Account Creation Fails */}
           {errorMsg && (
             <div
               style={{
-                background: 'rgba(239, 68, 68, 0.08)',
+                background: 'rgba(239, 68, 68, 0.1)',
                 border: '1px solid rgba(239, 68, 68, 0.3)',
                 borderRadius: '10px',
                 padding: '12px 14px',
                 marginBottom: '18px',
-                color: '#ef4444',
+                color: '#dc2626',
                 fontSize: '13px',
                 display: 'flex',
                 alignItems: 'flex-start',
@@ -221,7 +227,7 @@ export default function Signup() {
                       background: 'none',
                       border: 'none',
                       padding: 0,
-                      color: 'var(--brand)',
+                      color: '#4f46e5',
                       fontSize: '12px',
                       fontWeight: 700,
                       cursor: 'pointer',
@@ -240,11 +246,11 @@ export default function Signup() {
           <div
             style={{
               display: 'flex',
-              background: 'var(--bg-elevated)',
+              background: '#f1f5f9',
               borderRadius: '8px',
               padding: '4px',
               marginBottom: '20px',
-              border: '1px solid var(--border)',
+              border: '1px solid #cbd5e1',
             }}
           >
             <button
@@ -256,12 +262,12 @@ export default function Signup() {
                 border: 'none',
                 borderRadius: '6px',
                 background: role === 'student' ? 'linear-gradient(135deg, #4f46e5, #172554)' : 'transparent',
-                color: role === 'student' ? '#ffffff' : 'var(--text-secondary)',
+                color: role === 'student' ? '#ffffff' : '#475569',
                 fontWeight: 700,
                 fontSize: '13px',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
-                boxShadow: role === 'student' ? '0 2px 8px rgba(79, 70, 229, 0.2)' : 'none',
+                boxShadow: role === 'student' ? '0 2px 8px rgba(79, 70, 229, 0.25)' : 'none',
               }}
             >
               🎓 Student
@@ -275,12 +281,12 @@ export default function Signup() {
                 border: 'none',
                 borderRadius: '6px',
                 background: role === 'coordinator' ? 'linear-gradient(135deg, #4f46e5, #172554)' : 'transparent',
-                color: role === 'coordinator' ? '#ffffff' : 'var(--text-secondary)',
+                color: role === 'coordinator' ? '#ffffff' : '#475569',
                 fontWeight: 700,
                 fontSize: '13px',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
-                boxShadow: role === 'coordinator' ? '0 2px 8px rgba(79, 70, 229, 0.2)' : 'none',
+                boxShadow: role === 'coordinator' ? '0 2px 8px rgba(79, 70, 229, 0.25)' : 'none',
               }}
             >
               💼 Coordinator
@@ -298,6 +304,8 @@ export default function Signup() {
                 value={form.name}
                 onChange={handleChange}
                 style={inputStyle}
+                onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
+                onBlur={(e) => (e.target.style.borderColor = '#cbd5e1')}
                 required
               />
             </div>
@@ -314,6 +322,8 @@ export default function Signup() {
                 value={form.email}
                 onChange={handleChange}
                 style={inputStyle}
+                onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
+                onBlur={(e) => (e.target.style.borderColor = '#cbd5e1')}
                 required
               />
             </div>
@@ -331,6 +341,8 @@ export default function Signup() {
                       value={form.rollNumber}
                       onChange={handleChange}
                       style={inputStyle}
+                      onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
+                      onBlur={(e) => (e.target.style.borderColor = '#cbd5e1')}
                     />
                   </div>
                   <div>
@@ -340,6 +352,8 @@ export default function Signup() {
                       value={form.branch}
                       onChange={handleChange}
                       style={{ ...inputStyle, cursor: 'pointer' }}
+                      onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
+                      onBlur={(e) => (e.target.style.borderColor = '#cbd5e1')}
                     >
                       {BRANCHES.map((b) => (
                         <option key={b} value={b}>
@@ -358,6 +372,8 @@ export default function Signup() {
                       value={form.passedOutYear}
                       onChange={handleChange}
                       style={{ ...inputStyle, cursor: 'pointer' }}
+                      onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
+                      onBlur={(e) => (e.target.style.borderColor = '#cbd5e1')}
                     >
                       {BATCHES.map((y) => (
                         <option key={y} value={y}>
@@ -378,6 +394,8 @@ export default function Signup() {
                       value={form.cgpa}
                       onChange={handleChange}
                       style={inputStyle}
+                      onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
+                      onBlur={(e) => (e.target.style.borderColor = '#cbd5e1')}
                     />
                   </div>
                 </div>
@@ -395,6 +413,8 @@ export default function Signup() {
                   value={form.password}
                   onChange={handleChange}
                   style={{ ...inputStyle, paddingRight: '44px' }}
+                  onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
+                  onBlur={(e) => (e.target.style.borderColor = '#cbd5e1')}
                   required
                 />
                 <button
@@ -408,7 +428,7 @@ export default function Signup() {
                     background: 'none',
                     border: 'none',
                     cursor: 'pointer',
-                    color: 'var(--text-muted)',
+                    color: '#64748b',
                     fontSize: '16px',
                   }}
                   aria-label="Toggle password visibility"
@@ -428,6 +448,8 @@ export default function Signup() {
                 value={form.confirmPassword}
                 onChange={handleChange}
                 style={inputStyle}
+                onFocus={(e) => (e.target.style.borderColor = '#4f46e5')}
+                onBlur={(e) => (e.target.style.borderColor = '#cbd5e1')}
                 required
               />
             </div>
@@ -453,7 +475,7 @@ export default function Signup() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '8px',
-                boxShadow: '0 4px 14px rgba(79, 70, 229, 0.28)',
+                boxShadow: '0 4px 14px rgba(79, 70, 229, 0.32)',
               }}
             >
               {loading ? (
@@ -477,7 +499,7 @@ export default function Signup() {
           </form>
 
           {/* Already have an account link */}
-          <div style={{ marginTop: '20px', textAlign: 'center', fontSize: '13px', color: 'var(--text-muted)' }}>
+          <div style={{ marginTop: '20px', textAlign: 'center', fontSize: '13px', color: '#64748b' }}>
             Already have an account?{' '}
             <button
               type="button"
@@ -485,7 +507,7 @@ export default function Signup() {
               style={{
                 background: 'none',
                 border: 'none',
-                color: 'var(--brand)',
+                color: '#4f46e5',
                 cursor: 'pointer',
                 fontWeight: 700,
                 fontSize: '13px',
@@ -497,7 +519,7 @@ export default function Signup() {
           </div>
         </div>
 
-        <p style={{ textAlign: 'center', marginTop: '16px', fontSize: '12px', color: 'var(--text-muted)' }}>
+        <p style={{ textAlign: 'center', marginTop: '16px', fontSize: '12px', color: '#475569', fontWeight: 600 }}>
           JobLens · Job Search and AI Verification
         </p>
       </div>

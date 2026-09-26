@@ -254,7 +254,7 @@ export default function Sidebar({ collapsed, setCollapsed, isMobileDrawer = fals
                   }
                 }}
               >
-                <Icon size={18} color={active ? '#4f46e5' : 'currentColor'} />
+                <Icon size={18} color={active ? 'var(--brand)' : 'currentColor'} />
                 {(!collapsed || isMobileDrawer) && <span style={{ flex: 1, textAlign: 'left' }}>{item.label}</span>}
                 {(!collapsed || isMobileDrawer) && item.badge && (
                   <span

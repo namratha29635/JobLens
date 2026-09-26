@@ -1,19 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap');
 
 :root {
-  /* Brand Color System */
-  --navy-deep: #172554;
+  /* Brand Color System - Light Theme Default */
+  --navy-deep: #1e293b;
   --midnight: #0f172a;
   --slate: #334155;
-  --bg-primary: #f5f7fb;
+  --bg-primary: #f8fafc;
   --bg-secondary: #ffffff;
   --bg-card: #ffffff;
   --bg-elevated: #f1f5f9;
-  --bg-hover: #e8edf5;
-  --muted: #e8edf5;
+  --bg-hover: #e2e8f0;
+  --muted: #f1f5f9;
 
   --brand: #4f46e5;
-  --brand-dark: #172554;
+  --brand-dark: #1e1b4b;
   --brand-light: #6366f1;
   --brand-bg: rgba(79, 70, 229, 0.08);
 
@@ -52,33 +52,37 @@
 
 [data-theme="dark"] {
   color-scheme: dark;
-  --bg-primary: #090d16;
-  --bg-secondary: #0f172a;
-  --bg-card: #131c2e;
-  --bg-elevated: #1a273e;
-  --bg-hover: #223350;
-  --muted: #1e293b;
+  /* Softer, pleasant Modern Slate Navy - comfortable & balanced */
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-card: #1e293b;
+  --bg-elevated: #283548;
+  --bg-hover: #334155;
+  --muted: #283548;
 
   --brand: #6366f1;
   --brand-dark: #4f46e5;
   --brand-light: #818cf8;
-  --brand-bg: rgba(99, 102, 241, 0.15);
+  --brand-bg: rgba(99, 102, 241, 0.18);
 
   --accent-primary: #38bdf8;
-  --accent-secondary: #6366f1;
+  --accent-secondary: #818cf8;
+  --accent-green: #34d399;
+  --accent-orange: #fbbf24;
+  --accent-red: #f87171;
 
   --text-primary: #f8fafc;
   --text-secondary: #cbd5e1;
   --text-muted: #94a3b8;
 
-  --border: #1e293b;
-  --border-light: #334155;
-  --border-accent: rgba(56, 189, 248, 0.35);
+  --border: #334155;
+  --border-light: #475569;
+  --border-accent: rgba(56, 189, 248, 0.45);
 
-  --shadow-subtle: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
-  --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.45);
-  --shadow-elevation: 0 12px 28px -6px rgba(0, 0, 0, 0.6);
-  --shadow-floating: 0 20px 35px -10px rgba(0, 0, 0, 0.7);
+  --shadow-subtle: 0 1px 3px 0 rgba(0, 0, 0, 0.25);
+  --shadow-card: 0 4px 16px -2px rgba(0, 0, 0, 0.3);
+  --shadow-elevation: 0 12px 28px -6px rgba(0, 0, 0, 0.45);
+  --shadow-floating: 0 20px 35px -10px rgba(0, 0, 0, 0.55);
 }
 
 /* ── JobLens Brand Title Typography ── */

@@ -67,9 +67,9 @@ export const Button = ({
       boxShadow: '0 4px 12px rgba(16, 185, 129, 0.25)',
     },
     danger: {
-      background: '#fee2e2',
-      color: '#dc2626',
-      border: '1px solid #fca5a5',
+      background: 'rgba(239, 68, 68, 0.12)',
+      color: 'var(--accent-red)',
+      border: '1px solid rgba(239, 68, 68, 0.3)',
     },
     ghost: {
       background: 'transparent',
@@ -116,25 +116,25 @@ export const VerificationBadge = ({ status = 'Verified', level, size = 'md' }) =
   let config;
   if (isVerified) {
     config = {
-      bg: 'rgba(16, 185, 129, 0.09)',
-      color: '#059669',
-      border: 'rgba(16, 185, 129, 0.25)',
+      bg: 'rgba(16, 185, 129, 0.12)',
+      color: 'var(--accent-green)',
+      border: 'rgba(16, 185, 129, 0.3)',
       icon: ShieldCheck,
       label: level ? `${level} Verified` : 'Verified Job',
     };
   } else if (isPending) {
     config = {
-      bg: 'rgba(245, 158, 11, 0.09)',
-      color: '#d97706',
-      border: 'rgba(245, 158, 11, 0.25)',
+      bg: 'rgba(245, 158, 11, 0.12)',
+      color: 'var(--accent-orange)',
+      border: 'rgba(245, 158, 11, 0.3)',
       icon: Clock,
       label: 'Under Review',
     };
   } else {
     config = {
-      bg: 'rgba(239, 68, 68, 0.09)',
-      color: '#dc2626',
-      border: 'rgba(239, 68, 68, 0.25)',
+      bg: 'rgba(239, 68, 68, 0.12)',
+      color: 'var(--accent-red)',
+      border: 'rgba(239, 68, 68, 0.3)',
       icon: ShieldAlert,
       label: 'Unverified / Flagged',
     };
@@ -168,13 +168,13 @@ export const VerificationBadge = ({ status = 'Verified', level, size = 'md' }) =
 // ── Badge ────────────────────────────────────────────────────────────
 export const Badge = ({ children, variant = 'default', size = 'md' }) => {
   const colors = {
-    default: { bg: '#f1f5f9', color: '#334155', border: '#e2e8f0' },
-    primary: { bg: 'rgba(79, 70, 229, 0.08)', color: '#4f46e5', border: 'rgba(79, 70, 229, 0.2)' },
-    cyan: { bg: 'rgba(6, 182, 212, 0.08)', color: '#0891b2', border: 'rgba(6, 182, 212, 0.2)' },
-    success: { bg: 'rgba(16, 185, 129, 0.08)', color: '#059669', border: 'rgba(16, 185, 129, 0.2)' },
-    warning: { bg: 'rgba(245, 158, 11, 0.08)', color: '#d97706', border: 'rgba(245, 158, 11, 0.2)' },
-    danger: { bg: 'rgba(239, 68, 68, 0.08)', color: '#dc2626', border: 'rgba(239, 68, 68, 0.2)' },
-    purple: { bg: 'rgba(124, 58, 237, 0.08)', color: '#7c3aed', border: 'rgba(124, 58, 237, 0.2)' },
+    default: { bg: 'var(--bg-elevated)', color: 'var(--text-secondary)', border: 'var(--border)' },
+    primary: { bg: 'var(--brand-bg)', color: 'var(--brand)', border: 'var(--border-accent)' },
+    cyan: { bg: 'rgba(6, 182, 212, 0.12)', color: 'var(--accent-primary)', border: 'rgba(6, 182, 212, 0.3)' },
+    success: { bg: 'rgba(16, 185, 129, 0.12)', color: 'var(--accent-green)', border: 'rgba(16, 185, 129, 0.3)' },
+    warning: { bg: 'rgba(245, 158, 11, 0.12)', color: 'var(--accent-orange)', border: 'rgba(245, 158, 11, 0.3)' },
+    danger: { bg: 'rgba(239, 68, 68, 0.12)', color: 'var(--accent-red)', border: 'rgba(239, 68, 68, 0.3)' },
+    purple: { bg: 'rgba(124, 58, 237, 0.12)', color: '#a855f7', border: 'rgba(124, 58, 237, 0.3)' },
   };
 
   const c = colors[variant] || colors.default;

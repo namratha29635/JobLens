@@ -1,16 +1,16 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const ThemeContext = createContext({
-  theme: 'dark',
+  theme: 'light',
   setTheme: () => {},
 });
 
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => {
     try {
-      return localStorage.getItem('joblens_theme') || 'dark';
+      return localStorage.getItem('joblens_theme') || 'light';
     } catch (e) {
-      return 'dark';
+      return 'light';
     }
   });
 
